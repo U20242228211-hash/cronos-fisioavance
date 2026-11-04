@@ -19,18 +19,24 @@ class Tipo(models.TextChoices):
 
 
 class Clasificacion(models.TextChoices):
+    VITAL_NNA = "vital_nna", "Riesgo vital · niño, niña o adolescente"
     VITAL = "vital", "Riesgo vital"
     PRIORIZADO = "priorizado", "Riesgo priorizado"
     SIMPLE = "simple", "Riesgo simple"
     GENERAL = "general", "General"
     INFORMACION = "informacion", "Solicitud de documentos o información"
+    COPIAS = "copias", "Copias (por ejemplo, de la historia clínica)"
     CONSULTA = "consulta", "Consulta"
 
 
+RIESGOS = [Clasificacion.VITAL_NNA, Clasificacion.VITAL, Clasificacion.PRIORIZADO, Clasificacion.SIMPLE]
+
+# Una queja que tiene que ver con la atención se trata como reclamo, porque prevalece lo más favorable al
+# usuario (Circular Única de la Supersalud, Título VII, numeral 3.3).
 CLASIFICACIONES_POR_TIPO = {
-    Tipo.RECLAMO: [Clasificacion.VITAL, Clasificacion.PRIORIZADO, Clasificacion.SIMPLE],
-    Tipo.PETICION: [Clasificacion.GENERAL, Clasificacion.INFORMACION, Clasificacion.CONSULTA],
-    Tipo.QUEJA: [Clasificacion.GENERAL],
+    Tipo.RECLAMO: RIESGOS,
+    Tipo.PETICION: [Clasificacion.GENERAL, Clasificacion.INFORMACION, Clasificacion.COPIAS, Clasificacion.CONSULTA],
+    Tipo.QUEJA: [Clasificacion.GENERAL] + RIESGOS,
     Tipo.SUGERENCIA: [Clasificacion.GENERAL],
     Tipo.FELICITACION: [Clasificacion.GENERAL],
 }
@@ -92,6 +98,18 @@ class Consecutivo(models.Model):
             return fila.ultimo
 
 
+class Motivo(models.TextChoices):
+    OPORTUNIDAD = "oportunidad", "Oportunidad: citas y agendamiento"
+    ACCESO = "acceso", "Acceso: órdenes, autorizaciones o negación del servicio"
+    ATENCION = "atencion", "Atención del profesional y calidad del tratamiento"
+    TRATO = "trato", "Trato del personal"
+    INFORMACION = "informacion", "Información, documentos y trámites"
+    INFRAESTRUCTURA = "infraestructura", "Instalaciones, aseo y comodidad"
+    COBROS = "cobros", "Cobros y facturación"
+    RECONOCIMIENTO = "reconocimiento", "Reconocimiento al equipo"
+    OTRO = "otro", "Otro"
+
+
 class PQRSF(DeInstitucion):
     class Canal(models.TextChoices):
         WEB = "web", "Formulario web (código QR o enlace)"
@@ -110,7 +128,7 @@ class PQRSF(DeInstitucion):
     class MedioRespuesta(models.TextChoices):
         WHATSAPP = "whatsapp", "WhatsApp"
         CORREO = "correo", "Correo electrónico"
-        PERSONAL = "personal", "Entrega personal"
+        PERSONAL = "personal", "La recoge en la sede"
         AVISO = "aviso", "Aviso publicado (sin datos de contacto)"
 
     class TipoDocumento(models.TextChoices):
@@ -126,6 +144,12 @@ class PQRSF(DeInstitucion):
         M = "M", "Masculino"
         I = "I", "Intersexual"
         N = "N", "Prefiere no decir"
+
+    class Regimen(models.TextChoices):
+        NO_APLICA = "no_aplica", "No aplica (particular o póliza)"
+        CONTRIBUTIVO = "contributivo", "Contributivo"
+        SUBSIDIADO = "subsidiado", "Subsidiado"
+        ESPECIAL = "especial", "Especial o de excepción"
 
     class Vinculacion(models.TextChoices):
         PARTICULAR = "particular", "Particular"
@@ -170,6 +194,7 @@ class PQRSF(DeInstitucion):
     telefono = models.CharField("celular o WhatsApp", max_length=20, blank=True)
     correo = models.EmailField(blank=True)
     municipio = models.CharField(max_length=80, blank=True)
+    departamento = models.CharField(max_length=80, blank=True)
     vinculacion = models.CharField(
         "vinculación", max_length=12, choices=Vinculacion.choices, blank=True
     )
@@ -179,11 +204,25 @@ class PQRSF(DeInstitucion):
     )
     es_acudiente = models.BooleanField("la presenta un acudiente", default=False)
     nombre_paciente = models.CharField("nombre del paciente", max_length=160, blank=True)
+    paciente_tipo_documento = models.CharField(
+        "tipo de documento del paciente", max_length=3, choices=TipoDocumento.choices, blank=True
+    )
+    paciente_numero_documento = models.CharField("documento del paciente", max_length=20, blank=True)
     medio_respuesta = models.CharField(
         "dónde quiere la respuesta", max_length=10, choices=MedioRespuesta.choices
     )
     autoriza_datos = models.BooleanField("autorizó el tratamiento de datos", default=False)
     autorizacion_en = models.DateTimeField("fecha de la autorización", null=True, blank=True)
+
+    # Registro que pide la Circular Única (Título VII, numeral 3.3)
+    motivo = models.CharField("tema principal", max_length=16, choices=Motivo.choices, blank=True)
+    regimen = models.CharField("régimen", max_length=12, choices=Regimen.choices, default=Regimen.NO_APLICA)
+    tutela = models.BooleanField("hay fallo de tutela relacionado", default=False)
+    negacion_servicio = models.BooleanField("tiene que ver con una negación del servicio", default=False)
+    detalle_negacion = models.TextField("motivo y responsable de la negación", blank=True)
+    accion_realizada = models.TextField(
+        "acción realizada", blank=True, help_text="Qué se hizo para solucionarla. No lo ve el paciente."
+    )
 
     # Tiempos y gestión
     recibida_en = models.DateTimeField(
@@ -286,6 +325,11 @@ class PQRSF(DeInstitucion):
         if self.anonima:
             return "Anónima"
         return f"{self.nombres} {self.apellidos}".strip()
+
+    @property
+    def es_nna(self):
+        """Niño, niña o adolescente: tiene un término más corto si el riesgo es vital."""
+        return self.condicion_especial == self.Condicion.MENOR or (self.edad is not None and self.edad < 18)
 
     @property
     def edad(self):

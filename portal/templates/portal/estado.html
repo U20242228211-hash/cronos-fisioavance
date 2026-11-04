@@ -15,8 +15,9 @@
   {% if pqrsf.respuesta and not pqrsf.abierta %}
     <div style="display:grid;gap:8px">
       <h2>Nuestra respuesta</h2>
+      <span class="ayuda" style="color:var(--tenue);font-size:.9rem">{{ institucion.municipio|default:"" }}{% if institucion.municipio %}, {% endif %}{{ pqrsf.respondida_en|date:"j \d\e F \d\e Y" }}</span>
       <div class="respuesta">{{ pqrsf.respuesta }}</div>
-      <span class="ayuda" style="color:var(--tenue);font-size:.9rem">Respondida el {{ pqrsf.respondida_en|date:"j \d\e F \d\e Y" }}.</span>
+      <div class="alerta"><b>Importante:</b> {{ institucion.advertencia_respuesta }}</div>
     </div>
   {% endif %}
 </section>

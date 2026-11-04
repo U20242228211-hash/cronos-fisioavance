@@ -121,6 +121,7 @@ class PQRSFAdmin(PorInstitucionAdmin):
         "estado",
         "tipo",
         "clasificacion",
+        "motivo",
         "canal",
         "servicio",
         "anonima",
@@ -136,8 +137,9 @@ class PQRSFAdmin(PorInstitucionAdmin):
 
     campos_paciente = (
         "anonima", "tipo_documento", "numero_documento", "nombres", "apellidos", "sexo", "fecha_nacimiento",
-        "telefono", "correo", "municipio", "vinculacion", "aseguradora", "condicion_especial", "es_acudiente",
-        "nombre_paciente", "medio_respuesta", "autoriza_datos",
+        "telefono", "correo", "municipio", "departamento", "vinculacion", "aseguradora", "regimen",
+        "condicion_especial", "es_acudiente", "nombre_paciente", "paciente_tipo_documento",
+        "paciente_numero_documento", "medio_respuesta", "autoriza_datos",
     )
 
     def get_fieldsets(self, request, obj=None):
@@ -151,8 +153,9 @@ class PQRSFAdmin(PorInstitucionAdmin):
             ("Caso", {"fields": ("ver_resumen",)}),
             ("Lo que dice el paciente", {"fields": ("tipo", "canal", "recibida_en", "servicio", "profesional", "descripcion", "adjunto")}),
             ("Quién la presenta", {"classes": ("collapse",), "fields": ("ver_peticionario_completo",)}),
-            ("Gestión", {"fields": ("clasificacion", "ver_clasificacion_propuesta", "asignada_a", "nota_interna")}),
-            ("Respuesta al paciente", {"fields": ("respuesta", "respondida_en", "comunicada_en", "aviso_desde", "aviso_hasta")}),
+            ("Gestión", {"fields": ("clasificacion", "ver_clasificacion_propuesta", "motivo", "asignada_a", "nota_interna")}),
+            ("Registro para la Supersalud", {"classes": ("collapse",), "fields": ("regimen", "tutela", "negacion_servicio", "detalle_negacion")}),
+            ("Respuesta al paciente", {"fields": ("respuesta", "accion_realizada", "respondida_en", "comunicada_en", "aviso_desde", "aviso_hasta")}),
         )
 
     def get_readonly_fields(self, request, obj=None):
@@ -164,7 +167,8 @@ class PQRSFAdmin(PorInstitucionAdmin):
             "aviso_desde", "aviso_hasta",
         ]
         if obj.estado == PQRSF.Estado.CERRADA:
-            campos += ["clasificacion", "asignada_a", "respuesta"]
+            campos += ["clasificacion", "motivo", "asignada_a", "respuesta", "accion_realizada", "regimen", "tutela",
+                       "negacion_servicio", "detalle_negacion"]
         return campos
 
     def get_queryset(self, request):
@@ -268,10 +272,12 @@ class PQRSFAdmin(PorInstitucionAdmin):
             ("Correo", obj.correo or "—"),
             ("Sexo", obj.get_sexo_display() or "—"),
             ("Edad", f"{obj.edad} años" if obj.edad is not None else "—"),
-            ("Municipio", obj.municipio or "—"),
+            ("Municipio", f"{obj.municipio or '—'} {('(' + obj.departamento + ')') if obj.departamento else ''}"),
             ("Vinculación", f"{obj.get_vinculacion_display() or '—'} {obj.aseguradora or ''}"),
+            ("Régimen", obj.get_regimen_display()),
             ("Condición especial", obj.get_condicion_especial_display()),
-            ("Acudiente de", obj.nombre_paciente if obj.es_acudiente else "—"),
+            ("Acudiente de", f"{obj.nombre_paciente} {obj.paciente_tipo_documento} {obj.paciente_numero_documento}" if obj.es_acudiente else "—"),
+            ("Niño, niña o adolescente", "Sí" if obj.es_nna else "No"),
             ("Quiere la respuesta por", obj.get_medio_respuesta_display()),
             ("Autorizó sus datos", timezone.localtime(obj.autorizacion_en).strftime("%d/%m/%Y %I:%M %p") if obj.autorizacion_en else "No"),
         ]

@@ -66,6 +66,7 @@ class PQRSFPublicaForm(forms.ModelForm):
         self.fields["medio_respuesta"].choices = [
             (PQRSF.MedioRespuesta.WHATSAPP, "WhatsApp"),
             (PQRSF.MedioRespuesta.CORREO, "Correo electrónico"),
+            (PQRSF.MedioRespuesta.PERSONAL, "La recojo en la sede"),
         ]
         self.fields["medio_respuesta"].required = False
         self.fields["vinculacion"].choices = list(PQRSF.Vinculacion.choices)

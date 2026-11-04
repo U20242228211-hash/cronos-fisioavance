@@ -17,7 +17,7 @@
   {% if pqrsf.anonima %}
     <p class="entrada">Guarde el número de radicado y el código de consulta: sin ellos no podrá ver la respuesta. También se publicará en la cartelera de la sede.</p>
   {% else %}
-    <p class="entrada">Le enviaremos la respuesta por {{ pqrsf.get_medio_respuesta_display|lower }}. Guarde el número de radicado para consultar su caso.</p>
+    <p class="entrada">{% if pqrsf.medio_respuesta == "personal" %}Puede recoger la respuesta en la sede{% else %}Le enviaremos la respuesta por {{ pqrsf.get_medio_respuesta_display|lower }}{% endif %}. Guarde el número de radicado para consultar su caso.</p>
   {% endif %}
   <div class="acciones no-imprimir">
     <a class="boton" href="{% url 'portal:estado' institucion.slug pqrsf.token %}">Ver mi caso</a>

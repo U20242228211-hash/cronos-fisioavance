@@ -31,6 +31,7 @@ def test_radicar_crea_el_caso_con_radicado_termino_e_historico(client, instituci
     assert pqrsf.vence_en == pqrsf.recibida_en + timedelta(hours=48)
     assert pqrsf.autorizacion_en is not None and pqrsf.telefono == "3001112233"
     assert pqrsf.actuaciones.get().tipo == Actuacion.Tipo.RADICACION
+    assert pqrsf.motivo == "acceso"  # tema principal propuesto: «me suspendieron»
 
 
 def test_sin_autorizacion_de_datos_no_se_radica(client, institucion, datos_paciente):
@@ -74,7 +75,12 @@ def test_consultar_con_radicado_y_documento(client, institucion, datos_paciente)
         ("R", "Tengo mucho dolor y nadie me llama", "ninguna", "priorizado"),
         ("R", "No me han dado la cita de control", "adulto_mayor", "priorizado"),
         ("R", "No me han dado la cita de control", "ninguna", "simple"),
-        ("P", "Necesito copia de mi historia clínica", "ninguna", "informacion"),
+        ("P", "Necesito copia de mi historia clínica", "ninguna", "copias"),
+        ("P", "Necesito un certificado de asistencia", "ninguna", "informacion"),
+        ("R", "Mi hija se desmayó en la terapia", "menor", "vital_nna"),
+        ("R", "Mi hijo tiene asma y no tuvo su sesión", "menor", "vital_nna"),
+        ("Q", "Tengo mucho dolor y nadie me llama", "ninguna", "priorizado"),
+        ("Q", "Pongan papel en el baño", "ninguna", "general"),
         ("P", "Quisiera saber si atienden los sábados", "ninguna", "consulta"),
         ("S", "Pongan más sillas", "ninguna", "general"),
     ],
@@ -160,7 +166,8 @@ def test_caso_completo(client, institucion, datos_paciente, gestor):
     cambio = reverse("admin:pqrsf_pqrsf_change", args=[pqrsf.pk])
     pagina = client.get(cambio)
     assert pagina.status_code == 200
-    formulario = {"clasificacion": "simple", "asignada_a": gestor.pk, "respuesta": "Ya le reprogramamos las sesiones.",
+    formulario = {"clasificacion": "simple", "motivo": "acceso", "regimen": "no_aplica", "asignada_a": gestor.pk,
+                  "respuesta": "Ya le reprogramamos las sesiones.", "accion_realizada": "Se reprogramaron 3 sesiones.",
                   "nota_interna": "Se llamó a la paciente.", "actuaciones-TOTAL_FORMS": "1", "actuaciones-INITIAL_FORMS": "1",
                   "actuaciones-MIN_NUM_FORMS": "0", "actuaciones-MAX_NUM_FORMS": "0", "actuaciones-0-id": pqrsf.actuaciones.get().pk,
                   "actuaciones-0-pqrsf": pqrsf.pk, "_continue": "1"}
@@ -180,6 +187,7 @@ def test_caso_completo(client, institucion, datos_paciente, gestor):
     estado = client.get(url("estado", institucion, token=pqrsf.token))
     contenido = estado.content.decode()
     assert "Ya le reprogramamos las sesiones." in contenido and "Se llamó a la paciente." not in contenido
+    assert "Superintendencia Nacional de Salud" in contenido  # advertencia obligatoria (num. 3.3.1)
 
 
 def test_tablero_y_reportes(client, institucion, gestor, datos_paciente):
@@ -187,7 +195,7 @@ def test_tablero_y_reportes(client, institucion, gestor, datos_paciente):
     client.login(username="gestor", password=CLAVE)
     assert client.get(reverse("admin:index")).status_code == 200
     assert client.get(reverse("tablero:reportes")).status_code == 200
-    for tipo in ("pqrsf", "encuestas", "indicadores"):
+    for tipo in ("pqrsf", "encuestas", "indicadores", "res256"):
         excel = client.get(reverse("tablero:reportes"), {"descargar": tipo})
         assert excel.status_code == 200 and excel["Content-Type"].startswith("application/vnd.openxmlformats")
     assert client.get(reverse("portal:qr", kwargs={"slug": institucion.slug, "destino": "pqrsf"}))["Content-Type"] == "image/svg+xml"

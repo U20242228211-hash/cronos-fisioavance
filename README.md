@@ -68,7 +68,7 @@ servicios, WhatsApp, horario, logo) son los que publica en su sitio web, que aut
 | `python manage.py cargar_demo [--borrar]` | Carga (o recarga) Fisioavance con casos de ejemplo |
 | `python manage.py crear_institucion "Nombre" --slug nombre --usuario usuario --correo correo` | Da de alta otra IPS con sus preguntas y su usuario de dirección |
 | `python manage.py revisar_vencimientos` | Manda las alertas del 50 % y 80 % y escala lo vencido. En el servidor se programa cada hora |
-| `python -m pytest` | Corre las pruebas: 30 casos del cálculo de términos y las de integración y de sistema |
+| `python -m pytest` | Corre las pruebas: 33 casos del cálculo de términos y las de integración y de sistema |
 
 ## Cómo está organizado
 
@@ -85,13 +85,19 @@ tests/          pruebas unitarias, de integración y de sistema
 
 ## Normas que aplica
 
+Revisadas al 4 de noviembre de 2026.
+
 | Regla | Fuente |
 |---|---|
-| Términos por riesgo de los reclamos en salud: vital 24 h, priorizado 48 h, simple 72 h | Supersalud, Circular Externa 2023151000000010-5 de 2023 |
-| Peticiones: 15 días hábiles; documentos o información: 10; consultas: 30 | Ley 1755 de 2015, art. 14 |
-| Respuesta por aviso cuando no hay datos del peticionario | Ley 1437 de 2011, art. 69 |
-| Indicadores de satisfacción global y de recomendación | Resolución 256 de 2016 del Ministerio de Salud |
-| Autorización y aviso de privacidad; los datos de salud son sensibles | Ley 1581 de 2012 y Decreto 1377 de 2013 |
+| Reclamos en salud por riesgo, en horas corridas desde la radicación: vital 24 h, priorizado 48 h, simple 72 h. Aplica también a las IPS | Circular Única de la Supersalud, Título VII, num. 3.3.2 (Circular Externa 2023151000000010-5 de 2023) |
+| Riesgo vital de niños, niñas y adolescentes: máximo 8 horas | Supersalud, Circular Externa 2026151000000007-5 de 2026, instrucción 3ª |
+| Una queja relacionada con la atención se trata como reclamo según su riesgo | Circular Única, num. 3.3: prevalece lo más favorable al usuario |
+| Peticiones: 15 días hábiles; documentos o información: 10; copias: 3; consultas: 30 | Ley 1755 de 2015, art. 14; Circular Única, num. 3.3.2.4 |
+| Campos mínimos del registro de cada PQRSF | Circular Única, Título VII, num. 3.3, literales a) a s) |
+| Respuesta escrita por el medio que elija el usuario, con la advertencia de que puede acudir a la Supersalud | Circular Única, num. 3.3.1; Ley 1751 de 2015, art. 10 |
+| Se reciben PQRSF anónimas; la respuesta se publica 5 días en el portal y en la cartelera | Ley 1755, art. 32; Sentencia C-951 de 2014; Ley 1437 de 2011, art. 69 (buena práctica para una IPS privada) |
+| Indicadores de satisfacción global y de recomendación, reportados por trimestre en PISIS | Resolución 256 de 2016 y su parágrafo de reporte trimestral (vigente por la Resolución 1632 de 2025) |
+| Autorización y aviso de privacidad; los datos de salud son sensibles y opcionales | Ley 1581 de 2012 y Decreto 1377 de 2013 |
 
 Los términos viven en la tabla **Términos de respuesta**: si la norma cambia, se actualizan ahí sin tocar código, y
 cada institución puede poner los suyos si son más estrictos.

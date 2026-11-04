@@ -51,6 +51,14 @@ class Institucion(models.Model):
         blank=True,
         help_text="Texto que el paciente acepta antes de enviar sus datos (Ley 1581 de 2012).",
     )
+    advertencia_respuesta = models.TextField(
+        "advertencia al final de cada respuesta",
+        default=(
+            "Si no está de acuerdo con esta respuesta, puede acudir a la Superintendencia Nacional de Salud "
+            "(www.supersalud.gov.co) o a la Secretaría de Salud de su departamento o municipio."
+        ),
+        help_text="La Circular Única de la Supersalud (Título VII, numeral 3.3.1) exige incluirla, destacada.",
+    )
     activa = models.BooleanField(default=True)
     creada = models.DateTimeField(auto_now_add=True)
 

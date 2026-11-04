@@ -38,7 +38,7 @@
       {% if institucion.direccion %}<span>{{ institucion.direccion }}{% if institucion.municipio %}, {{ institucion.municipio }}{% endif %}</span>{% endif %}
       {% if institucion.horario_atencion %}<span>{{ institucion.horario_atencion }}</span>{% endif %}
       {% if institucion.whatsapp %}<span>WhatsApp: <a href="{{ institucion.enlace_whatsapp }}">{{ institucion.telefono|default:institucion.whatsapp }}</a></span>{% endif %}
-      <span>Sus datos están protegidos según la Ley 1581 de 2012 · Hecho con Cronos</span>
+      <span>Vigilado <a href="https://www.supersalud.gov.co" target="_blank" rel="noopener">Superintendencia Nacional de Salud</a> · Sus datos están protegidos según la Ley 1581 de 2012 · Hecho con Cronos</span>
     </div>
   </footer>
   {% endif %}

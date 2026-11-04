@@ -1,4 +1,4 @@
-"""Banco de 30 casos del cálculo de términos (objetivo específico 5 del proyecto).
+"""Banco de 33 casos del cálculo de términos (objetivo específico 5 del proyecto).
 
 Los resultados esperados se calcularon a mano con el calendario de festivos de Colombia de 2026 y 2027:
 noviembre de 2026 tiene festivos el lunes 2 y el lunes 16; diciembre, el martes 8 y el viernes 25; enero de
@@ -96,3 +96,31 @@ def test_30_la_regla_propia_de_la_institucion_gana(institucion, servicio):
     pqrsf.recalcular_vencimiento()
     assert pqrsf.vence_en == fin_del_dia(2026, 11, 24)
     assert timezone.localtime(pqrsf.vence_en).date().isoformat() == "2026-11-24"
+
+
+@pytest.mark.django_db
+def test_31_riesgo_vital_de_un_nino_vence_en_8_horas(institucion, servicio):
+    """Supersalud, Circular Externa 2026151000000007-5 de 2026, instrucción 3ª."""
+    pqrsf = PQRSF(institucion=institucion, tipo="R", clasificacion="vital_nna", servicio=servicio, descripcion="x",
+                  medio_respuesta="whatsapp", recibida_en=bogota(2026, 11, 7, 22, 0))
+    pqrsf.recalcular_vencimiento()
+    assert pqrsf.vence_en == bogota(2026, 11, 8, 6, 0)
+
+
+@pytest.mark.django_db
+def test_32_copias_en_tres_dias_habiles(institucion, servicio):
+    """Circular Única, Título VII, num. 3.3.2.4 c). Del viernes 13 de noviembre: sábado, domingo y el festivo
+    del lunes 16 no cuentan; vence el jueves 19."""
+    pqrsf = PQRSF(institucion=institucion, tipo="P", clasificacion="copias", servicio=servicio, descripcion="x",
+                  medio_respuesta="whatsapp", recibida_en=bogota(2026, 11, 13, 10, 0))
+    pqrsf.recalcular_vencimiento()
+    assert pqrsf.vence_en == fin_del_dia(2026, 11, 19)
+
+
+@pytest.mark.django_db
+def test_33_queja_sobre_la_atencion_se_trata_como_reclamo(institucion, servicio):
+    """Lo más favorable al usuario: una queja de riesgo priorizado vence en 48 horas, no en 15 días."""
+    pqrsf = PQRSF(institucion=institucion, tipo="Q", clasificacion="priorizado", servicio=servicio, descripcion="x",
+                  medio_respuesta="whatsapp", recibida_en=bogota(2026, 11, 4, 9, 0))
+    pqrsf.recalcular_vencimiento()
+    assert pqrsf.vence_en == bogota(2026, 11, 6, 9, 0)

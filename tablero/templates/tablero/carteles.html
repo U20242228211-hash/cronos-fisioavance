@@ -32,6 +32,7 @@
     <p>Escanee el código con la cámara de su celular. No necesita crear cuenta y le avisamos la respuesta por WhatsApp.</p>
     <img class="qr" src="{% url 'portal:qr' institucion.slug 'pqrsf' %}" alt="Código QR para poner una PQRSF">
     <div class="pasos"><span>1. Escanee</span><span>2. Cuéntenos</span><span>3. Reciba su radicado</span></div>
+    <p style="font-size:12pt">Le respondemos: reclamos de riesgo vital en máximo 24 horas (8 horas si el paciente es un niño, niña o adolescente), priorizados en 48 horas y simples en 72 horas; peticiones en 15 días hábiles.</p>
     <div class="url">{{ request.scheme }}://{{ request.get_host }}{{ ruta_pqrsf }}</div>
   </section>
   <section class="cartel">

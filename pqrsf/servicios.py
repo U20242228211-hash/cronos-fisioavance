@@ -19,9 +19,12 @@ PALABRAS_PRIORIZADO = (
     "inflama", "embaraz", "cirugía", "cirugia", "postoperatori", "lesión", "lesion", "silla de ruedas",
     "suspendieron", "me negaron", "no me atendieron", "urgente",
 )
-PALABRAS_INFORMACION = (
-    "historia clínica", "historia clinica", "copia", "certificado", "constancia", "factura", "documento",
-    "incapacidad", "resultado", "epicrisis",
+PALABRAS_COPIAS = ("copia", "historia clínica", "historia clinica", "epicrisis")
+PALABRAS_INFORMACION = ("certificado", "constancia", "factura", "documento", "incapacidad", "resultado")
+# Cohortes que la CE 2026151000000007-5 trata siempre como riesgo vital cuando el paciente es menor de edad
+COHORTES_NNA = (
+    "trasplant", "cardiovascular", "corazón", "corazon", "cáncer", "cancer", "leucemia", "huérfana", "huerfana",
+    "respiratoria crónica", "respiratoria cronica", "asma", "vih",
 )
 PALABRAS_CONSULTA = ("quisiera saber", "qué debo", "que debo", "cómo puedo", "como puedo", "consulta", "pregunta")
 CONDICIONES_PRIORITARIAS = {
@@ -30,20 +33,47 @@ CONDICIONES_PRIORITARIAS = {
 
 CAMPOS_PERSONALES = (
     "tipo_documento", "numero_documento", "nombres", "apellidos", "sexo", "telefono", "correo", "municipio",
-    "nombre_paciente",
+    "departamento", "nombre_paciente", "paciente_tipo_documento", "paciente_numero_documento",
 )
 
 
-def proponer_clasificacion(tipo, descripcion, condicion=PQRSF.Condicion.NINGUNA):
+MOTIVOS = [
+    ("reconocimiento", ("felicit", "gracias", "excelente", "agradec")),
+    ("trato", ("mala manera", "grosero", "grosera", "trato", "me gritó", "me grito", "irrespet")),
+    ("acceso", ("orden", "autoriz", "suspend", "negaron", "no me dejaron", "no la dejaron", "no lo dejaron")),
+    ("oportunidad", ("cita", "agenda", "sesiones", "esperando", "esperar", "tarde", "demora")),
+    ("cobros", ("cobro", "factura", "pago", "precio", "valor")),
+    ("informacion", ("certificado", "copia", "historia clínica", "historia clinica", "documento", "información", "informacion")),
+    ("infraestructura", ("baño", "bano", "silla", "rampa", "sede", "aseo", "calor", "parqueadero", "ascensor")),
+    ("atencion", ("tratamiento", "dolor", "terapia", "explic", "atendió", "atendio")),
+]
+
+
+def proponer_motivo(descripcion):
+    texto = (descripcion or "").lower()
+    for motivo, palabras in MOTIVOS:
+        if any(p in texto for p in palabras):
+            return motivo
+    return "otro"
+
+
+def proponer_clasificacion(tipo, descripcion, condicion=PQRSF.Condicion.NINGUNA, es_nna=False):
     """Propone la clasificación con reglas simples. Siempre la confirma un funcionario: no reemplaza su criterio."""
     texto = (descripcion or "").lower()
-    if tipo == Tipo.RECLAMO:
-        if any(p in texto for p in PALABRAS_VITAL):
+    es_nna = es_nna or condicion == PQRSF.Condicion.MENOR
+    vital = any(p in texto for p in PALABRAS_VITAL)
+    priorizado = any(p in texto for p in PALABRAS_PRIORIZADO) or condicion in CONDICIONES_PRIORITARIAS
+    if tipo in (Tipo.RECLAMO, Tipo.QUEJA):
+        if es_nna and (vital or any(p in texto for p in COHORTES_NNA)):
+            return Clasificacion.VITAL_NNA
+        if vital:
             return Clasificacion.VITAL
-        if any(p in texto for p in PALABRAS_PRIORIZADO) or condicion in CONDICIONES_PRIORITARIAS:
+        if priorizado:
             return Clasificacion.PRIORIZADO
-        return Clasificacion.SIMPLE
+        return Clasificacion.SIMPLE if tipo == Tipo.RECLAMO else Clasificacion.GENERAL
     if tipo == Tipo.PETICION:
+        if any(p in texto for p in PALABRAS_COPIAS):
+            return Clasificacion.COPIAS
         if any(p in texto for p in PALABRAS_INFORMACION):
             return Clasificacion.INFORMACION
         if any(p in texto for p in PALABRAS_CONSULTA):
@@ -76,10 +106,14 @@ def radicar(pqrsf, usuario=None):
         pqrsf.fecha_nacimiento = None
         pqrsf.medio_respuesta = PQRSF.MedioRespuesta.AVISO
     pqrsf.clasificacion_propuesta = proponer_clasificacion(
-        pqrsf.tipo, pqrsf.descripcion, pqrsf.condicion_especial
+        pqrsf.tipo, pqrsf.descripcion, pqrsf.condicion_especial, pqrsf.es_nna
     )
     if not pqrsf.clasificacion:
         pqrsf.clasificacion = pqrsf.clasificacion_propuesta
+    if not pqrsf.motivo:
+        pqrsf.motivo = proponer_motivo(pqrsf.descripcion)
+    if pqrsf.municipio and not pqrsf.departamento:
+        pqrsf.departamento = pqrsf.institucion.departamento
     if pqrsf.autoriza_datos and not pqrsf.autorizacion_en:
         pqrsf.autorizacion_en = timezone.now()
     pqrsf.estado = PQRSF.Estado.RADICADA

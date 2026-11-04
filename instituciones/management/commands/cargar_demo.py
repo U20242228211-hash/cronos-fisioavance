@@ -19,7 +19,7 @@ from encuestas.servicios import crear_preguntas_por_defecto
 from instituciones.models import Aseguradora, Institucion, Profesional, Servicio
 from pqrsf import plazos
 from pqrsf.models import PQRSF, Actuacion, Consecutivo
-from pqrsf.servicios import proponer_clasificacion
+from pqrsf.servicios import proponer_clasificacion, proponer_motivo
 from usuarios.models import Usuario
 
 CLAVE_DEMO = "Cronos-Demo-2026"
@@ -111,6 +111,10 @@ class Command(BaseCommand):
                 "color_primario": "#0E7490",
                 "horario_atencion": "Lunes a viernes: 7:00 a. m. a 12:00 m. y 2:00 a 7:00 p. m.",
                 "aviso_privacidad": AVISO,
+                "advertencia_respuesta": (
+                    "Si no está de acuerdo con esta respuesta, puede acudir a la Superintendencia Nacional de Salud "
+                    "(www.supersalud.gov.co) o a la Secretaría de Salud Departamental del Huila."
+                ),
             },
         )
         servicios = {}
@@ -187,7 +191,8 @@ class Command(BaseCommand):
             pqrsf.aseguradora = aseguradora
         if pqrsf.autoriza_datos:
             pqrsf.autorizacion_en = recibida
-        pqrsf.clasificacion_propuesta = proponer_clasificacion(tipo, texto, condicion)
+        pqrsf.clasificacion_propuesta = proponer_clasificacion(tipo, texto, condicion, pqrsf.es_nna)
+        pqrsf.motivo = proponer_motivo(texto)
         pqrsf.clasificacion = pqrsf.clasificacion_propuesta
         pqrsf.recalcular_vencimiento()
         pqrsf.save()
@@ -239,6 +244,7 @@ class Command(BaseCommand):
             (("Q", "Fisiatría", "El especialista me atendió muy rápido y no me explicó el tratamiento.", "ninguna", "web", False), _hace_dias_habiles(8), True),
             (("P", "Fisioterapia", "Necesito un certificado de las terapias que he recibido para mi incapacidad.", "ninguna", "tableta", False), ahora - timedelta(hours=20), False),
             (("S", "Terapia ocupacional", "Podrían tener una rampa en la entrada para las personas en silla de ruedas.", "discapacidad", "buzon", False), ahora - timedelta(hours=3), False),
+            (("R", "Fisioterapia", "Mi hijo de 9 años tiene asma y hoy lo dejaron sin la sesión que le ordenaron porque no había profesional.", "menor", "web", False), ahora - timedelta(hours=2), False),
         ]
         for caso, recibida, confirmada in abiertos:
             pqrsf = self._crear(fisio, servicios, caso, recibida, azar, aseguradora)

@@ -9,7 +9,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 from encuestas import indicadores
-from encuestas.models import Pregunta, RespuestaEncuesta
+from encuestas.models import Pregunta, RespuestaEncuesta, RespuestaItem
 from instituciones.models import Servicio
 from pqrsf import plazos
 from pqrsf.models import PQRSF
@@ -55,13 +55,16 @@ def libro_pqrsf(institucion, desde, hasta):
     qs = PQRSF.objects.filter(institucion=institucion, recibida_en__gte=desde, recibida_en__lt=hasta).select_related(
         "servicio", "profesional", "aseguradora", "asignada_a"
     )
+    # Los literales a) a s) del numeral 3.3 del Título VII de la Circular Única, más los datos del término
     columnas = [
         "Radicado", "Fecha y hora de recepción", "Canal", "Tipo", "Clasificación", "Clasificación confirmada",
-        "Servicio", "Profesional", "Anónima", "Tipo de documento", "Número de documento", "Nombres", "Apellidos",
-        "Sexo", "Edad", "Municipio", "Vinculación", "Aseguradora", "Condición especial", "Acudiente de",
-        "Celular", "Correo", "Medio de respuesta", "Autorizó datos", "Descripción", "Estado", "Responsable",
-        "Vence", "Fecha de respuesta", "Respondida a tiempo", "Días hábiles para responder",
-        "Horas para responder", "Respuesta comunicada", "Cerrada",
+        "Tema principal", "Servicio", "Profesional", "Entidad asociada", "Régimen", "Anónima",
+        "Tipo de documento", "Número de documento", "Nombres", "Apellidos", "Celular", "Correo",
+        "Paciente (si la presentó un acudiente)", "Documento del paciente", "Niño, niña o adolescente", "Sexo", "Edad",
+        "Departamento", "Municipio", "Condición especial", "Fallo de tutela", "Negación del servicio",
+        "Motivo y responsable de la negación", "Medio de respuesta", "Autorizó datos", "Descripción", "Estado",
+        "Responsable", "Vence", "Fecha de solución", "Respondida a tiempo", "Días hábiles para responder",
+        "Horas para responder", "Respuesta comunicada", "Acción realizada", "Cerrada",
     ]
     filas = []
     for p in qs:
@@ -69,15 +72,17 @@ def libro_pqrsf(institucion, desde, hasta):
         horas = round((p.respondida_en - p.recibida_en).total_seconds() / 3600, 1) if p.respondida_en else None
         filas.append([
             p.radicado, _fecha(p.recibida_en), p.get_canal_display(), p.get_tipo_display(),
-            p.get_clasificacion_display(), "Sí" if p.clasificacion_confirmada else "No",
-            str(p.servicio or ""), str(p.profesional or ""), "Sí" if p.anonima else "No", p.tipo_documento,
-            p.numero_documento, p.nombres, p.apellidos, p.get_sexo_display(), p.edad, p.municipio,
-            p.get_vinculacion_display(), str(p.aseguradora or ""), p.get_condicion_especial_display(),
-            p.nombre_paciente if p.es_acudiente else "", p.telefono, p.correo, p.get_medio_respuesta_display(),
-            "Sí" if p.autoriza_datos else "No", p.descripcion, p.get_estado_display(), str(p.asignada_a or ""),
-            _fecha(p.vence_en), _fecha(p.respondida_en),
+            p.get_clasificacion_display(), "Sí" if p.clasificacion_confirmada else "No", p.get_motivo_display(),
+            str(p.servicio or ""), str(p.profesional or ""), str(p.aseguradora or "Particular"),
+            p.get_regimen_display(), "Sí" if p.anonima else "No", p.tipo_documento, p.numero_documento, p.nombres,
+            p.apellidos, p.telefono, p.correo, p.nombre_paciente if p.es_acudiente else "",
+            f"{p.paciente_tipo_documento} {p.paciente_numero_documento}".strip() if p.es_acudiente else "",
+            "Sí" if p.es_nna else "No", p.get_sexo_display(), p.edad, p.departamento, p.municipio,
+            p.get_condicion_especial_display(), "Sí" if p.tutela else "No", "Sí" if p.negacion_servicio else "No",
+            p.detalle_negacion, p.get_medio_respuesta_display(), "Sí" if p.autoriza_datos else "No", p.descripcion,
+            p.get_estado_display(), str(p.asignada_a or ""), _fecha(p.vence_en), _fecha(p.respondida_en),
             ("Sí" if p.respondida_a_tiempo else "No") if p.respondida_en else "",
-            dias, horas, _fecha(p.comunicada_en), _fecha(p.cerrada_en),
+            dias, horas, _fecha(p.comunicada_en), p.accion_realizada, _fecha(p.cerrada_en),
         ])
     libro = Workbook()
     hoja = _hoja(libro, "PQRSF", columnas, filas, primera=True)
@@ -156,6 +161,48 @@ def libro_indicadores(institucion, primero):
     return libro
 
 
+def trimestre_de(dia):
+    numero = (dia.month - 1) // 3 + 1
+    inicio = dia.replace(month=3 * (numero - 1) + 1, day=1)
+    return numero, inicio, indicadores.sumar_meses(inicio, 3)
+
+
+def libro_res256(institucion, primero):
+    """Conteos por opción de respuesta del trimestre, que es lo que la IPS reporta en PISIS (Resolución 256 de
+    2016, Anexo Técnico 2, registro tipo 3; reporte trimestral por el parágrafo del art. 6)."""
+    numero, inicio, fin = trimestre_de(primero)
+    desde, hasta = indicadores.a_fecha_hora(inicio), indicadores.a_fecha_hora(fin)
+    encuestas = RespuestaEncuesta.objects.filter(institucion=institucion, respondida_en__gte=desde, respondida_en__lt=hasta)
+    filas = []
+    for indicador, codigo in ((Pregunta.Indicador.SATISFACCION, "P.3.14"), (Pregunta.Indicador.RECOMENDACION, "P.3.15")):
+        pregunta = Pregunta.objects.filter(institucion=institucion, indicador=indicador).first()
+        if not pregunta:
+            continue
+        items = RespuestaItem.objects.filter(pregunta=pregunta, respuesta__in=encuestas)
+        conteo = {v: items.filter(valor=v).count() for v, _ in pregunta.opciones}
+        no_informa = encuestas.count() - items.exclude(valor=None).count()
+        positivas = sum(n for v, n in conteo.items() if pregunta.es_positiva(v))
+        respondieron = sum(conteo.values())
+        for valor, texto in reversed(pregunta.opciones):
+            filas.append([codigo, pregunta.texto, texto, conteo[valor]])
+        filas.append([codigo, pregunta.texto, "No informa", no_informa])
+        filas.append([codigo, "Indicador (calculado)", f"{positivas} de {respondieron}", indicadores.porcentaje(positivas, respondieron)])
+    libro = Workbook()
+    _hoja(libro, f"Trimestre {numero} de {inicio.year}", ["Indicador", "Pregunta", "Respuesta", "Usuarios"], filas, primera=True)
+    vence = indicadores.sumar_meses(inicio, 3)
+    nota = libro.create_sheet("Cómo se reporta")
+    for linea in [
+        f"{institucion.nombre} · trimestre {numero} de {inicio.year} ({inicio:%d/%m/%Y} a {indicadores.sumar_meses(inicio, 3):%d/%m/%Y}, sin incluir el último día).",
+        "Se reporta en la plataforma PISIS de SISPRO, en archivo plano, dentro de los 30 días calendario siguientes al cierre del trimestre.",
+        f"Para este trimestre: a más tardar 30 días después del {vence:%d/%m/%Y}.",
+        "Se reportan los usuarios que eligieron cada opción; el Ministerio calcula el indicador. 'No informa' son las encuestas que no respondieron la pregunta.",
+        "Fuente: Resolución 256 de 2016, art. 6 parágrafo (reporte trimestral, vigente por la Resolución 1632 de 2025, art. 19) y fichas técnicas P.3.14 y P.3.15.",
+    ]:
+        nota.append([linea])
+    nota.column_dimensions["A"].width = 140
+    return libro
+
+
 def descargar(tipo, institucion, desde, hasta, primero):
     sufijo = f"{institucion.slug}-{primero:%Y-%m}"
     if tipo == "pqrsf":
@@ -164,4 +211,7 @@ def descargar(tipo, institucion, desde, hasta, primero):
         return _respuesta(libro_encuestas(institucion, desde, hasta), f"encuestas-{sufijo}.xlsx")
     if tipo == "indicadores":
         return _respuesta(libro_indicadores(institucion, primero), f"indicadores-{sufijo}.xlsx")
+    if tipo == "res256":
+        numero, inicio, _ = trimestre_de(primero)
+        return _respuesta(libro_res256(institucion, primero), f"res256-{institucion.slug}-{inicio.year}-T{numero}.xlsx")
     raise Http404

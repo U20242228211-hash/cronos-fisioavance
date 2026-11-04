@@ -6,7 +6,7 @@ from .models import Pregunta, RespuestaEncuesta, RespuestaItem
 
 
 PREGUNTAS_POR_DEFECTO = [
-    ("¿Cómo calificaría su experiencia global respecto a los servicios de salud que recibió en esta IPS?", Pregunta.Escala.CARITAS, Pregunta.Indicador.SATISFACCION),
+    ("¿Cómo calificaría su experiencia global respecto a los servicios de salud que ha recibido a través de su IPS?", Pregunta.Escala.CARITAS, Pregunta.Indicador.SATISFACCION),
     ("¿Cómo le pareció la atención del profesional que lo trató?", Pregunta.Escala.CARITAS, ""),
     ("¿Cómo le pareció la puntualidad en el inicio de sus sesiones?", Pregunta.Escala.CARITAS, ""),
     ("¿Cómo le parecieron la limpieza y la comodidad de las instalaciones?", Pregunta.Escala.CARITAS, ""),

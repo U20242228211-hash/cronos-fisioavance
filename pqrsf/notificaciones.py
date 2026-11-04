@@ -82,19 +82,31 @@ def enlace_whatsapp(numero, mensaje):
 
 
 def mensaje_respuesta(pqrsf, url_consulta):
+    """Por WhatsApp va el aviso y el enlace, no el texto: así los datos de salud no quedan en el chat
+    (Ley 1581 de 2012, art. 4, principio de seguridad). La respuesta completa, fechada y con la advertencia,
+    está en el enlace."""
     return (
-        f"Hola {pqrsf.nombres}, le escribimos de {pqrsf.institucion.nombre} sobre su "
-        f"{pqrsf.get_tipo_display().lower()} radicada con el número {pqrsf.radicado}.\n\n"
-        f"{pqrsf.respuesta}\n\nPuede ver el detalle aquí: {url_consulta}"
+        f"Hola {pqrsf.nombres}, le escribimos de {pqrsf.institucion.nombre}. Ya está la respuesta a su "
+        f"{pqrsf.get_tipo_display().lower()} radicada con el número {pqrsf.radicado}. "
+        f"Puede leerla aquí: {url_consulta}"
     )
 
 
 def enviar_respuesta_por_correo(pqrsf, url_consulta):
     if not pqrsf.correo:
         return False
+    institucion = pqrsf.institucion
+    lugar = f"{institucion.municipio}, " if institucion.municipio else ""
+    fecha = timezone.localtime(pqrsf.respondida_en or timezone.now()).strftime("%d/%m/%Y")
+    cuerpo = (
+        f"{lugar}{fecha}\n\nHola {pqrsf.nombres}:\n\nEsta es la respuesta a su {pqrsf.get_tipo_display().lower()} "
+        f"radicada con el número {pqrsf.radicado}.\n\n{pqrsf.respuesta}\n\n"
+        f"IMPORTANTE: {institucion.advertencia_respuesta}\n\n"
+        f"Puede consultar su caso aquí: {url_consulta}\n\n{institucion.nombre} · Atención al usuario"
+    )
     enviados = send_mail(
         f"Respuesta a su {pqrsf.get_tipo_display().lower()} {pqrsf.radicado} · {pqrsf.institucion.nombre}",
-        mensaje_respuesta(pqrsf, url_consulta),
+        cuerpo,
         settings.DEFAULT_FROM_EMAIL,
         [pqrsf.correo],
         fail_silently=True,

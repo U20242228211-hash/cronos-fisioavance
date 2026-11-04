@@ -8,16 +8,16 @@
     <p class="radicado">{{ pqrsf.radicado }}</p>
   </div>
   <dl class="datos">
-    <dt>Recibida</dt><dd>{{ pqrsf.recibida_en|date:"j \d\e F \d\e Y, g:i a" }}</dd>
+    <dt>Recibida</dt><dd>{{ pqrsf.recibida_en|date:"j \d\e F \d\e Y, g:i a"|lower }}</dd>
     <dt>Tipo</dt><dd>{{ pqrsf.get_tipo_display }}</dd>
     <dt>Servicio</dt><dd>{{ pqrsf.servicio|default:"—" }}</dd>
-    {% if pqrsf.vence_en %}<dt>Le respondemos a más tardar</dt><dd>{{ pqrsf.vence_en|date:"j \d\e F \d\e Y, g:i a" }}</dd>{% endif %}
+    {% if pqrsf.vence_en %}<dt>Le respondemos a más tardar</dt><dd>{{ pqrsf.vence_en|date:"j \d\e F \d\e Y, g:i a"|lower }}</dd>{% endif %}
     {% if pqrsf.anonima %}<dt>Código de consulta</dt><dd style="font-size:1.3rem;letter-spacing:.1em">{{ pqrsf.codigo_consulta }}</dd>{% endif %}
   </dl>
   {% if pqrsf.anonima %}
     <p class="entrada">Guarde el número de radicado y el código de consulta: sin ellos no podrá ver la respuesta. También se publicará en la cartelera de la sede.</p>
   {% else %}
-    <p class="entrada">{% if pqrsf.medio_respuesta == "personal" %}Puede recoger la respuesta en la sede{% else %}Le enviaremos la respuesta por {{ pqrsf.get_medio_respuesta_display|lower }}{% endif %}. Guarde el número de radicado para consultar su caso.</p>
+    <p class="entrada">{% if pqrsf.medio_respuesta == "personal" %}Puede recoger la respuesta en la sede{% elif pqrsf.medio_respuesta == "whatsapp" %}Le avisaremos por WhatsApp cuando esté la respuesta{% else %}Le enviaremos la respuesta por correo electrónico{% endif %}. Guarde el número de radicado para consultar su caso.</p>
   {% endif %}
   <div class="acciones no-imprimir">
     <a class="boton" href="{% url 'portal:estado' institucion.slug pqrsf.token %}">Ver mi caso</a>

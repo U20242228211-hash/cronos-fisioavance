@@ -1,0 +1,122 @@
+@startuml
+!pragma layout smetana
+!include _estilo.iuml
+title Modelo de datos de Cronos
+hide methods
+hide circle
+
+entity "Institucion" as I {
+  * id
+  --
+  nombre · slug · prefijo_radicado
+  nit · codigo_habilitacion
+  direccion · municipio · departamento · pais
+  whatsapp · correo · dominio
+  logo · color_primario
+  aviso_privacidad · advertencia_respuesta
+}
+entity "Usuario" as U {
+  * id
+  --
+  username · nombre · correo
+  rol (dirección, atención al usuario,
+       recepción, plataforma)
+}
+entity "Servicio" as SV {
+  * id
+  --
+  nombre · orden · activo
+}
+entity "Profesional" as PR {
+  * id
+  --
+  nombre · activo
+}
+entity "Aseguradora" as AS {
+  * id
+  --
+  nombre · activa
+}
+entity "ReglaPlazo" as RP {
+  * id
+  --
+  tipo · clasificacion
+  cantidad · unidad (horas o días hábiles)
+  norma
+}
+entity "Consecutivo" as CO {
+  * id
+  --
+  anio · ultimo
+}
+entity "PQRSF" as Q {
+  * id
+  --
+  radicado (único) · tipo · canal
+  clasificacion (propuesta y confirmada)
+  motivo · descripcion · adjunto
+  datos del peticionario y del paciente
+  regimen · tutela · negacion_servicio
+  medio_respuesta · autoriza_datos
+  recibida_en · vence_en · estado
+  respuesta · accion_realizada
+  respondida_en · comunicada_en · cerrada_en
+  aviso_desde · aviso_hasta
+  token · codigo_consulta
+}
+entity "Actuacion" as AC {
+  * id
+  --
+  tipo · descripcion · fecha
+  estado_anterior · estado_nuevo
+  visible_paciente
+  (no se edita ni se borra)
+}
+entity "Pregunta" as PG {
+  * id
+  --
+  orden · texto · escala
+  indicador (satisfacción o
+             recomendación, Res. 256)
+}
+entity "InvitacionEncuesta" as IN {
+  * id
+  --
+  nombre_paciente · telefono · correo
+  fin_tratamiento · token
+  expira_en · enviada_en
+}
+entity "RespuestaEncuesta" as RE {
+  * id
+  --
+  canal · respondida_en · comentario
+  requiere_atencion · atendida
+}
+entity "RespuestaItem" as RI {
+  * id
+  --
+  valor (1 a 5 o 1 a 4)
+}
+
+I ||--o{ U
+I ||--o{ SV
+I ||--o{ PR
+I ||--o{ AS
+I |o--o{ RP : "vacía = norma\npara todas"
+I ||--o{ CO
+I ||--o{ Q
+I ||--o{ PG
+I ||--o{ IN
+I ||--o{ RE
+SV |o--o{ Q
+PR |o--o{ Q
+AS |o--o{ Q
+U |o--o{ Q : responsable
+Q ||--o{ AC : histórico
+U |o--o{ AC
+SV ||--o{ IN
+IN |o--o| RE
+RE ||--o{ RI
+PG ||--o{ RI
+RE }o--o| Q : "queja que\ngeneró"
+@enduml

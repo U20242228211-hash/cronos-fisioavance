@@ -1,0 +1,48 @@
+@startuml
+!include _estilo.iuml
+title Arquitectura de Cronos (Django, patrón Modelo-Vista-Plantilla con capa de servicios)
+skinparam componentStyle rectangle
+
+actor "Paciente" as P
+actor "Equipo de la IPS" as E
+
+package "Presentación" {
+  [Portal del paciente\n(portal: formularios y plantillas)] as Portal
+  [Panel del equipo\n(admin de Django + Unfold)] as Panel
+  [Tablero, reportes, carteles\n(tablero)] as Tablero
+}
+package "Lógica de negocio" {
+  [Acciones del caso\n(pqrsf/servicios.py)] as Serv
+  [Motor de términos\n(pqrsf/plazos.py)] as Plazos
+  [Notificaciones y enlaces\n(pqrsf/notificaciones.py)] as Notif
+  [Indicadores Res. 256\n(encuestas/indicadores.py)] as Ind
+  [Permisos por institución y rol\n(instituciones/admin_base.py)] as Perm
+}
+package "Datos" {
+  [Modelos y ORM\n(instituciones, usuarios, pqrsf, encuestas)] as ORM
+  database "PostgreSQL\no MySQL" as BD
+}
+cloud "Externos" {
+  [Calendario de festivos\n(librería holidays)] as Fest
+  [WhatsApp (wa.me)] as WA
+  [Servidor de correo (SMTP)] as SMTP
+}
+[Tarea programada cada hora\n(manage.py revisar_vencimientos)] as Cron
+
+P --> Portal : HTTPS
+E --> Panel : HTTPS
+E --> Tablero
+Portal --> Serv
+Panel --> Serv
+Panel --> Perm
+Tablero --> Ind
+Serv --> Plazos
+Serv --> Notif
+Serv --> ORM
+Ind --> ORM
+Plazos --> Fest
+Notif --> WA
+Notif --> SMTP
+ORM --> BD
+Cron --> Serv
+@enduml

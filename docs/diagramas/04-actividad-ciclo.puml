@@ -1,0 +1,38 @@
+@startuml
+!include _estilo.iuml
+title Actividad: ciclo de vida de una PQRSF en Cronos
+start
+:Llega la PQRSF (QR, enlace de WhatsApp,\ntableta, buzón, en persona o correo);
+:Radicar: número consecutivo, fecha y hora;
+:Proponer tema y clasificación\n(reglas de la norma);
+:Calcular el vencimiento;
+:Avisar a atención al usuario;
+:Confirmar la clasificación\ny asignar responsable;
+if (¿Cambió la clasificación?) then (sí)
+  :Recalcular el vencimiento;
+endif
+fork
+  :Gestionar el caso\n(notas internas);
+  :Escribir la respuesta\ny la acción realizada;
+fork again
+  :Revisar cada hora\n(revisar_vencimientos);
+  if (¿Va en el 50 % o el 80 %?) then (sí)
+    :Alerta al responsable;
+  endif
+  if (¿Se venció?) then (sí)
+    :Escalar a la dirección;
+  endif
+end fork
+if (¿La PQRSF es anónima?) then (sí)
+  :Publicar el aviso 5 días\nen el portal y la cartelera;
+else (no)
+  :Enviar por el medio que eligió\n(WhatsApp, correo o en la sede);
+endif
+:Cerrar el caso;
+note right
+  Todo queda en el histórico,
+  que no se puede editar
+  ni borrar.
+end note
+stop
+@enduml

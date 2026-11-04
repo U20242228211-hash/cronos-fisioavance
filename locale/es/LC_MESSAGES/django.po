@@ -1,0 +1,625 @@
+# Traducción de Cronos: lo que Unfold no trae en español y los meses en minúscula.
+# Después de editarlo: python manage.py compilemessages
+msgid ""
+msgstr ""
+"Project-Id-Version: Cronos\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Select record"
+msgstr "Seleccionar registro"
+
+msgid "Select action"
+msgstr "Seleccionar acción"
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Collapse"
+msgstr "Contraer"
+
+msgid "Name"
+msgstr "Nombre"
+
+msgid "Value"
+msgstr "Valor"
+
+msgid "Default"
+msgstr "Por defecto"
+
+msgid "Code"
+msgstr "Código"
+
+msgid "Current file"
+msgstr "Archivo actual"
+
+msgid "Reset to default"
+msgstr "Volver al valor por defecto"
+
+msgid "All"
+msgstr "Todos"
+
+msgid " By %(filter_title)s "
+msgstr " Por %(filter_title)s "
+
+msgid "Yes"
+msgstr "Sí"
+
+msgid "No"
+msgstr "No"
+
+msgid "From"
+msgstr "Desde"
+
+msgid "To"
+msgstr "Hasta"
+
+msgid "Date from"
+msgstr "Fecha desde"
+
+msgid "Time"
+msgstr "Hora"
+
+msgid "Date to"
+msgstr "Fecha hasta"
+
+msgid "Not enough data."
+msgstr "No hay datos suficientes."
+
+msgid "Add new item"
+msgstr "Agregar elemento"
+
+msgid "Group"
+msgstr "Grupo"
+
+msgid "Permissions"
+msgstr "Permisos"
+
+msgid "User"
+msgstr "Usuario"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Select format"
+msgstr "Seleccione el formato"
+
+msgid "Export"
+msgstr "Exportar"
+
+msgid "Import"
+msgstr "Importar"
+
+msgid "Submit"
+msgstr "Enviar"
+
+msgid "Delete"
+msgstr "Eliminar"
+
+msgid "Update"
+msgstr "Actualizar"
+
+msgid "%(class_name)s %(instance)s"
+msgstr "%(class_name)s %(instance)s"
+
+msgid "and"
+msgstr "y"
+
+msgid "Deleting %(class_name)s %(instance)s would require deleting the following protected related objects: %(related_objects)s"
+msgstr "Eliminar %(class_name)s %(instance)s obligaría a borrar estos registros protegidos: %(related_objects)s"
+
+msgid "Date/time"
+msgstr "Fecha y hora"
+
+msgid "Action"
+msgstr "Acción"
+
+msgid "This object doesn't have a change history. It probably wasn't added via this admin site."
+msgstr "Este registro no tiene historial de cambios. Probablemente no se creó desde este panel."
+
+msgid "Comment"
+msgstr "Comentario"
+
+msgid "previous"
+msgstr "anterior"
+
+msgid "next"
+msgstr "siguiente"
+
+msgid "Close"
+msgstr "Cerrar"
+
+msgid "Select action to run"
+msgstr "Seleccione la acción"
+
+msgid "Raw passwords are not stored, so there is no way to see this user’s password, but you can change the password using <a href=\"{}\" class=\"text-primary-600 dark:text-primary-500\">this form</a>."
+msgstr "Las contraseñas no se guardan como texto, así que no hay forma de ver la de este usuario, pero puede cambiarla con <a href=\"{}\" class=\"text-primary-600 dark:text-primary-500\">este formulario</a>."
+
+msgid "Items must be selected in order to perform actions on them. No items have been changed."
+msgstr "Seleccione al menos un registro para aplicarle la acción. No se cambió nada."
+
+msgid "Dataset not found. No action performed."
+msgstr "No se encontraron los datos. No se hizo nada."
+
+msgid "Select value"
+msgstr "Seleccione un valor"
+
+msgid "You can not create nested object without parent"
+msgstr "No se puede crear un registro anidado sin su registro principal"
+
+msgid "Run the selected action"
+msgstr "Ejecutar la acción seleccionada"
+
+msgid "Run"
+msgstr "Ejecutar"
+
+msgid "Click here to select the objects across all pages"
+msgstr "Clic aquí para seleccionar los registros de todas las páginas"
+
+msgid "Select all %(total_count)s %(module_name)s"
+msgstr "Seleccionar los %(total_count)s %(module_name)s"
+
+msgid "Clear selection"
+msgstr "Quitar la selección"
+
+msgid "Django site admin"
+msgstr "Administración"
+
+msgid "Models in the %(name)s application"
+msgstr "Modelos de la aplicación %(name)s"
+
+msgid "You don’t have permission to view or edit anything."
+msgstr "No tiene permiso para ver ni editar nada."
+
+msgid "After you've created a user, you’ll be able to edit more user options."
+msgstr "Después de crear el usuario podrá editar el resto de sus datos."
+
+msgid "Enter a new password for the user <strong>%(username)s</strong>."
+msgstr "Escriba una nueva contraseña para el usuario <strong>%(username)s</strong>."
+
+msgid "Change password"
+msgstr "Cambiar contraseña"
+
+msgid "History"
+msgstr "Historial"
+
+msgid "View on site"
+msgstr "Ver en el sitio"
+
+msgid "Deleting the %(object_name)s '%(escaped_object)s' would result in deleting related objects, but your account doesn't have permission to delete the following types of objects:"
+msgstr "Eliminar %(object_name)s «%(escaped_object)s» borraría registros relacionados, pero su cuenta no tiene permiso para eliminar estos tipos de registro:"
+
+msgid "Deleting the %(object_name)s '%(escaped_object)s' would require deleting the following protected related objects:"
+msgstr "Eliminar %(object_name)s «%(escaped_object)s» obligaría a borrar estos registros protegidos:"
+
+msgid "Are you sure you want to delete the %(object_name)s \"%(escaped_object)s\"? All of the following related items will be deleted:"
+msgstr "¿Seguro que quiere eliminar %(object_name)s «%(escaped_object)s»? También se eliminarán estos registros relacionados:"
+
+msgid "Objects"
+msgstr "Registros"
+
+msgid "Deleting the selected %(objects_name)s would result in deleting related objects, but your account doesn't have permission to delete the following types of objects:"
+msgstr "Eliminar los %(objects_name)s seleccionados borraría registros relacionados, pero su cuenta no tiene permiso para eliminar estos tipos de registro:"
+
+msgid "Deleting the selected %(objects_name)s would require deleting the following protected related objects:"
+msgstr "Eliminar los %(objects_name)s seleccionados obligaría a borrar estos registros protegidos:"
+
+msgid "Are you sure you want to delete the selected %(objects_name)s? All of the following objects and their related items will be deleted:"
+msgstr "¿Seguro que quiere eliminar los %(objects_name)s seleccionados? Se eliminarán estos registros y los relacionados con ellos:"
+
+msgid "Summary"
+msgstr "Resumen"
+
+msgid "Welcome back to"
+msgstr "Bienvenido de nuevo a"
+
+msgid "You are authenticated as %(username)s, but are not authorized to access this page. Would you like to login to a different account?"
+msgstr "Entró como %(username)s, pero no tiene permiso para ver esta página. ¿Quiere entrar con otra cuenta?"
+
+msgid "Log in"
+msgstr "Entrar"
+
+msgid "Forgotten your password or username?"
+msgstr "¿Olvidó su contraseña o su usuario?"
+
+msgid "This object doesn’t have a change history. It probably wasn’t added via this admin site."
+msgstr "Este registro no tiene historial de cambios. Probablemente no se creó desde este panel."
+
+msgid "Show all"
+msgstr "Mostrar todo"
+
+msgid "Type to search"
+msgstr "Escriba para buscar"
+
+msgid "Save and continue editing"
+msgstr "Guardar y seguir editando"
+
+msgid "Save and view"
+msgstr "Guardar y ver"
+
+msgid "Save and add another"
+msgstr "Guardar y agregar otro"
+
+msgid "Save as new"
+msgstr "Guardar como nuevo"
+
+msgid "You have been successfully logged out from the administration"
+msgstr "Salió del panel correctamente"
+
+msgid "Thanks for spending some quality time with the web site today."
+msgstr "Gracias por su tiempo."
+
+msgid "Log in again"
+msgstr "Entrar de nuevo"
+
+msgid "Your password was changed."
+msgstr "Su contraseña se cambió."
+
+msgid "Please enter your old password, for security’s sake, and then enter your new password twice so we can verify you typed it in correctly."
+msgstr "Por seguridad, escriba su contraseña actual y luego la nueva dos veces, para confirmar que quedó bien escrita."
+
+msgid "No data"
+msgstr "Sin datos"
+
+msgid "View site"
+msgstr "Ver el sitio"
+
+msgid "Log out"
+msgstr "Salir"
+
+msgid "Add %(name)s"
+msgstr "Agregar %(name)s"
+
+msgid "All applications"
+msgstr "Todas las secciones"
+
+msgid "View"
+msgstr "Ver"
+
+msgid "Change"
+msgstr "Modificar"
+
+msgid "Add"
+msgstr "Agregar"
+
+msgid "Unknown"
+msgstr "Desconocido"
+
+msgid "True"
+msgstr "Sí"
+
+msgid "False"
+msgstr "No"
+
+msgid "Apply Filters"
+msgstr "Aplicar filtros"
+
+msgid "Hide counts"
+msgstr "Ocultar conteos"
+
+msgid "Show counts"
+msgstr "Mostrar conteos"
+
+msgid "Clear all filters"
+msgstr "Quitar todos los filtros"
+
+msgid "Filters"
+msgstr "Filtros"
+
+msgid "Toggle sorting"
+msgstr "Cambiar el orden"
+
+msgid "Remove from sorting"
+msgstr "Quitar del orden"
+
+msgid "Sorting priority: %(priority_number)s"
+msgstr "Prioridad de orden: %(priority_number)s"
+
+msgid "Navigate"
+msgstr "Moverse"
+
+msgid "Select"
+msgstr "Seleccionar"
+
+msgid "Clear"
+msgstr "Limpiar"
+
+msgid "Recent searches"
+msgstr "Búsquedas recientes"
+
+msgid "Nothing matched your search"
+msgstr "No hay nada que coincida con la búsqueda"
+
+msgid "\n            Found <span class=\"font-medium text-important\">%(counter)s</span> result in %(time)s seconds\n        "
+msgid_plural "\n            Found <span class=\"font-medium text-important\">%(counter)s</span> results in %(time)s seconds\n        "
+msgstr[0] "\n            Se encontró <span class=\"font-medium text-important\">%(counter)s</span> resultado en %(time)s segundos\n        "
+msgstr[1] "\n            Se encontraron <span class=\"font-medium text-important\">%(counter)s</span> resultados en %(time)s segundos\n        "
+
+msgid "No, take me back"
+msgstr "No, volver"
+
+msgid "Yes, I’m sure"
+msgstr "Sí, estoy seguro"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Record picture"
+msgstr "Tomar foto"
+
+msgid "This item will be deleted."
+msgstr "Este elemento se eliminará."
+
+msgid "Click to cancel"
+msgstr "Clic para cancelar"
+
+msgid "No results found"
+msgstr "No se encontraron resultados"
+
+msgid "This page yielded into no results."
+msgstr "Esta página no tiene resultados."
+
+msgid "Reset filters"
+msgstr "Quitar filtros"
+
+msgid "Image preview"
+msgstr "Vista previa de la imagen"
+
+msgid "Click to download"
+msgstr "Clic para descargar"
+
+msgid "Go back"
+msgstr "Volver"
+
+msgid "Recent actions"
+msgstr "Acciones recientes"
+
+msgid "Unknown content"
+msgstr "Contenido desconocido"
+
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] "Corrija el error que aparece abajo."
+msgstr[1] "Corrija los errores que aparecen abajo."
+
+msgid "Previous"
+msgstr "Anterior"
+
+msgid "Next"
+msgstr "Siguiente"
+
+msgid "Search apps and models..."
+msgstr "Buscar en el panel..."
+
+msgid "Available shortcuts"
+msgstr "Atajos disponibles"
+
+msgid "Global shortcuts"
+msgstr "Atajos generales"
+
+msgid "Open command tool"
+msgstr "Abrir la búsqueda rápida"
+
+msgid "Open shortcuts list"
+msgstr "Ver los atajos"
+
+msgid "Toggle sidebar"
+msgstr "Mostrar u ocultar el menú"
+
+msgid "Toggle dark/light mode"
+msgstr "Cambiar entre modo claro y oscuro"
+
+msgid "Changelist shortcuts"
+msgstr "Atajos de las listas"
+
+msgid "Toggle filter"
+msgstr "Mostrar u ocultar los filtros"
+
+msgid "Create new record"
+msgstr "Crear registro"
+
+msgid "Command tool shortcuts"
+msgstr "Atajos de la búsqueda rápida"
+
+msgid "Open selection"
+msgstr "Abrir la selección"
+
+msgid "Open selection in new tab"
+msgstr "Abrir la selección en otra pestaña"
+
+msgid "Django administration"
+msgstr "Administración"
+
+msgid "Home"
+msgstr "Inicio"
+
+msgid "General"
+msgstr "General"
+
+msgid "Light"
+msgstr "Claro"
+
+msgid "Dark"
+msgstr "Oscuro"
+
+msgid "System"
+msgstr "Sistema"
+
+msgid "Return to site"
+msgstr "Volver al sitio"
+
+msgid "%(counter)s result"
+msgid_plural "%(counter)s results"
+msgstr[0] "%(counter)s resultado"
+msgstr[1] "%(counter)s resultados"
+
+msgid "%(full_result_count)s total"
+msgstr "%(full_result_count)s en total"
+
+msgid "Choose file to upload"
+msgstr "Escoja el archivo"
+
+msgid "Toggle password visibility"
+msgstr "Mostrar u ocultar la contraseña"
+
+msgid "Change selected %(model)s"
+msgstr "Modificar %(model)s seleccionado"
+
+msgid "Add another %(model)s"
+msgstr "Agregar otro %(model)s"
+
+msgid "View selected %(model)s"
+msgstr "Ver %(model)s seleccionado"
+
+msgid "Delete selected %(model)s"
+msgstr "Eliminar %(model)s seleccionado"
+
+msgid "Add row"
+msgstr "Agregar fila"
+
+msgid "Welcome"
+msgstr "Bienvenido"
+
+msgid "Select all objects on this page for an action"
+msgstr "Seleccionar todos los registros de esta página"
+
+msgid "Date"
+msgstr "Fecha"
+
+msgid "Select currency"
+msgstr "Seleccione la moneda"
+
+msgid "January"
+msgstr "enero"
+
+msgctxt "alt. month"
+msgid "January"
+msgstr "enero"
+
+msgid "February"
+msgstr "febrero"
+
+msgctxt "alt. month"
+msgid "February"
+msgstr "febrero"
+
+msgid "March"
+msgstr "marzo"
+
+msgctxt "alt. month"
+msgid "March"
+msgstr "marzo"
+
+msgid "April"
+msgstr "abril"
+
+msgctxt "alt. month"
+msgid "April"
+msgstr "abril"
+
+msgid "May"
+msgstr "mayo"
+
+msgctxt "alt. month"
+msgid "May"
+msgstr "mayo"
+
+msgid "June"
+msgstr "junio"
+
+msgctxt "alt. month"
+msgid "June"
+msgstr "junio"
+
+msgid "July"
+msgstr "julio"
+
+msgctxt "alt. month"
+msgid "July"
+msgstr "julio"
+
+msgid "August"
+msgstr "agosto"
+
+msgctxt "alt. month"
+msgid "August"
+msgstr "agosto"
+
+msgid "September"
+msgstr "septiembre"
+
+msgctxt "alt. month"
+msgid "September"
+msgstr "septiembre"
+
+msgid "October"
+msgstr "octubre"
+
+msgctxt "alt. month"
+msgid "October"
+msgstr "octubre"
+
+msgid "November"
+msgstr "noviembre"
+
+msgctxt "alt. month"
+msgid "November"
+msgstr "noviembre"
+
+msgid "December"
+msgstr "diciembre"
+
+msgctxt "alt. month"
+msgid "December"
+msgstr "diciembre"
+
+msgctxt "abbrev. month"
+msgid "Jan."
+msgstr "ene."
+
+msgctxt "abbrev. month"
+msgid "Feb."
+msgstr "feb."
+
+msgctxt "abbrev. month"
+msgid "March"
+msgstr "marzo"
+
+msgctxt "abbrev. month"
+msgid "April"
+msgstr "abril"
+
+msgctxt "abbrev. month"
+msgid "May"
+msgstr "mayo"
+
+msgctxt "abbrev. month"
+msgid "June"
+msgstr "junio"
+
+msgctxt "abbrev. month"
+msgid "July"
+msgstr "julio"
+
+msgctxt "abbrev. month"
+msgid "Aug."
+msgstr "ago."
+
+msgctxt "abbrev. month"
+msgid "Sept."
+msgstr "sept."
+
+msgctxt "abbrev. month"
+msgid "Oct."
+msgstr "oct."
+
+msgctxt "abbrev. month"
+msgid "Nov."
+msgstr "nov."
+
+msgctxt "abbrev. month"
+msgid "Dec."
+msgstr "dic."

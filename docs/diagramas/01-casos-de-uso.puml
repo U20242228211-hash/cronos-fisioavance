@@ -1,0 +1,52 @@
+@startuml
+!pragma layout smetana
+!include _estilo.iuml
+left to right direction
+title Casos de uso de Cronos
+
+actor "Paciente o acudiente" as P
+actor "Recepción" as R
+actor "Atención al usuario\n(Diana)" as G
+actor "Dirección\n(representante legal)" as D
+actor "Administrador\nde la plataforma" as A
+actor "Reloj del sistema\n(tarea cada hora)" as T
+G <|-- D
+
+rectangle "Cronos" {
+  usecase "Radicar una PQRSF\nsin crear cuenta" as UC1
+  usecase "Autorizar el\ntratamiento de datos" as UC1b
+  usecase "Consultar el estado\ncon el radicado" as UC2
+  usecase "Responder la encuesta\nde satisfacción" as UC3
+  usecase "Ver los avisos\npublicados" as UC4
+  usecase "Registrar lo del buzón,\nen persona o por correo" as UC5
+  usecase "Enviar invitación\na la encuesta" as UC6
+  usecase "Confirmar la clasificación\ny el término" as UC7
+  usecase "Asignar responsable\ny agregar notas" as UC8
+  usecase "Responder y enviar por\nWhatsApp o correo" as UC9
+  usecase "Cerrar o reabrir\nel caso" as UC10
+  usecase "Ver tablero, reportes\ny descargar Excel" as UC11
+  usecase "Revisar encuestas con\nmala calificación" as UC12
+  usecase "Imprimir carteles con QR\ny avisos para la cartelera" as UC13
+  usecase "Configurar institución,\nservicios, usuarios y\ntérminos propios" as UC14
+  usecase "Dar de alta una\ninstitución nueva" as UC15
+  usecase "Revisar vencimientos:\nalertas 50 % y 80 %\ny escalamiento" as UC16
+}
+P --> UC1
+UC1 .> UC1b : <<include>>
+P --> UC2
+P --> UC3
+P --> UC4
+R --> UC5
+R --> UC6
+G --> UC7
+G --> UC8
+G --> UC9
+G --> UC10
+G --> UC11
+G --> UC12
+G --> UC13
+G --> UC6
+D --> UC14
+A --> UC15
+T --> UC16
+@enduml

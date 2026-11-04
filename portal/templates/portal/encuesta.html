@@ -40,7 +40,7 @@
         {% endfor %}
       </div>
     {% endif %}
-    <button type="button" class="enlace-discreto" data-atras style="justify-self:center">Volver a la anterior</button>
+    {% if not invitacion or not forloop.first %}<button type="button" class="enlace-discreto" data-atras style="justify-self:center">Volver a la anterior</button>{% endif %}
   </section>
   {% endfor %}
 

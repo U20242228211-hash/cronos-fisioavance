@@ -1,0 +1,20 @@
+@startuml
+!include _estilo.iuml
+title Estados de una PQRSF
+hide empty description
+[*] --> Radicada : radicar()
+Radicada --> EnTramite : clasificar() o asignar()
+EnTramite --> EnTramite : nota(), alerta 50 %/80 %,\nescalamiento si vence
+Radicada --> Respondida : responder()
+EnTramite --> Respondida : responder()
+Respondida --> Respondida : comunicar() o publicar aviso
+Respondida --> Cerrada : cerrar()
+Cerrada --> EnTramite : reabrir()
+Cerrada --> [*]
+state "En trámite" as EnTramite
+note right of EnTramite
+  «Vencida» no es un estado:
+  es lo que muestra el semáforo
+  cuando pasa el término sin respuesta.
+end note
+@enduml

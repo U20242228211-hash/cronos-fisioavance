@@ -1,0 +1,25 @@
+@startuml
+!include _estilo.iuml
+title Secuencia: el paciente radica una PQRSF por el código QR
+autonumber
+actor "Paciente" as P
+participant "Portal\n(formulario de 3 pasos)" as F
+participant "servicios.radicar()" as S
+participant "Motor de términos\n(plazos.py)" as M
+database "Base de datos" as BD
+participant "Notificaciones" as N
+actor "Atención al usuario" as G
+
+P -> F : escanea el QR de la sede\n(/fisioavance/pqrsf/?canal=qr)
+F --> P : paso 1: qué pasó · paso 2: sus datos\npaso 3: medio de respuesta y autorización
+P -> F : envía el formulario
+F -> F : valida (datos obligatorios,\ncelular si pide WhatsApp, autorización)
+F -> S : radicar(PQRSF, canal = web)
+S -> S : propone tema principal y clasificación\n(riesgo vital, 8 h si es niño, priorizado, simple)
+S -> M : calcular_vencimiento(recibida, regla de la norma)
+M --> S : vence (horas corridas o días hábiles con festivos)
+S -> BD : guarda la PQRSF con radicado FIS-2026-000NN\ny la actuación «Radicación» (histórico inmutable)
+S -> N : al confirmar la transacción
+N -> G : correo «Nueva queja FIS-2026-000NN, vence …»
+F --> P : constancia: radicado, fecha y hora,\nfecha límite de respuesta y enlace para consultar
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+!include _estilo.iuml
+title Despliegue: dos opciones con el dominio de la IPS
+
+node "Celular o computador\ndel paciente y del equipo" as Cliente {
+  [Navegador web] as Nav
+}
+node "Opción A · Hosting actual de la IPS\n(Colombia Hosting, cPanel)" as Cp {
+  node "LiteSpeed + Passenger" {
+    [Cronos (passenger_wsgi.py)] as App1
+  }
+  database "MySQL" as My
+  [Cron de cPanel\n(cada hora)] as Cr1
+  [WordPress de la IPS\n(sitio actual, sin cambios)] as WP
+}
+node "Opción B · Servidor propio (VPS)" as Vps {
+  node "Docker" {
+    [Proxy HTTPS] as Px
+    [Cronos (gunicorn)] as App2
+    database "PostgreSQL" as Pg
+  }
+}
+cloud "DNS de fisioavanceips.com" as DNS
+Nav --> DNS : pqrsf.fisioavanceips.com
+DNS --> App1 : opción A
+DNS --> Px : opción B (registro A)
+Px --> App2
+App1 --> My
+App2 --> Pg
+Cr1 --> App1
+WP ..> App1 : botón «PQRSF» en el sitio
+@enduml

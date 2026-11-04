@@ -1,0 +1,27 @@
+@startuml
+!include _estilo.iuml
+title Secuencia: atención al usuario responde y el paciente consulta
+autonumber
+actor "Atención al usuario\n(Diana)" as G
+participant "Panel\n(bandeja con semáforo)" as A
+participant "servicios" as S
+database "Base de datos" as BD
+participant "WhatsApp\n(enlace wa.me)" as W
+actor "Paciente" as P
+participant "Portal\n(consulta del caso)" as C
+
+G -> A : abre el caso que va «por vencer»
+G -> A : confirma la clasificación, escribe la respuesta\ny la acción realizada, y guarda
+A -> S : clasificar() · responder()
+S -> BD : recalcula el término, guarda la respuesta\ny deja «Clasificación» y «Respuesta» en el histórico
+G -> A : botón «Enviar respuesta por WhatsApp»
+A -> S : comunicar(medio = WhatsApp)
+S -> BD : actuación «Respuesta comunicada»
+A -> W : abre el chat con el mensaje ya escrito\n(solo el aviso y el enlace, sin datos de salud)
+W -> P : «Ya está la respuesta a su reclamo FIS-2026-000NN: <enlace>»
+P -> C : abre el enlace
+C -> BD : busca el caso por su token
+C --> P : respuesta fechada, advertencia de la Supersalud\ny línea de tiempo del caso
+G -> A : «Cerrar caso»
+A -> S : cerrar() → actuación «Cierre»
+@enduml

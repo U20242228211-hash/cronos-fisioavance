@@ -9,13 +9,13 @@
   <dl class="datos">
     <dt>Tipo</dt><dd>{{ pqrsf.get_tipo_display }}</dd>
     <dt>Servicio</dt><dd>{{ pqrsf.servicio|default:"—" }}</dd>
-    <dt>Recibida</dt><dd>{{ pqrsf.recibida_en|date:"j \d\e F \d\e Y, g:i a" }}</dd>
-    {% if pqrsf.abierta and pqrsf.vence_en %}<dt>Respuesta a más tardar</dt><dd>{{ pqrsf.vence_en|date:"j \d\e F \d\e Y, g:i a" }}</dd>{% endif %}
+    <dt>Recibida</dt><dd>{{ pqrsf.recibida_en|date:"j \d\e F \d\e Y, g:i a"|lower }}</dd>
+    {% if pqrsf.abierta and pqrsf.vence_en %}<dt>Respuesta a más tardar</dt><dd>{{ pqrsf.vence_en|date:"j \d\e F \d\e Y, g:i a"|lower }}</dd>{% endif %}
   </dl>
   {% if pqrsf.respuesta and not pqrsf.abierta %}
     <div style="display:grid;gap:8px">
       <h2>Nuestra respuesta</h2>
-      <span class="ayuda" style="color:var(--tenue);font-size:.9rem">{{ institucion.municipio|default:"" }}{% if institucion.municipio %}, {% endif %}{{ pqrsf.respondida_en|date:"j \d\e F \d\e Y" }}</span>
+      <span class="ayuda" style="color:var(--tenue);font-size:.9rem">{{ institucion.municipio|default:"" }}{% if institucion.municipio %}, {% endif %}{{ pqrsf.respondida_en|date:"j \d\e F \d\e Y"|lower }}</span>
       <div class="respuesta">{{ pqrsf.respuesta }}</div>
       <div class="alerta"><b>Importante:</b> {{ institucion.advertencia_respuesta }}</div>
     </div>
@@ -25,7 +25,7 @@
   <h2>Lo que ha pasado con su caso</h2>
   <ol class="linea">
     {% for a in actuaciones %}
-      <li><b>{{ a.get_tipo_display }}</b><time>{{ a.fecha|date:"j M Y, g:i a" }}</time>{% if a.tipo != "radicacion" %}<span>{{ a.descripcion }}</span>{% endif %}</li>
+      <li><b>{{ a.get_tipo_display }}</b><time>{{ a.fecha|date:"j M Y, g:i a"|lower }}</time>{% if a.tipo != "radicacion" %}<span>{{ a.descripcion }}</span>{% endif %}</li>
     {% endfor %}
   </ol>
 </section>

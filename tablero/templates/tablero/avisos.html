@@ -24,7 +24,7 @@
   {% for p in avisos %}
     <article class="aviso {% if p.aviso_hasta < hoy %}vencido{% endif %}">
       <h1>Aviso · {{ p.get_tipo_display }} {{ p.radicado }}</h1>
-      <div class="meta">{{ institucion.nombre }} · Atención al usuario. Publicado del {{ p.aviso_desde|date:"j \d\e F" }} al {{ p.aviso_hasta|date:"j \d\e F \d\e Y" }}{% if p.aviso_hasta < hoy %} (ya terminó){% endif %}.</div>
+      <div class="meta">{{ institucion.nombre }} · Atención al usuario. Publicado del {{ p.aviso_desde|date:"j \d\e F"|lower }} al {{ p.aviso_hasta|date:"j \d\e F \d\e Y"|lower }}{% if p.aviso_hasta < hoy %} (ya terminó){% endif %}.</div>
       <p>Se informa la respuesta a la {{ p.get_tipo_display|lower }} recibida el {{ p.recibida_en|date:"j \d\e F \d\e Y" }} sin datos de contacto (Ley 1437 de 2011, artículo 69):</p>
       <div class="texto">{{ p.respuesta }}</div>
     </article>

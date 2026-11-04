@@ -47,7 +47,9 @@ h1 { font-size: 1.85rem; line-height: 1.15; margin: 0; letter-spacing: -.01em; t
 h2 { font-size: 1.3rem; margin: 0; text-wrap: balance; }
 .entrada { color: var(--tenue); margin: 0; max-width: 60ch; }
 
-.tarjeta { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: var(--radio); padding: 22px; display: grid; gap: 16px; }
+.tarjeta { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: var(--radio); padding: 22px; display: grid; gap: 16px; min-width: 0; }
+fieldset { min-width: 0; }
+.paso, .campo, .tipos, .tipo-opcion > span { min-width: 0; }
 
 .menu { display: grid; gap: 14px; }
 .opcion-grande { display: flex; align-items: center; gap: 18px; padding: 22px; background: var(--tarjeta); border: 2px solid var(--borde); border-radius: var(--radio); text-decoration: none; color: inherit; transition: border-color .15s, transform .15s; }
@@ -135,6 +137,11 @@ input[type=file] { font: inherit; }
 .pie .dentro { display: grid; gap: 4px; padding-block: 18px 24px; }
 .pie a { color: inherit; }
 
+@media (max-width: 520px) {
+  .datos { grid-template-columns: 1fr; gap: 2px; }
+  .datos dd { margin-bottom: 10px; }
+  .tarjeta { padding: 18px; }
+}
 @media (max-width: 420px) {
   body { font-size: 17px; }
   h1 { font-size: 1.6rem; }

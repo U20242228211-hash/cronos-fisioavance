@@ -57,7 +57,11 @@ def proponer_motivo(descripcion):
     return "otro"
 
 
-def proponer_clasificacion(tipo, descripcion, condicion=PQRSF.Condicion.NINGUNA, es_nna=False):
+# Temas en los que una queja en realidad es sobre la prestación del servicio: se trata como reclamo
+MOTIVOS_DE_ATENCION = {"atencion", "acceso", "oportunidad"}
+
+
+def proponer_clasificacion(tipo, descripcion, condicion=PQRSF.Condicion.NINGUNA, es_nna=False, motivo=None):
     """Propone la clasificación con reglas simples. Siempre la confirma un funcionario: no reemplaza su criterio."""
     texto = (descripcion or "").lower()
     es_nna = es_nna or condicion == PQRSF.Condicion.MENOR
@@ -70,7 +74,9 @@ def proponer_clasificacion(tipo, descripcion, condicion=PQRSF.Condicion.NINGUNA,
             return Clasificacion.VITAL
         if priorizado:
             return Clasificacion.PRIORIZADO
-        return Clasificacion.SIMPLE if tipo == Tipo.RECLAMO else Clasificacion.GENERAL
+        if tipo == Tipo.RECLAMO or (motivo or proponer_motivo(texto)) in MOTIVOS_DE_ATENCION:
+            return Clasificacion.SIMPLE
+        return Clasificacion.GENERAL
     if tipo == Tipo.PETICION:
         if any(p in texto for p in PALABRAS_COPIAS):
             return Clasificacion.COPIAS
@@ -105,13 +111,13 @@ def radicar(pqrsf, usuario=None):
             setattr(pqrsf, campo, "")
         pqrsf.fecha_nacimiento = None
         pqrsf.medio_respuesta = PQRSF.MedioRespuesta.AVISO
+    if not pqrsf.motivo:
+        pqrsf.motivo = proponer_motivo(pqrsf.descripcion)
     pqrsf.clasificacion_propuesta = proponer_clasificacion(
-        pqrsf.tipo, pqrsf.descripcion, pqrsf.condicion_especial, pqrsf.es_nna
+        pqrsf.tipo, pqrsf.descripcion, pqrsf.condicion_especial, pqrsf.es_nna, pqrsf.motivo
     )
     if not pqrsf.clasificacion:
         pqrsf.clasificacion = pqrsf.clasificacion_propuesta
-    if not pqrsf.motivo:
-        pqrsf.motivo = proponer_motivo(pqrsf.descripcion)
     if pqrsf.municipio and not pqrsf.departamento:
         pqrsf.departamento = pqrsf.institucion.departamento
     if pqrsf.autoriza_datos and not pqrsf.autorizacion_en:

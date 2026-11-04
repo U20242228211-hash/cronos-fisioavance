@@ -81,6 +81,8 @@ def test_consultar_con_radicado_y_documento(client, institucion, datos_paciente)
         ("R", "Mi hijo tiene asma y no tuvo su sesión", "menor", "vital_nna"),
         ("Q", "Tengo mucho dolor y nadie me llama", "ninguna", "priorizado"),
         ("Q", "Pongan papel en el baño", "ninguna", "general"),
+        ("Q", "La recepcionista me habló de mala manera", "ninguna", "general"),
+        ("Q", "El fisioterapeuta no me explicó el tratamiento", "ninguna", "simple"),
         ("P", "Quisiera saber si atienden los sábados", "ninguna", "consulta"),
         ("S", "Pongan más sillas", "ninguna", "general"),
     ],

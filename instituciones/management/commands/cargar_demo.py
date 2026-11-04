@@ -191,8 +191,8 @@ class Command(BaseCommand):
             pqrsf.aseguradora = aseguradora
         if pqrsf.autoriza_datos:
             pqrsf.autorizacion_en = recibida
-        pqrsf.clasificacion_propuesta = proponer_clasificacion(tipo, texto, condicion, pqrsf.es_nna)
         pqrsf.motivo = proponer_motivo(texto)
+        pqrsf.clasificacion_propuesta = proponer_clasificacion(tipo, texto, condicion, pqrsf.es_nna, pqrsf.motivo)
         pqrsf.clasificacion = pqrsf.clasificacion_propuesta
         pqrsf.recalcular_vencimiento()
         pqrsf.save()
@@ -241,7 +241,7 @@ class Command(BaseCommand):
         abiertos = [
             (("R", "Tecarterapia", "Me suspendieron la terapia porque dicen que la orden está vencida, pero el médico la renovó la semana pasada. Tengo mucho dolor.", "ninguna", "whatsapp", False), ahora - timedelta(hours=40), True),
             (("R", "Fisioterapia", "Llevo dos semanas esperando que me asignen las sesiones que faltan de mi tratamiento.", "ninguna", "web", False), ahora - timedelta(hours=80), True),
-            (("Q", "Fisiatría", "El especialista me atendió muy rápido y no me explicó el tratamiento.", "ninguna", "web", False), _hace_dias_habiles(8), True),
+            (("Q", "Fisiatría", "El auxiliar de recepción fue grosero cuando pregunté por mi cita y no me quiso decir su nombre.", "ninguna", "web", False), _hace_dias_habiles(8), True),
             (("P", "Fisioterapia", "Necesito un certificado de las terapias que he recibido para mi incapacidad.", "ninguna", "tableta", False), ahora - timedelta(hours=20), False),
             (("S", "Terapia ocupacional", "Podrían tener una rampa en la entrada para las personas en silla de ruedas.", "discapacidad", "buzon", False), ahora - timedelta(hours=3), False),
             (("R", "Fisioterapia", "Mi hijo de 9 años tiene asma y hoy lo dejaron sin la sesión que le ordenaron porque no había profesional.", "menor", "web", False), ahora - timedelta(hours=2), False),

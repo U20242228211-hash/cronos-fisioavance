@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib import admin, messages
-from django.db.models import Case, IntegerField, Value, When
+from django.db.models import F
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
@@ -168,15 +168,11 @@ class PQRSFAdmin(PorInstitucionAdmin):
         return campos
 
     def get_queryset(self, request):
-        abierta = Case(When(estado__in=ABIERTAS, then=Value(0)), default=Value(1), output_field=IntegerField())
-        return (
-            super().get_queryset(request)
-            .select_related("servicio", "asignada_a", "institucion")
-            .annotate(cerrada_orden=abierta)
-        )
+        return super().get_queryset(request).select_related("servicio", "asignada_a", "institucion")
 
     def get_ordering(self, request):
-        return ["cerrada_orden", "vence_en", "-recibida_en"]
+        # Primero lo que no tiene respuesta, de lo que vence antes a lo que vence después
+        return [F("respondida_en").desc(nulls_first=True), "vence_en"]
 
     def get_changeform_initial_data(self, request):
         datos = super().get_changeform_initial_data(request)

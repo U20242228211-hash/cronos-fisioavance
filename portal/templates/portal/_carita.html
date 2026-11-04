@@ -1,0 +1,5 @@
+<svg viewBox="0 0 64 64" aria-hidden="true">
+  <circle cx="32" cy="32" r="30" fill="{% if valor == 5 %}#12b76a{% elif valor == 4 %}#7cc91f{% elif valor == 3 %}#f5b301{% elif valor == 2 %}#f79009{% else %}#f04438{% endif %}"/>
+  <circle cx="23" cy="26" r="3.6" fill="#1b2420"/><circle cx="41" cy="26" r="3.6" fill="#1b2420"/>
+  <path d="{% if valor == 5 %}M19 38 Q32 54 45 38{% elif valor == 4 %}M21 40 Q32 49 43 40{% elif valor == 3 %}M22 44 L42 44{% elif valor == 2 %}M21 47 Q32 39 43 47{% else %}M19 49 Q32 35 45 49{% endif %}" stroke="#1b2420" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+</svg>

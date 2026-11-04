@@ -1,0 +1,93 @@
+{% extends 'admin/base.html' %}
+{% load i18n unfold %}
+
+{% block title %}Tablero | Cronos{% endblock %}
+{% block branding %}{% include "unfold/helpers/site_branding.html" %}{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+{% if sin_tablero %}
+  <div class="cr-vacio">
+    <h1 class="cr-titulo">Hola, {{ request.user.first_name|default:request.user.username }}</h1>
+    <p>Use el menú de la izquierda para registrar una PQRSF del buzón o enviar una encuesta.</p>
+  </div>
+{% else %}
+<div class="cr-tablero">
+  <div class="cr-cabeza">
+    <div>
+      <h1 class="cr-titulo">{{ institucion.nombre }}</h1>
+      <p class="cr-sub">Atención al usuario · hoy {% now "j \d\e F \d\e Y" %}</p>
+    </div>
+    <div class="cr-acciones">
+      <a class="cr-boton" href="{{ url_bandeja }}?estado__exact=radicada">Ver las que llegaron</a>
+      <a class="cr-boton cr-boton-claro" href="{{ url_portal }}" target="_blank">Abrir el portal del paciente</a>
+    </div>
+  </div>
+
+  <div class="cr-kpis">
+    <a class="cr-kpi" href="{{ url_bandeja }}?estado__in=radicada,en_tramite">
+      <span class="cr-kpi-etq">Abiertas</span><span class="cr-kpi-num">{{ kpi.abiertas }}</span><span class="cr-kpi-pie">{{ kpi.sin_confirmar }} por confirmar la clasificación</span>
+    </a>
+    <a class="cr-kpi {% if kpi.por_vencer %}cr-alerta{% endif %}" href="{{ url_bandeja }}">
+      <span class="cr-kpi-etq">Por vencer</span><span class="cr-kpi-num">{{ kpi.por_vencer }}</span><span class="cr-kpi-pie">pasaron el 80 % del término</span>
+    </a>
+    <a class="cr-kpi {% if kpi.vencidas %}cr-peligro{% endif %}" href="{{ url_bandeja }}">
+      <span class="cr-kpi-etq">Vencidas</span><span class="cr-kpi-num">{{ kpi.vencidas }}</span><span class="cr-kpi-pie">ya se pasó el término</span>
+    </a>
+    <div class="cr-kpi">
+      <span class="cr-kpi-etq">Respondidas a tiempo</span><span class="cr-kpi-num">{% if kpi.oportunidad is not None %}{{ kpi.oportunidad }} %{% else %}—{% endif %}</span><span class="cr-kpi-pie">últimos 90 días{% if kpi.dias_promedio is not None %} · {{ kpi.dias_promedio }} días hábiles en promedio{% endif %}</span>
+    </div>
+    <div class="cr-kpi">
+      <span class="cr-kpi-etq">Satisfacción global</span><span class="cr-kpi-num">{% if kpi.satisfaccion is not None %}{{ kpi.satisfaccion }} %{% else %}—{% endif %}</span><span class="cr-kpi-pie">últimos 30 días · {{ kpi.encuestas_mes }} encuestas</span>
+    </div>
+    <div class="cr-kpi">
+      <span class="cr-kpi-etq">Recomendaría la IPS</span><span class="cr-kpi-num">{% if kpi.recomendacion is not None %}{{ kpi.recomendacion }} %{% else %}—{% endif %}</span><span class="cr-kpi-pie">últimos 30 días · Resolución 256 de 2016</span>
+    </div>
+  </div>
+
+  <div class="cr-dos">
+    {% component "unfold/components/card.html" with title="Lo que hay que atender primero" description="Abiertas, de la que vence antes a la que vence después" %}
+      {% if atender %}
+      <table class="cr-tabla">
+        <thead><tr><th>Radicado</th><th>Tipo</th><th>Servicio</th><th>Vence</th><th>Término</th></tr></thead>
+        <tbody>
+        {% for p in atender %}
+          <tr>
+            <td><a href="{% url 'admin:pqrsf_pqrsf_change' p.pk %}">{{ p.radicado }}</a></td>
+            <td>{{ p.get_tipo_display }}{% if not p.clasificacion_confirmada %} <span class="cr-mini">por confirmar</span>{% endif %}</td>
+            <td>{{ p.servicio|default:"—" }}</td>
+            <td>{{ p.vence_en|date:"d/m g:i a" }}</td>
+            <td><span class="cr-luz cr-{{ p.luz }}">{% if p.luz == "vencida" %}Vencida{% else %}{{ p.pct|floatformat:0 }} %{% endif %}</span></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <p class="cr-sub">No hay PQRSF abiertas. ¡Todo al día!</p>
+      {% endif %}
+    {% endcomponent %}
+
+    {% component "unfold/components/card.html" with title="Encuestas con mala calificación" description="Sin revisar todavía" %}
+      {% if malas_sin_revisar %}
+      <ul class="cr-lista">
+        {% for r in malas_sin_revisar %}
+          <li><a href="{% url 'admin:encuestas_respuestaencuesta_change' r.pk %}"><b>{{ r.servicio|default:"Sin servicio" }}</b> · {{ r.respondida_en|date:"d/m g:i a" }}</a><span>{{ r.comentario|default:"Sin comentario"|truncatechars:90 }}</span></li>
+        {% endfor %}
+      </ul>
+      {% else %}
+        <p class="cr-sub">No hay encuestas malas por revisar.</p>
+      {% endif %}
+    {% endcomponent %}
+  </div>
+
+  <div class="cr-dos">
+    {% component "unfold/components/card.html" with title="PQRSF por mes" description="Últimos 6 meses, por tipo" %}
+      {% component "unfold/components/chart/bar.html" with data=grafica_pqrsf options=opciones_barras height=280 %}{% endcomponent %}
+    {% endcomponent %}
+    {% component "unfold/components/card.html" with title="Satisfacción por mes" description="Indicadores de la Resolución 256 de 2016" %}
+      {% component "unfold/components/chart/line.html" with data=grafica_satisfaccion options=opciones_lineas height=280 %}{% endcomponent %}
+    {% endcomponent %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}

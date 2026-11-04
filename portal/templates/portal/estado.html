@@ -1,0 +1,32 @@
+{% extends "portal/base.html" %}
+{% block titulo %}Caso {{ pqrsf.radicado }}{% endblock %}
+{% block contenido %}
+<section class="tarjeta">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+    <p class="radicado" style="font-size:1.6rem">{{ pqrsf.radicado }}</p>
+    <span class="chip {{ pqrsf.estado }}">{{ pqrsf.get_estado_display }}</span>
+  </div>
+  <dl class="datos">
+    <dt>Tipo</dt><dd>{{ pqrsf.get_tipo_display }}</dd>
+    <dt>Servicio</dt><dd>{{ pqrsf.servicio|default:"—" }}</dd>
+    <dt>Recibida</dt><dd>{{ pqrsf.recibida_en|date:"j \d\e F \d\e Y, g:i a" }}</dd>
+    {% if pqrsf.abierta and pqrsf.vence_en %}<dt>Respuesta a más tardar</dt><dd>{{ pqrsf.vence_en|date:"j \d\e F \d\e Y, g:i a" }}</dd>{% endif %}
+  </dl>
+  {% if pqrsf.respuesta and not pqrsf.abierta %}
+    <div style="display:grid;gap:8px">
+      <h2>Nuestra respuesta</h2>
+      <div class="respuesta">{{ pqrsf.respuesta }}</div>
+      <span class="ayuda" style="color:var(--tenue);font-size:.9rem">Respondida el {{ pqrsf.respondida_en|date:"j \d\e F \d\e Y" }}.</span>
+    </div>
+  {% endif %}
+</section>
+<section class="tarjeta">
+  <h2>Lo que ha pasado con su caso</h2>
+  <ol class="linea">
+    {% for a in actuaciones %}
+      <li><b>{{ a.get_tipo_display }}</b><time>{{ a.fecha|date:"j M Y, g:i a" }}</time>{% if a.tipo != "radicacion" %}<span>{{ a.descripcion }}</span>{% endif %}</li>
+    {% endfor %}
+  </ol>
+</section>
+<a class="boton secundario" href="{% url 'portal:inicio' institucion.slug %}">Volver al inicio</a>
+{% endblock %}

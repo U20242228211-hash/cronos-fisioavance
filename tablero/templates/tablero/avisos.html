@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Avisos para la cartelera · {{ institucion.nombre }}</title>
+  <style>
+    :root { color-scheme: light; }
+    body { margin: 0; background: #eef2f1; color: #13201d; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .barra { display: flex; gap: 12px; justify-content: center; padding: 16px; }
+    .barra button, .barra a { font: 700 15px system-ui, sans-serif; padding: 10px 16px; border-radius: 10px; border: 1px solid #c9d3cf; background: #fff; color: #13201d; text-decoration: none; cursor: pointer; }
+    .barra button { background: #0f766e; color: #fff; border: 0; }
+    .aviso { width: 210mm; margin: 0 auto 20px; background: #fff; padding: 18mm; page-break-after: always; display: grid; gap: 6mm; }
+    .aviso h1 { margin: 0; font-size: 22pt; }
+    .aviso .meta { color: #4a5753; }
+    .aviso .texto { white-space: pre-line; border-left: 3px solid #0f766e; padding-left: 6mm; }
+    .vencido { opacity: .55; }
+    .vacio { text-align: center; padding: 40px; }
+    @media print { body { background: #fff; } .barra, .vencido { display: none; } .aviso { margin: 0; } }
+  </style>
+</head>
+<body>
+  <div class="barra"><button onclick="window.print()">Imprimir los vigentes</button><a href="{% url 'admin:index' %}">Volver al panel</a></div>
+  {% for p in avisos %}
+    <article class="aviso {% if p.aviso_hasta < hoy %}vencido{% endif %}">
+      <h1>Aviso · {{ p.get_tipo_display }} {{ p.radicado }}</h1>
+      <div class="meta">{{ institucion.nombre }} · Atención al usuario. Publicado del {{ p.aviso_desde|date:"j \d\e F" }} al {{ p.aviso_hasta|date:"j \d\e F \d\e Y" }}{% if p.aviso_hasta < hoy %} (ya terminó){% endif %}.</div>
+      <p>Se informa la respuesta a la {{ p.get_tipo_display|lower }} recibida el {{ p.recibida_en|date:"j \d\e F \d\e Y" }} sin datos de contacto (Ley 1437 de 2011, artículo 69):</p>
+      <div class="texto">{{ p.respuesta }}</div>
+    </article>
+  {% empty %}
+    <p class="vacio">No hay avisos en los últimos 30 días.</p>
+  {% endfor %}
+</body>
+</html>

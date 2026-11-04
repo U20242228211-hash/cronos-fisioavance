@@ -1,0 +1,15 @@
+{% extends "portal/base.html" %}
+{% block titulo %}Consultar mi caso{% endblock %}
+{% block contenido %}
+<div style="display:grid;gap:8px">
+  <h1>Consultar mi caso</h1>
+  <p class="entrada">Escriba el número de radicado que le dimos y su número de documento.</p>
+</div>
+<form method="post" class="tarjeta">
+  {% csrf_token %}
+  {% if form.non_field_errors %}<div class="alerta peligro">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+  <div class="campo"><label for="{{ form.radicado.id_for_label }}">{{ form.radicado.label }}</label>{{ form.radicado }}{% for e in form.radicado.errors %}<span class="error">{{ e }}</span>{% endfor %}</div>
+  <div class="campo"><label for="{{ form.documento.id_for_label }}">{{ form.documento.label }}</label>{{ form.documento }}<span class="ayuda">{{ form.documento.help_text }}</span>{% for e in form.documento.errors %}<span class="error">{{ e }}</span>{% endfor %}</div>
+  <button class="boton ancho" type="submit">Consultar</button>
+</form>
+{% endblock %}

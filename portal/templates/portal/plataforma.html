@@ -1,0 +1,9 @@
+{% extends "portal/base.html" %}
+{% block titulo %}Cronos{% endblock %}
+{% block contenido %}
+<section class="tarjeta">
+  <h1>Cronos</h1>
+  <p class="entrada">Gestión de PQRSF y encuestas de satisfacción para instituciones de salud. Cada institución tiene su propio portal y su propio equipo.</p>
+  <a class="boton" href="{% url 'admin:index' %}">Entrar al panel</a>
+</section>
+{% endblock %}

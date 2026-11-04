@@ -1,0 +1,72 @@
+{% extends "portal/base.html" %}
+{% block titulo %}Encuesta de satisfacción{% endblock %}
+{% block contenido %}
+<div style="display:grid;gap:8px">
+  <h1>{% if invitacion %}Hola, {{ primer_nombre }}{% else %}¿Cómo lo atendimos?{% endif %}</h1>
+  <p class="entrada">{% if invitacion %}Gracias por terminar su servicio de {{ invitacion.servicio|lower }}. {% endif %}Son {{ preguntas|length }} preguntas y toma menos de un minuto.</p>
+</div>
+<form method="post" class="tarjeta" id="encuesta">
+  {% csrf_token %}
+  <input type="hidden" name="canal" value="{{ canal }}">
+  {% if error %}<div class="alerta peligro">{{ error }}</div>{% endif %}
+  <div class="pasos" aria-hidden="true">{% if not invitacion %}<span></span>{% endif %}{% for p in preguntas %}<span></span>{% endfor %}<span></span></div>
+
+  {% if not invitacion %}
+  <section class="paso pregunta" data-i="0">
+    <div class="contador">Antes de empezar</div>
+    <h2>¿Qué servicio recibió?</h2>
+    <div class="tipos" style="text-align:left">
+      {% for s in servicios %}
+        <label class="tipo-opcion"><input type="radio" name="servicio" value="{{ s.pk }}" data-avanza><span class="icono" aria-hidden="true">medical_services</span><b>{{ s.nombre }}</b></label>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% for p in preguntas %}
+  <section class="paso pregunta" data-i="{% if invitacion %}{{ forloop.counter0 }}{% else %}{{ forloop.counter }}{% endif %}" hidden>
+    <div class="contador">Pregunta {{ forloop.counter }} de {{ preguntas|length }}</div>
+    <h2>{{ p.texto }}</h2>
+    {% if p.escala == "recomendacion" %}
+      <div class="caritas cuatro">
+        {% for valor, texto in p.opciones %}
+          <label class="carita"><input type="radio" name="p{{ p.id }}" value="{{ valor }}" data-avanza>{{ texto }}</label>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="caritas">
+        {% for valor, texto in p.opciones %}
+          <label class="carita"><input type="radio" name="p{{ p.id }}" value="{{ valor }}" data-avanza>{% include "portal/_carita.html" with valor=valor %}<span>{{ texto }}</span></label>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <button type="button" class="enlace-discreto" data-atras style="justify-self:center">Volver a la anterior</button>
+  </section>
+  {% endfor %}
+
+  <section class="paso pregunta" data-i="final" hidden>
+    <div class="contador">Último paso</div>
+    <h2>¿Algo más que quiera contarnos?</h2>
+    <div class="campo" style="text-align:left"><label for="comentario">Comentario (opcional)</label><textarea id="comentario" name="comentario" rows="4" placeholder="Lo que más le gustó o lo que podemos mejorar"></textarea></div>
+    <button type="submit" class="boton ancho">Enviar encuesta</button>
+    <button type="button" class="enlace-discreto" data-atras style="justify-self:center">Volver a la anterior</button>
+  </section>
+</form>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  const pasos = [...document.querySelectorAll("#encuesta .paso")];
+  const barras = [...document.querySelectorAll("#encuesta .pasos span")];
+  let actual = 0;
+  function mostrar(n) {
+    actual = Math.max(0, Math.min(n, pasos.length - 1));
+    pasos.forEach((p, i) => p.hidden = i !== actual);
+    barras.forEach((b, i) => b.classList.toggle("hecho", i <= actual));
+  }
+  document.querySelectorAll("[data-avanza]").forEach(r => r.addEventListener("change", () => setTimeout(() => mostrar(actual + 1), 280)));
+  document.querySelectorAll("[data-atras]").forEach(b => b.addEventListener("click", () => mostrar(actual - 1)));
+  mostrar(0);
+})();
+</script>
+{% endblock %}

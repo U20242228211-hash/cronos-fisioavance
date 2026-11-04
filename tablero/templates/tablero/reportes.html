@@ -1,0 +1,70 @@
+{% extends 'admin/base.html' %}
+{% load unfold %}
+{% block title %}Reportes | Cronos{% endblock %}
+{% block branding %}{% include "unfold/helpers/site_branding.html" %}{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+{% block content %}
+<div class="cr-tablero">
+  <div class="cr-cabeza">
+    <div>
+      <h1 class="cr-titulo">Reportes · {{ etiqueta_mes }}</h1>
+      <p class="cr-sub">{{ institucion.nombre }}</p>
+    </div>
+    <form method="get" class="cr-filtro">
+      <label>Mes <input type="month" name="mes" value="{{ mes }}"></label>
+      <button class="cr-boton" type="submit">Ver</button>
+    </form>
+  </div>
+
+  <div class="cr-acciones">
+    <a class="cr-boton" href="?mes={{ mes }}&descargar=pqrsf">Descargar PQRSF (Excel)</a>
+    <a class="cr-boton" href="?mes={{ mes }}&descargar=encuestas">Descargar encuestas (Excel)</a>
+    <a class="cr-boton cr-boton-claro" href="?mes={{ mes }}&descargar=indicadores">Informe de indicadores de 12 meses (Excel)</a>
+  </div>
+
+  <div class="cr-dos">
+    {% component "unfold/components/card.html" with title="PQRSF del mes" %}
+      <div class="cr-cifras">
+        <div class="cr-cifra"><b>{{ pqrsf.total }}</b><span>recibidas</span></div>
+        <div class="cr-cifra"><b>{{ pqrsf.respondidas }}</b><span>respondidas</span></div>
+        <div class="cr-cifra"><b>{% if pqrsf.oportunidad is not None %}{{ pqrsf.oportunidad }} %{% else %}—{% endif %}</b><span>respondidas a tiempo</span></div>
+        <div class="cr-cifra"><b>{% if pqrsf.dias_promedio is not None %}{{ pqrsf.dias_promedio }}{% else %}—{% endif %}</b><span>días hábiles en promedio</span></div>
+      </div>
+      <table class="cr-tabla" style="margin-top:16px">
+        <thead><tr><th>Por tipo</th><th>Cantidad</th></tr></thead>
+        <tbody>{% for f in pqrsf.por_tipo %}<tr><td>{{ f.texto }}</td><td>{{ f.n }}</td></tr>{% empty %}<tr><td colspan="2">Sin PQRSF este mes.</td></tr>{% endfor %}</tbody>
+      </table>
+      <table class="cr-tabla" style="margin-top:16px">
+        <thead><tr><th>Por canal</th><th>Cantidad</th></tr></thead>
+        <tbody>{% for f in pqrsf.por_canal %}<tr><td>{{ f.texto }}</td><td>{{ f.n }}</td></tr>{% endfor %}</tbody>
+      </table>
+    {% endcomponent %}
+
+    {% component "unfold/components/card.html" with title="Satisfacción del mes" description="Resolución 256 de 2016" %}
+      <div class="cr-cifras">
+        <div class="cr-cifra"><b>{{ satisfaccion.encuestas }}</b><span>encuestas</span></div>
+        <div class="cr-cifra"><b>{% if satisfaccion.satisfaccion is not None %}{{ satisfaccion.satisfaccion }} %{% else %}—{% endif %}</b><span>satisfacción global ({{ satisfaccion.satisfaccion_numerador }} de {{ satisfaccion.satisfaccion_denominador }})</span></div>
+        <div class="cr-cifra"><b>{% if satisfaccion.recomendacion is not None %}{{ satisfaccion.recomendacion }} %{% else %}—{% endif %}</b><span>recomendaría la IPS ({{ satisfaccion.recomendacion_numerador }} de {{ satisfaccion.recomendacion_denominador }})</span></div>
+        <div class="cr-cifra"><b>{{ satisfaccion.malas }}</b><span>con mala calificación</span></div>
+      </div>
+      <table class="cr-tabla" style="margin-top:16px">
+        <thead><tr><th>Servicio</th><th>Encuestas</th><th>Satisfacción</th><th>Recomendaría</th></tr></thead>
+        <tbody>{% for s in por_servicio %}<tr><td>{{ s.servicio }}</td><td>{{ s.encuestas }}</td><td>{{ s.satisfaccion|default_if_none:"—" }} %</td><td>{{ s.recomendacion|default_if_none:"—" }} %</td></tr>{% empty %}<tr><td colspan="4">Sin encuestas este mes.</td></tr>{% endfor %}</tbody>
+      </table>
+    {% endcomponent %}
+  </div>
+
+  {% component "unfold/components/card.html" with title="Por servicio y por clasificación" %}
+    <div class="cr-dos">
+      <table class="cr-tabla">
+        <thead><tr><th>Servicio</th><th>PQRSF</th></tr></thead>
+        <tbody>{% for f in pqrsf.por_servicio %}<tr><td>{{ f.servicio__nombre|default:"Sin servicio" }}</td><td>{{ f.n }}</td></tr>{% empty %}<tr><td colspan="2">—</td></tr>{% endfor %}</tbody>
+      </table>
+      <table class="cr-tabla">
+        <thead><tr><th>Clasificación</th><th>PQRSF</th></tr></thead>
+        <tbody>{% for f in pqrsf.por_clasificacion %}<tr><td>{{ f.texto }}</td><td>{{ f.n }}</td></tr>{% empty %}<tr><td colspan="2">—</td></tr>{% endfor %}</tbody>
+      </table>
+    </div>
+  {% endcomponent %}
+</div>
+{% endblock %}

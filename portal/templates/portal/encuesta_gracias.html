@@ -1,0 +1,24 @@
+{% extends "portal/base.html" %}
+{% block titulo %}Gracias{% endblock %}
+{% block contenido %}
+<section class="tarjeta" style="text-align:center;justify-items:center">
+  {% if ya_respondida %}
+    <h1>Esta encuesta ya fue respondida</h1>
+    <p class="entrada">Gracias por su tiempo.</p>
+  {% elif vencida %}
+    <h1>Esta invitación ya venció</h1>
+    <p class="entrada">Si quiere calificar la atención, puede hacerlo desde el inicio.</p>
+  {% else %}
+    <div style="width:84px">{% include "portal/_carita.html" with valor=5 %}</div>
+    <h1>¡Gracias por ayudarnos a mejorar!</h1>
+    {% if respuesta.requiere_atencion %}
+      <p class="entrada">Sentimos que algo no salió bien. Si quiere, cuéntenos qué pasó y le respondemos.</p>
+      <a class="boton" href="{% url 'portal:radicar' institucion.slug %}?tipo=Q{% if respuesta.servicio %}&servicio={{ respuesta.servicio.pk }}{% endif %}{% if tableta %}&canal=tableta{% endif %}">Poner una queja</a>
+    {% else %}
+      <p class="entrada">Su opinión llega directo al equipo de atención al usuario.</p>
+    {% endif %}
+  {% endif %}
+  <a class="boton secundario" href="{% url 'portal:inicio' institucion.slug %}{% if tableta %}?canal=tableta{% endif %}">Volver al inicio</a>
+</section>
+{% endblock %}
+{% block scripts %}{% if tableta %}<script>setTimeout(() => location.href = "{% url 'portal:inicio' institucion.slug %}?canal=tableta", 30000)</script>{% endif %}{% endblock %}

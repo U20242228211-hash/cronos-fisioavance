@@ -1,0 +1,45 @@
+{% load static %}<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Carteles con QR · {{ institucion.nombre }}</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,700;6..12,900&display=swap">
+  <style>
+    :root { --marca: {{ institucion.color_primario|default:"#0f766e" }}; color-scheme: light; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #e9eeec; color: #13201d; font-family: "Nunito Sans", system-ui, sans-serif; }
+    .barra { display: flex; gap: 12px; justify-content: center; padding: 16px; }
+    .barra button, .barra a { font: 700 16px "Nunito Sans", sans-serif; padding: 10px 18px; border-radius: 10px; border: 0; background: var(--marca); color: #fff; text-decoration: none; cursor: pointer; }
+    .barra a { background: #fff; color: #13201d; border: 1px solid #c9d3cf; }
+    .cartel { width: 210mm; min-height: 297mm; margin: 0 auto 24px; background: #fff; padding: 22mm 18mm; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10mm; page-break-after: always; }
+    .cartel img.logo { width: 34mm; height: 34mm; object-fit: cover; border-radius: 8mm; }
+    .cartel h1 { font-size: 30pt; line-height: 1.1; margin: 0; font-weight: 900; }
+    .cartel p { font-size: 15pt; margin: 0; color: #4a5753; max-width: 150mm; }
+    .cartel .qr { width: 110mm; height: 110mm; padding: 6mm; border: 3mm solid var(--marca); border-radius: 10mm; }
+    .cartel .url { font-size: 12pt; color: #4a5753; word-break: break-all; }
+    .cartel .pasos { display: flex; gap: 8mm; font-size: 13pt; font-weight: 700; }
+    .cartel .pasos span { background: color-mix(in srgb, var(--marca) 12%, white); padding: 3mm 6mm; border-radius: 99px; }
+    @media print { body { background: #fff; } .barra { display: none; } .cartel { margin: 0; } @page { size: A4; margin: 0; } }
+  </style>
+</head>
+<body>
+  <div class="barra"><button onclick="window.print()">Imprimir</button><a href="{% url 'admin:index' %}">Volver al panel</a></div>
+  {% url 'portal:radicar' institucion.slug as ruta_pqrsf %}{% url 'portal:encuesta' institucion.slug as ruta_encuesta %}
+  <section class="cartel">
+    {% if institucion.logo_src %}<img class="logo" src="{{ institucion.logo_src }}" alt="">{% endif %}
+    <h1>¿Tiene una petición, queja, reclamo, sugerencia o felicitación?</h1>
+    <p>Escanee el código con la cámara de su celular. No necesita crear cuenta y le avisamos la respuesta por WhatsApp.</p>
+    <img class="qr" src="{% url 'portal:qr' institucion.slug 'pqrsf' %}" alt="Código QR para poner una PQRSF">
+    <div class="pasos"><span>1. Escanee</span><span>2. Cuéntenos</span><span>3. Reciba su radicado</span></div>
+    <div class="url">{{ request.scheme }}://{{ request.get_host }}{{ ruta_pqrsf }}</div>
+  </section>
+  <section class="cartel">
+    {% if institucion.logo_src %}<img class="logo" src="{{ institucion.logo_src }}" alt="">{% endif %}
+    <h1>¿Cómo lo atendimos hoy?</h1>
+    <p>Si ya terminó su tratamiento, califíquenos en menos de un minuto: son 5 preguntas con caritas.</p>
+    <img class="qr" src="{% url 'portal:qr' institucion.slug 'encuesta' %}" alt="Código QR para la encuesta de satisfacción">
+    <div class="url">{{ request.scheme }}://{{ request.get_host }}{{ ruta_encuesta }}</div>
+  </section>
+</body>
+</html>

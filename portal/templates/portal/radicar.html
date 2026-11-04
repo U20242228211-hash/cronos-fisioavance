@@ -1,0 +1,190 @@
+{% extends "portal/base.html" %}
+{% block titulo %}Poner una PQRSF{% endblock %}
+{% block contenido %}
+<form method="post" enctype="multipart/form-data" class="tarjeta" id="formulario" novalidate>
+  {% csrf_token %}
+  <input type="hidden" name="canal" value="{{ canal }}">
+  <div class="pasos" aria-hidden="true"><span class="hecho"></span><span></span><span></span></div>
+
+  {% if form.non_field_errors %}<div class="alerta peligro">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+
+  {# ---------- Paso 1: qué pasó ---------- #}
+  <section class="paso" data-paso="1" style="display:grid;gap:18px">
+    <div class="paso-titulo">Paso 1 de 3 · Qué pasó</div>
+    <fieldset class="campo" style="border:0;padding:0;margin:0">
+      <legend class="etiqueta" style="font-weight:800;margin-bottom:8px">{{ form.tipo.label }}</legend>
+      <div class="tipos">
+        {% for opcion in form.opciones_tipo %}
+          <label class="tipo-opcion">
+            <input type="radio" name="tipo" value="{{ opcion.valor }}" required {% if opcion.elegido %}checked{% endif %}>
+            <span class="icono" aria-hidden="true">{{ opcion.icono }}</span>
+            <span><b>{{ opcion.texto }}</b><small>{{ opcion.ayuda }}</small></span>
+          </label>
+        {% endfor %}
+      </div>
+      {% for e in form.tipo.errors %}<span class="error">{{ e }}</span>{% endfor %}
+    </fieldset>
+    <div class="fila">
+      <div class="campo">
+        <label for="{{ form.servicio.id_for_label }}">{{ form.servicio.label }}</label>
+        {{ form.servicio }}
+        {% for e in form.servicio.errors %}<span class="error">{{ e }}</span>{% endfor %}
+      </div>
+      <div class="campo">
+        <label for="{{ form.profesional.id_for_label }}">{{ form.profesional.label }}</label>
+        {{ form.profesional }}
+      </div>
+    </div>
+    <div class="campo">
+      <label for="{{ form.descripcion.id_for_label }}">{{ form.descripcion.label }}</label>
+      {{ form.descripcion }}
+      {% for e in form.descripcion.errors %}<span class="error">{{ e }}</span>{% endfor %}
+    </div>
+    <div class="campo">
+      <label for="{{ form.adjunto.id_for_label }}">{{ form.adjunto.label }}</label>
+      {{ form.adjunto }}
+    </div>
+    <div class="acciones"><button type="button" class="boton ancho" data-ir="2">Siguiente</button></div>
+  </section>
+
+  {# ---------- Paso 2: quién la presenta ---------- #}
+  <section class="paso" data-paso="2" hidden style="display:grid;gap:18px">
+    <div class="paso-titulo">Paso 2 de 3 · Sus datos</div>
+    <p class="entrada" style="font-size:.95rem">Los necesitamos para responderle y para los reportes que exige la Superintendencia de Salud.</p>
+    <label class="marca-check" id="caja-anonima">{{ form.anonima }} <span>{{ form.anonima.label }}</span></label>
+    {% for e in form.anonima.errors %}<span class="error">{{ e }}</span>{% endfor %}
+    <div class="alerta" id="nota-anonima" hidden>Puede hacerlo, pero no podremos escribirle: la respuesta se publica en la cartelera de la sede y en esta página durante 5 días hábiles. Si nos deja un celular, le respondemos directo.</div>
+
+    <div id="datos-personales" style="display:grid;gap:16px">
+      <div class="fila">
+        <div class="campo"><label for="{{ form.tipo_documento.id_for_label }}">Tipo de documento</label>{{ form.tipo_documento }}{% for e in form.tipo_documento.errors %}<span class="error">{{ e }}</span>{% endfor %}</div>
+        <div class="campo"><label for="{{ form.numero_documento.id_for_label }}">Número</label>{{ form.numero_documento }}{% for e in form.numero_documento.errors %}<span class="error">{{ e }}</span>{% endfor %}</div>
+      </div>
+      <div class="fila">
+        <div class="campo"><label for="{{ form.nombres.id_for_label }}">Nombres</label>{{ form.nombres }}{% for e in form.nombres.errors %}<span class="error">{{ e }}</span>{% endfor %}</div>
+        <div class="campo"><label for="{{ form.apellidos.id_for_label }}">Apellidos</label>{{ form.apellidos }}{% for e in form.apellidos.errors %}<span class="error">{{ e }}</span>{% endfor %}</div>
+      </div>
+      <div class="fila">
+        <div class="campo"><label for="{{ form.telefono.id_for_label }}">Celular o WhatsApp</label>{{ form.telefono }}{% for e in form.telefono.errors %}<span class="error">{{ e }}</span>{% endfor %}</div>
+        <div class="campo"><label for="{{ form.correo.id_for_label }}">Correo (opcional)</label>{{ form.correo }}{% for e in form.correo.errors %}<span class="error">{{ e }}</span>{% endfor %}</div>
+      </div>
+      <div class="fila">
+        <div class="campo"><label for="{{ form.sexo.id_for_label }}">Sexo (opcional)</label>{{ form.sexo }}</div>
+        <div class="campo"><label for="{{ form.fecha_nacimiento.id_for_label }}">Fecha de nacimiento (opcional)</label>{{ form.fecha_nacimiento }}</div>
+        <div class="campo"><label for="{{ form.municipio.id_for_label }}">Municipio (opcional)</label>{{ form.municipio }}</div>
+      </div>
+      <div class="campo">
+        <span class="etiqueta">{{ form.vinculacion.label }}</span>
+        <div class="pildoras">
+          {% for radio in form.vinculacion %}<label class="pildora">{{ radio.tag }}<span>{{ radio.choice_label }}</span></label>{% endfor %}
+        </div>
+      </div>
+      <div class="campo" id="caja-aseguradora" hidden>
+        <label for="{{ form.aseguradora.id_for_label }}">Aseguradora</label>{{ form.aseguradora }}{% for e in form.aseguradora.errors %}<span class="error">{{ e }}</span>{% endfor %}
+      </div>
+      <div class="campo">
+        <label for="{{ form.condicion_especial.id_for_label }}">¿El paciente tiene alguna de estas condiciones?</label>{{ form.condicion_especial }}
+        <span class="ayuda">Nos ayuda a darle prioridad.</span>
+      </div>
+      <label class="marca-check">{{ form.es_acudiente }} <span>{{ form.es_acudiente.label }}</span></label>
+      <div class="campo" id="caja-paciente" hidden>
+        <label for="{{ form.nombre_paciente.id_for_label }}">Nombre del paciente</label>{{ form.nombre_paciente }}{% for e in form.nombre_paciente.errors %}<span class="error">{{ e }}</span>{% endfor %}
+      </div>
+    </div>
+    <div class="acciones">
+      <button type="button" class="boton secundario" data-ir="1">Atrás</button>
+      <button type="button" class="boton" data-ir="3">Siguiente</button>
+    </div>
+  </section>
+
+  {# ---------- Paso 3: respuesta y autorización ---------- #}
+  <section class="paso" data-paso="3" hidden style="display:grid;gap:18px">
+    <div class="paso-titulo">Paso 3 de 3 · Respuesta y autorización</div>
+    <div class="campo" id="caja-medio">
+      <span class="etiqueta">{{ form.medio_respuesta.label }}</span>
+      <div class="pildoras">
+        {% for radio in form.medio_respuesta %}<label class="pildora">{{ radio.tag }}<span>{{ radio.choice_label }}</span></label>{% endfor %}
+      </div>
+      {% for e in form.medio_respuesta.errors %}<span class="error">{{ e }}</span>{% endfor %}
+    </div>
+    <div id="caja-autorizacion" style="display:grid;gap:12px">
+      <div class="privacidad">{{ institucion.aviso_privacidad|default:"Sus datos se usan solo para atender su PQRSF y para los reportes que exige la ley." }}</div>
+      <label class="marca-check">{{ form.autoriza_datos }} <span>{{ form.autoriza_datos.label }}</span></label>
+      {% for e in form.autoriza_datos.errors %}<span class="error">{{ e }}</span>{% endfor %}
+    </div>
+    <div class="alerta" id="nota-aviso" hidden>Como no dejó datos, la respuesta se publicará por aviso.</div>
+    <div class="acciones">
+      <button type="button" class="boton secundario" data-ir="2">Atrás</button>
+      <button type="submit" class="boton">Enviar</button>
+    </div>
+  </section>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  const form = document.getElementById("formulario");
+  const pasos = [...form.querySelectorAll(".paso")];
+  const barras = [...form.querySelectorAll(".pasos span")];
+  const anonima = document.getElementById("{{ form.anonima.id_for_label }}");
+  const acudiente = document.getElementById("{{ form.es_acudiente.id_for_label }}");
+
+  function mostrar(n) {
+    pasos.forEach(p => p.hidden = p.dataset.paso !== String(n));
+    barras.forEach((b, i) => b.classList.toggle("hecho", i < n));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  function pasoValido(n) {
+    const paso = pasos[n - 1];
+    if (n === 1) {
+      const tipo = form.querySelector("input[name=tipo]:checked");
+      const servicio = form.querySelector("[name=servicio]");
+      const texto = form.querySelector("[name=descripcion]");
+      const faltan = [];
+      if (!tipo) faltan.push("qué quiere hacer");
+      if (!servicio.value) faltan.push("el servicio");
+      if (!texto.value.trim()) faltan.push("qué pasó");
+      avisar(paso, faltan);
+      return faltan.length === 0;
+    }
+    if (n === 2 && !anonima.checked) {
+      const faltan = [];
+      for (const [nombre, texto] of [["tipo_documento", "el tipo de documento"], ["numero_documento", "el número de documento"], ["nombres", "su nombre"], ["apellidos", "sus apellidos"]]) {
+        if (!form.querySelector(`[name=${nombre}]`).value.trim()) faltan.push(texto);
+      }
+      avisar(paso, faltan);
+      return faltan.length === 0;
+    }
+    return true;
+  }
+  function avisar(paso, faltan) {
+    let caja = paso.querySelector(".alerta.peligro.js");
+    if (!faltan.length) { if (caja) caja.remove(); return; }
+    if (!caja) { caja = document.createElement("div"); caja.className = "alerta peligro js"; paso.insertBefore(caja, paso.children[1]); }
+    caja.textContent = "Falta: " + faltan.join(", ") + ".";
+  }
+  form.querySelectorAll("[data-ir]").forEach(b => b.addEventListener("click", () => {
+    const destino = Number(b.dataset.ir);
+    const actual = Number(b.closest(".paso").dataset.paso);
+    if (destino > actual && !pasoValido(actual)) return;
+    mostrar(destino);
+  }));
+  function sincronizar() {
+    const sinDatos = anonima.checked;
+    document.getElementById("datos-personales").hidden = sinDatos;
+    document.getElementById("nota-anonima").hidden = !sinDatos;
+    document.getElementById("caja-medio").hidden = sinDatos;
+    document.getElementById("caja-autorizacion").hidden = sinDatos;
+    document.getElementById("nota-aviso").hidden = !sinDatos;
+    document.getElementById("caja-paciente").hidden = !acudiente.checked;
+    const vinculo = form.querySelector("input[name=vinculacion]:checked");
+    document.getElementById("caja-aseguradora").hidden = !(vinculo && vinculo.value === "aseguradora");
+  }
+  form.addEventListener("change", sincronizar);
+  sincronizar();
+  const primerError = form.querySelector(".error");
+  if (primerError) mostrar(Number(primerError.closest(".paso").dataset.paso));
+})();
+</script>
+{% endblock %}

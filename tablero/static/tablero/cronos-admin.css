@@ -1,0 +1,54 @@
+/* Tablero de Cronos dentro del panel (Unfold). Usa los colores del tema para verse bien en claro y oscuro. */
+.cr-tablero { display: grid; gap: 24px; }
+.cr-cabeza { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between; }
+.cr-titulo { font-size: 1.6rem; font-weight: 700; color: var(--color-base-900); margin: 0; }
+.dark .cr-titulo { color: var(--color-base-100); }
+.cr-sub { color: var(--color-base-500); margin: 4px 0 0; }
+.cr-acciones { display: flex; gap: 10px; flex-wrap: wrap; }
+.cr-boton { display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border-radius: 8px; background: var(--color-primary-600); color: #fff !important; font-weight: 600; text-decoration: none; }
+.cr-boton:hover { background: var(--color-primary-700); }
+.cr-boton-claro { background: transparent; color: var(--color-primary-700) !important; border: 1px solid var(--color-primary-300); }
+.dark .cr-boton-claro { color: var(--color-primary-300) !important; border-color: var(--color-primary-700); }
+.cr-kpis { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.cr-kpi { display: grid; gap: 4px; padding: 18px 20px; border-radius: 10px; border: 1px solid var(--color-base-200); background: #fff; text-decoration: none; color: inherit; }
+.dark .cr-kpi { background: var(--color-base-900); border-color: var(--color-base-800); }
+a.cr-kpi:hover { border-color: var(--color-primary-400); }
+.cr-kpi-etq { font-size: .78rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--color-base-500); }
+.cr-kpi-num { font-size: 2rem; font-weight: 700; line-height: 1.1; color: var(--color-base-900); font-variant-numeric: tabular-nums; }
+.dark .cr-kpi-num { color: var(--color-base-100); }
+.cr-kpi-pie { font-size: .8rem; color: var(--color-base-500); }
+.cr-alerta { border-color: #fdb022; background: #fffaeb; }
+.cr-alerta .cr-kpi-num { color: #b54708; }
+.cr-peligro { border-color: #fda29b; background: #fef3f2; }
+.cr-peligro .cr-kpi-num { color: #b42318; }
+.dark .cr-alerta, .dark .cr-peligro { background: var(--color-base-900); }
+.cr-dos { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); }
+.cr-tabla { width: 100%; border-collapse: collapse; font-size: .88rem; }
+.cr-tabla th { text-align: left; font-weight: 600; color: var(--color-base-500); padding: 6px 8px; border-bottom: 1px solid var(--color-base-200); }
+.cr-tabla td { padding: 8px; border-bottom: 1px solid var(--color-base-100); }
+.dark .cr-tabla th, .dark .cr-tabla td { border-color: var(--color-base-800); }
+.cr-tabla a { color: var(--color-primary-700); font-weight: 600; }
+.dark .cr-tabla a { color: var(--color-primary-400); }
+.cr-mini { font-size: .72rem; padding: 1px 6px; border-radius: 99px; background: var(--color-base-100); color: var(--color-base-600); }
+.cr-luz { display: inline-block; min-width: 62px; text-align: center; padding: 2px 8px; border-radius: 99px; font-weight: 700; font-size: .78rem; }
+.cr-verde { background: #dcfae6; color: #067647; }
+.cr-amarillo { background: #fef0c7; color: #b54708; }
+.cr-rojo { background: #fee4e2; color: #b42318; }
+.cr-vencida { background: #b42318; color: #fff; }
+.cr-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.cr-lista li { display: grid; gap: 2px; padding-bottom: 10px; border-bottom: 1px solid var(--color-base-100); }
+.dark .cr-lista li { border-color: var(--color-base-800); }
+.cr-lista a { color: var(--color-primary-700); }
+.cr-lista span { color: var(--color-base-500); font-size: .85rem; }
+.cr-vacio { max-width: 640px; padding: 24px 0; }
+.cronos-resumen p { margin: 0 0 6px; }
+.cronos-tabla th { text-align: left; padding: 3px 14px 3px 0; color: var(--color-base-500); font-weight: 600; white-space: nowrap; }
+.cronos-tabla td { padding: 3px 0; }
+.cronos-boton { display: inline-flex; align-items: center; height: 30px; padding: 0 10px; border-radius: 6px; background: var(--color-primary-600); color: #fff !important; font-weight: 600; font-size: .8rem; text-decoration: none; }
+.cr-filtro { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; }
+.cr-filtro input { height: 38px; padding: 0 10px; border: 1px solid var(--color-base-300); border-radius: 8px; background: transparent; color: inherit; }
+.cr-cifras { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.cr-cifra b { display: block; font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+.cr-cifra span { color: var(--color-base-500); font-size: .85rem; }
+.cr-tabla td:first-child, .cr-tabla td:nth-child(4) { white-space: nowrap; }
+.dark .cr-mini { background: var(--color-base-800); color: var(--color-base-300); }

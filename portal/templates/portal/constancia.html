@@ -1,0 +1,36 @@
+{% extends "portal/base.html" %}
+{% block titulo %}Constancia {{ pqrsf.radicado }}{% endblock %}
+{% block contenido %}
+<section class="tarjeta">
+  <div class="alerta ok"><b>¡Listo! Recibimos su {{ pqrsf.get_tipo_display|lower }}.</b></div>
+  <div>
+    <span class="paso-titulo">Su número de radicado</span>
+    <p class="radicado">{{ pqrsf.radicado }}</p>
+  </div>
+  <dl class="datos">
+    <dt>Recibida</dt><dd>{{ pqrsf.recibida_en|date:"j \d\e F \d\e Y, g:i a" }}</dd>
+    <dt>Tipo</dt><dd>{{ pqrsf.get_tipo_display }}</dd>
+    <dt>Servicio</dt><dd>{{ pqrsf.servicio|default:"—" }}</dd>
+    {% if pqrsf.vence_en %}<dt>Le respondemos a más tardar</dt><dd>{{ pqrsf.vence_en|date:"j \d\e F \d\e Y, g:i a" }}</dd>{% endif %}
+    {% if pqrsf.anonima %}<dt>Código de consulta</dt><dd style="font-size:1.3rem;letter-spacing:.1em">{{ pqrsf.codigo_consulta }}</dd>{% endif %}
+  </dl>
+  {% if pqrsf.anonima %}
+    <p class="entrada">Guarde el número de radicado y el código de consulta: sin ellos no podrá ver la respuesta. También se publicará en la cartelera de la sede.</p>
+  {% else %}
+    <p class="entrada">Le enviaremos la respuesta por {{ pqrsf.get_medio_respuesta_display|lower }}. Guarde el número de radicado para consultar su caso.</p>
+  {% endif %}
+  <div class="acciones no-imprimir">
+    <a class="boton" href="{% url 'portal:estado' institucion.slug pqrsf.token %}">Ver mi caso</a>
+    <button type="button" class="boton secundario" onclick="window.print()">Imprimir constancia</button>
+  </div>
+  {% if tableta %}<p class="entrada no-imprimir" id="regreso">Esta pantalla vuelve al inicio en <b id="segundos">45</b> segundos.</p>{% endif %}
+</section>
+{% endblock %}
+{% block scripts %}
+{% if tableta %}
+<script>
+  let s = 45; const el = document.getElementById("segundos");
+  setInterval(() => { s -= 1; el.textContent = s; if (s <= 0) location.href = "{% url 'portal:inicio' institucion.slug %}?canal=tableta"; }, 1000);
+</script>
+{% endif %}
+{% endblock %}

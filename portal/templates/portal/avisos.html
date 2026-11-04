@@ -1,0 +1,19 @@
+{% extends "portal/base.html" %}
+{% block titulo %}Avisos publicados{% endblock %}
+{% block contenido %}
+<div style="display:grid;gap:8px">
+  <h1>Avisos publicados</h1>
+  <p class="entrada">Respuestas a PQRSF que llegaron sin datos de contacto. Cada aviso se publica durante 5 días hábiles, como lo pide el artículo 69 de la Ley 1437 de 2011.</p>
+</div>
+{% for p in avisos %}
+  <article class="tarjeta">
+    <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <b>{{ p.get_tipo_display }} {{ p.radicado }}</b>
+      <span class="chip">Publicado hasta el {{ p.aviso_hasta|date:"j \d\e F" }}</span>
+    </div>
+    <div class="respuesta">{{ p.respuesta }}</div>
+  </article>
+{% empty %}
+  <div class="tarjeta"><p class="entrada">No hay avisos publicados en este momento.</p></div>
+{% endfor %}
+{% endblock %}

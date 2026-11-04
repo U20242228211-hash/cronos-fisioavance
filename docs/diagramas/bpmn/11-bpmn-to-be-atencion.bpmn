@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definiciones_Atencion" targetNamespace="https://github.com/U20242228211-hash/cronos-fisioavance" exporter="Cronos (generado)" exporterVersion="1.0">
+  <bpmn:collaboration id="Colaboracion_Atencion">
+    <bpmn:participant id="Pac" name="Paciente o acudiente" />
+    <bpmn:participant id="Ips" name="Fisioavance IPS" processRef="Proceso_Atencion" />
+    <bpmn:messageFlow id="Mensaje_1" name="Respuesta fechada, con la advertencia de la Superintendencia" sourceRef="T_Enviar" targetRef="Pac" />
+    <bpmn:textAnnotation id="Nota_1"><bpmn:text>Cronos publica el aviso en el portal durante 5 días hábiles.</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="Asociacion_1" associationDirection="None" sourceRef="T_Aviso" targetRef="Nota_1" />
+    <bpmn:textAnnotation id="Nota_2"><bpmn:text>Si el paciente no queda conforme, el caso se puede reabrir.</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="Asociacion_2" associationDirection="None" sourceRef="T_Cerrar" targetRef="Nota_2" />
+  </bpmn:collaboration>
+  <bpmn:process id="Proceso_Atencion" isExecutable="false">
+    <bpmn:laneSet id="Carriles_Proceso_Atencion">
+      <bpmn:lane id="L_Cro" name="Cronos (sistema)">
+        <bpmn:flowNodeRef>T_Alerta</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Fin_Alerta</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_Ate" name="Atención al usuario">
+        <bpmn:flowNodeRef>Ini_Caso</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Gestionar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gw_Anonima</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Enviar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Aviso</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gw_Une</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Cerrar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Fin_Caso</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>B_Alerta</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>B_Vence</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_Dir" name="Dirección">
+        <bpmn:flowNodeRef>T_Escalar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Fin_Escala</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Ini_Caso" name="PQRSF en trámite">
+      <bpmn:outgoing>Flujo_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="T_Gestionar" name="Gestionar el caso y responder">
+      <bpmn:incoming>Flujo_1</bpmn:incoming>
+      <bpmn:outgoing>Flujo_2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="T_Alerta" name="Enviar la alerta por correo al responsable">
+      <bpmn:incoming>Flujo_3</bpmn:incoming>
+      <bpmn:outgoing>Flujo_4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Fin_Alerta" name="Alerta enviada">
+      <bpmn:incoming>Flujo_4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="T_Escalar" name="Hacer seguimiento al caso vencido">
+      <bpmn:incoming>Flujo_5</bpmn:incoming>
+      <bpmn:outgoing>Flujo_6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Fin_Escala" name="Escalamiento atendido">
+      <bpmn:incoming>Flujo_6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="Gw_Anonima" name="¿Es anónima?">
+      <bpmn:incoming>Flujo_2</bpmn:incoming>
+      <bpmn:outgoing>Flujo_7</bpmn:outgoing>
+      <bpmn:outgoing>Flujo_8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sendTask id="T_Enviar" name="Enviar la respuesta por WhatsApp o correo">
+      <bpmn:incoming>Flujo_7</bpmn:incoming>
+      <bpmn:outgoing>Flujo_9</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:userTask id="T_Aviso" name="Imprimir el aviso para la cartelera">
+      <bpmn:incoming>Flujo_8</bpmn:incoming>
+      <bpmn:outgoing>Flujo_10</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gw_Une">
+      <bpmn:incoming>Flujo_9</bpmn:incoming>
+      <bpmn:incoming>Flujo_10</bpmn:incoming>
+      <bpmn:outgoing>Flujo_11</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="T_Cerrar" name="Cerrar el caso">
+      <bpmn:incoming>Flujo_11</bpmn:incoming>
+      <bpmn:outgoing>Flujo_12</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Fin_Caso" name="Caso cerrado">
+      <bpmn:incoming>Flujo_12</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="B_Alerta" name="Al 50 % y al 80 % del término" attachedToRef="T_Gestionar" cancelActivity="false">
+      <bpmn:outgoing>Flujo_3</bpmn:outgoing>
+      <bpmn:timerEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="B_Vence" name="Al vencerse el término" attachedToRef="T_Gestionar" cancelActivity="false">
+      <bpmn:outgoing>Flujo_5</bpmn:outgoing>
+      <bpmn:timerEventDefinition />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flujo_1" sourceRef="Ini_Caso" targetRef="T_Gestionar" />
+    <bpmn:sequenceFlow id="Flujo_2" sourceRef="T_Gestionar" targetRef="Gw_Anonima" />
+    <bpmn:sequenceFlow id="Flujo_3" sourceRef="B_Alerta" targetRef="T_Alerta" />
+    <bpmn:sequenceFlow id="Flujo_4" sourceRef="T_Alerta" targetRef="Fin_Alerta" />
+    <bpmn:sequenceFlow id="Flujo_5" sourceRef="B_Vence" targetRef="T_Escalar" />
+    <bpmn:sequenceFlow id="Flujo_6" sourceRef="T_Escalar" targetRef="Fin_Escala" />
+    <bpmn:sequenceFlow id="Flujo_7" name="No" sourceRef="Gw_Anonima" targetRef="T_Enviar" />
+    <bpmn:sequenceFlow id="Flujo_8" name="Sí" sourceRef="Gw_Anonima" targetRef="T_Aviso" />
+    <bpmn:sequenceFlow id="Flujo_9" sourceRef="T_Enviar" targetRef="Gw_Une" />
+    <bpmn:sequenceFlow id="Flujo_10" sourceRef="T_Aviso" targetRef="Gw_Une" />
+    <bpmn:sequenceFlow id="Flujo_11" sourceRef="Gw_Une" targetRef="T_Cerrar" />
+    <bpmn:sequenceFlow id="Flujo_12" sourceRef="T_Cerrar" targetRef="Fin_Caso" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagrama_Atencion">
+    <bpmndi:BPMNPlane id="Plano_Atencion" bpmnElement="Colaboracion_Atencion">
+      <bpmndi:BPMNShape id="Pac_di" bpmnElement="Pac" isHorizontal="true"><dc:Bounds x="0" y="0" width="1215" height="60" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Ips_di" bpmnElement="Ips" isHorizontal="true"><dc:Bounds x="0" y="140" width="1215" height="530" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_Cro_di" bpmnElement="L_Cro" isHorizontal="true"><dc:Bounds x="30" y="140" width="1185" height="140" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_Ate_di" bpmnElement="L_Ate" isHorizontal="true"><dc:Bounds x="30" y="280" width="1185" height="250" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_Dir_di" bpmnElement="L_Dir" isHorizontal="true"><dc:Bounds x="30" y="530" width="1185" height="140" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Ini_Caso_di" bpmnElement="Ini_Caso"><dc:Bounds x="132" y="342" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="110" y="383" width="80" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Gestionar_di" bpmnElement="T_Gestionar"><dc:Bounds x="245" y="315" width="130" height="90" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Alerta_di" bpmnElement="T_Alerta"><dc:Bounds x="245" y="165" width="130" height="90" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fin_Alerta_di" bpmnElement="Fin_Alerta"><dc:Bounds x="452" y="192" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="430" y="233" width="80" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Escalar_di" bpmnElement="T_Escalar"><dc:Bounds x="245" y="555" width="130" height="90" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fin_Escala_di" bpmnElement="Fin_Escala"><dc:Bounds x="452" y="582" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="425" y="623" width="90" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gw_Anonima_di" bpmnElement="Gw_Anonima" isMarkerVisible="true"><dc:Bounds x="445" y="335" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="430" y="301" width="80" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Enviar_di" bpmnElement="T_Enviar"><dc:Bounds x="565" y="315" width="130" height="90" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Aviso_di" bpmnElement="T_Aviso"><dc:Bounds x="565" y="425" width="130" height="90" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gw_Une_di" bpmnElement="Gw_Une" isMarkerVisible="true"><dc:Bounds x="765" y="335" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Cerrar_di" bpmnElement="T_Cerrar"><dc:Bounds x="885" y="315" width="130" height="90" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fin_Caso_di" bpmnElement="Fin_Caso"><dc:Bounds x="1092" y="342" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="1070" y="383" width="80" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="B_Alerta_di" bpmnElement="B_Alerta"><dc:Bounds x="292" y="297" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="338" y="260" width="110" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="B_Vence_di" bpmnElement="B_Vence"><dc:Bounds x="292" y="387" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="334" y="404" width="90" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Nota_1_di" bpmnElement="Nota_1"><dc:Bounds x="575" y="555" width="250" height="44" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Nota_2_di" bpmnElement="Nota_2"><dc:Bounds x="900" y="160" width="250" height="46" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flujo_1_di" bpmnElement="Flujo_1"><di:waypoint x="168" y="360" /><di:waypoint x="245" y="360" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_2_di" bpmnElement="Flujo_2"><di:waypoint x="375" y="360" /><di:waypoint x="445" y="360" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_3_di" bpmnElement="Flujo_3"><di:waypoint x="310" y="297" /><di:waypoint x="310" y="255" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_4_di" bpmnElement="Flujo_4"><di:waypoint x="375" y="210" /><di:waypoint x="452" y="210" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_5_di" bpmnElement="Flujo_5"><di:waypoint x="310" y="423" /><di:waypoint x="310" y="555" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_6_di" bpmnElement="Flujo_6"><di:waypoint x="375" y="600" /><di:waypoint x="452" y="600" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_7_di" bpmnElement="Flujo_7"><di:waypoint x="495" y="360" /><di:waypoint x="565" y="360" /><bpmndi:BPMNLabel><dc:Bounds x="518" y="340" width="24" height="16" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_8_di" bpmnElement="Flujo_8"><di:waypoint x="470" y="385" /><di:waypoint x="470" y="470" /><di:waypoint x="565" y="470" /><bpmndi:BPMNLabel><dc:Bounds x="476" y="420" width="20" height="16" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_9_di" bpmnElement="Flujo_9"><di:waypoint x="695" y="360" /><di:waypoint x="765" y="360" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_10_di" bpmnElement="Flujo_10"><di:waypoint x="695" y="470" /><di:waypoint x="790" y="470" /><di:waypoint x="790" y="385" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_11_di" bpmnElement="Flujo_11"><di:waypoint x="815" y="360" /><di:waypoint x="885" y="360" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_12_di" bpmnElement="Flujo_12"><di:waypoint x="1015" y="360" /><di:waypoint x="1092" y="360" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Mensaje_1_di" bpmnElement="Mensaje_1"><di:waypoint x="630" y="315" /><di:waypoint x="630" y="60" /><bpmndi:BPMNLabel><dc:Bounds x="638" y="70" width="170" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Asociacion_1_di" bpmnElement="Asociacion_1"><di:waypoint x="630" y="515" /><di:waypoint x="630" y="555" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Asociacion_2_di" bpmnElement="Asociacion_2"><di:waypoint x="950" y="315" /><di:waypoint x="950" y="206" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

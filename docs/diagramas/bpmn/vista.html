@@ -1,0 +1,16 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="node_modules/bpmn-js/dist/assets/diagram-js.css">
+<link rel="stylesheet" href="node_modules/bpmn-js/dist/assets/bpmn-js.css">
+<style>html,body{margin:0;background:#fff} #lienzo{width:2200px;height:1600px}</style>
+</head><body><div id="lienzo"></div>
+<script src="node_modules/bpmn-js/dist/bpmn-viewer.development.js"></script>
+<script>
+window.cargar = async (xml) => {
+  document.getElementById("lienzo").innerHTML = "";
+  const visor = new BpmnJS({ container: "#lienzo" });
+  const { warnings } = await visor.importXML(xml);
+  const { svg } = await visor.saveSVG();
+  return { avisos: warnings.map((w) => w.message), svg };
+};
+</script></body></html>

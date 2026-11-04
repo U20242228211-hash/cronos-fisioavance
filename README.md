@@ -25,20 +25,23 @@ y nunca ve los de otra. Una IPS nueva se crea con un comando.
 ## Tecnología
 
 - **Python 3.13 y Django 6.1**, con **Unfold** para el panel del equipo.
-- **PostgreSQL** en desarrollo. En un hosting compartido con cPanel también funciona con **MySQL** (ver `DESPLIEGUE.md`).
+- **SQLite** para probarlo sin instalar nada, **PostgreSQL** en desarrollo y en un servidor, y **MySQL** en un hosting
+  compartido con cPanel (ver `DESPLIEGUE.md`).
 - Festivos con la librería `holidays`; Excel con `openpyxl`; códigos QR con `qrcode`.
 - WhatsApp por enlaces `wa.me`: no necesita la API paga de WhatsApp Business.
 
 ## Correrlo en un computador
 
+Necesita **Python 3.12 o más nuevo**. No hay que instalar ninguna base de datos: por defecto usa SQLite, que es
+un archivo (`db.sqlite3`) que se crea solo.
+
 ```bash
 git clone https://github.com/U20242228211-hash/cronos-fisioavance.git
 cd cronos-fisioavance
-python3 -m venv .venv
+python3 -m venv .venv                # En Windows: python -m venv .venv
 source .venv/bin/activate            # En Windows: .venv\Scripts\activate
 pip install -r requirements-dev.txt
-cp .env.example .env                 # ajuste DATABASE_URL si su PostgreSQL pide usuario y clave
-createdb cronos                      # o créela desde pgAdmin
+cp .env.example .env                 # En Windows: copy .env.example .env
 python manage.py migrate
 python manage.py cargar_demo         # Fisioavance con casos de ejemplo
 python manage.py runserver
@@ -46,6 +49,9 @@ python manage.py runserver
 
 - Portal del paciente: <http://localhost:8000/fisioavance/>
 - Panel del equipo: <http://localhost:8000/admin/>
+
+Para usar PostgreSQL en vez de SQLite, cree la base `cronos` y cambie `DATABASE_URL` en el archivo `.env`
+(por ejemplo `postgres://usuario:clave@localhost/cronos`).
 
 ### Usuarios de prueba (solo para el computador de desarrollo)
 

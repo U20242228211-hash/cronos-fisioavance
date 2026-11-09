@@ -149,6 +149,8 @@ class Command(BaseCommand):
             ("diana", "Diana", "", Usuario.Rol.GESTOR, "Administrativa · atención al usuario"),
             ("cristhian", "Cristhian Iván", "Pérez Martínez", Usuario.Rol.DIRECCION, "Representante legal"),
             ("recepcion", "Recepción", "Fisioavance", Usuario.Rol.RECEPCION, "Recepción"),
+            ("yuliana", "Yuliana", "Ortiz Cabrera", Usuario.Rol.RECEPCION, "Auxiliar de recepción · turno de la tarde"),
+            ("luisa", "Luisa Fernanda", "Medina Castro", Usuario.Rol.GESTOR, "Auxiliar de atención al usuario"),
         ]:
             u, creado = Usuario.objects.get_or_create(username=usuario, defaults={"first_name": nombre, "last_name": apellido})
             u.institucion, u.rol, u.cargo, u.is_active = fisio, rol, cargo, True
@@ -175,6 +177,7 @@ class Command(BaseCommand):
         else:
             self._pqrsf(fisio, servicios, usuarios, azar)
             self._encuestas(fisio, servicios, usuarios, azar)
+            self._complementos(fisio, servicios, usuarios, azar)
         self.stdout.write(self.style.SUCCESS("Listo: Fisioavance IPS cargada. Usuarios y clave de prueba en el README."))
 
     # ------------------------------------------------------------------------------------------
@@ -325,3 +328,114 @@ class Command(BaseCommand):
                 institucion=fisio, nombre_paciente=nombre, telefono=f"3{azar.randint(100000000, 229999999)}", servicio=servicios["Fisioterapia"],
                 fin_tratamiento=hoy, creada_por=usuarios["recepcion"], enviada_en=timezone.now() - timedelta(hours=5),
             )
+
+    # ------------------------------------------------------------------------------------------
+    def _atender(self, p, quien, recibida, cuando, texto, comunicar=True):
+        """Lleva un caso hasta «respondida»: clasificación confirmada, respuesta y aviso o comunicación."""
+        p.clasificacion_confirmada, p.estado, p.asignada_a = True, PQRSF.Estado.EN_TRAMITE, quien
+        p.save()
+        self._actuacion(p, "clasificacion", f"Clasificación confirmada: {p.get_clasificacion_display()}.", recibida + timedelta(hours=2), quien, "radicada")
+        p.respuesta, p.respondida_en, p.respondida_por, p.estado = texto, cuando, quien, PQRSF.Estado.RESPONDIDA
+        if p.anonima:
+            p.aviso_desde = timezone.localdate(cuando)
+            p.aviso_hasta = timezone.localdate(plazos.sumar_dias_habiles(cuando, 5))
+        p.save()
+        self._actuacion(p, "respuesta", "Se dio respuesta dentro del término.", cuando, quien, "en_tramite", True)
+        if p.anonima:
+            self._actuacion(p, "aviso", f"Respuesta publicada hasta el {p.aviso_hasta:%d/%m/%Y}.", cuando, quien, visible=True)
+        elif comunicar:
+            p.comunicada_en = cuando + timedelta(minutes=10)
+            p.save()
+            medio = "correo" if p.medio_respuesta == "correo" else "WhatsApp"
+            self._actuacion(p, "comunicacion", f"Respuesta enviada por {medio}.", p.comunicada_en, quien, visible=True)
+
+    def _complementos(self, fisio, servicios, usuarios, azar):
+        """Llena las secciones que quedarían vacías: avisos activos, registro para la Supersalud, notas internas,
+        alertas, escalamiento, respuestas por correo, invitaciones en todos los estados."""
+        diana, cristhian, recepcion = usuarios["diana"], usuarios["cristhian"], usuarios["recepcion"]
+        aseguradora = Aseguradora.objects.filter(institucion=fisio).first()
+        ahora = timezone.now()
+
+        # 1. Registro para la Supersalud en los casos ya cerrados
+        acciones = {
+            "R": "Se reprogramaron las sesiones y se habló con el área asistencial para que no se repita.",
+            "Q": "Se conversó con la persona involucrada y se reforzó el protocolo de atención.",
+            "P": "Se entregó al paciente lo que solicitó.",
+            "S": "Se llevó la sugerencia al comité de calidad.",
+            "F": "Se compartió el mensaje con el profesional y con todo el equipo.",
+        }
+        cerradas = list(PQRSF.objects.filter(institucion=fisio, estado=PQRSF.Estado.CERRADA).order_by("recibida_en"))
+        for i, p in enumerate(cerradas):
+            if p.vinculacion == "aseguradora":
+                p.regimen = "contributivo" if i % 2 else "subsidiado"
+            p.accion_realizada = acciones[p.tipo]
+            p.save()
+        reclamos = [p for p in cerradas if p.tipo == "R"]
+        if reclamos:
+            reclamos[0].negacion_servicio = True
+            reclamos[0].detalle_negacion = "No había agenda disponible para las sesiones que faltaban. Responsable: coordinación de agenda."
+            reclamos[0].save()
+        if len(reclamos) > 2:
+            reclamos[2].tutela = True
+            reclamos[2].save()
+
+        # 2. Avisos publicados: PQRSF anónimas respondidas esta semana
+        for dias, texto_caso, tipo, servicio, respuesta in [
+            (3, "Pónganle música tranquila a la sala de espera, ayuda a relajarse antes de la terapia.", "S", "Fisioterapia",
+             "Gracias por la idea. La probamos esta semana en la sala de espera y la dejamos si a los pacientes les gusta."),
+            (2, "En el segundo piso el aire acondicionado no funciona y hace mucho calor en las terapias de la tarde.", "Q", "Terapia ocupacional",
+             "Gracias por avisarnos. Ya se reportó el daño y se está reparando; mientras tanto movimos las sesiones a las salas de abajo."),
+        ]:
+            recibida = ahora - timedelta(days=dias)
+            p = self._crear(fisio, servicios, (tipo, servicio, texto_caso, "ninguna", "buzon", True), recibida, azar, aseguradora)
+            self._atender(p, diana, recibida, ahora - timedelta(days=1, hours=2), respuesta)
+
+        # 3. Respondida por correo (sin cerrar) y escalada a la dirección
+        recibida = ahora - timedelta(days=2, hours=3)
+        p = self._crear(fisio, servicios, ("P", "Fisiatría", "Solicito la constancia de mis atenciones en fisiatría para presentarla ante mi aseguradora.", "ninguna", "correo", False), recibida, azar, aseguradora)
+        p.medio_respuesta, p.correo = PQRSF.MedioRespuesta.CORREO, f"{p.nombres.split()[0].lower()}.{p.apellidos.split()[0].lower()}@example.com"
+        p.save()
+        self._atender(p, diana, recibida, ahora - timedelta(days=1, hours=1), "Adjuntamos la constancia solicitada. Si necesita una copia física, puede reclamarla en la sede.")
+
+        recibida = ahora - timedelta(hours=30)
+        p = self._crear(fisio, servicios, ("R", "Fisioterapia", "Pedí cambio de terapeuta por la forma en que me trataron y todavía no me responden.", "ninguna", "web", False), recibida, azar, aseguradora)
+        p.clasificacion_confirmada, p.estado, p.asignada_a = True, PQRSF.Estado.EN_TRAMITE, cristhian
+        p.save()
+        self._actuacion(p, "clasificacion", f"Clasificación confirmada: {p.get_clasificacion_display()}.", recibida + timedelta(hours=1), diana, "radicada")
+        self._actuacion(p, "asignacion", "Responsable: Cristhian Iván Pérez Martínez.", recibida + timedelta(hours=1), diana, visible=True)
+
+        # 4. Registrado en la recepción, todavía sin confirmar
+        recibida = ahora - timedelta(hours=5)
+        p = self._crear(fisio, servicios, ("Q", "Fisioterapia", "Dejé una queja en la recepción porque me cobraron una sesión que no recibí.", "ninguna", "presencial", False), recibida, azar, aseguradora)
+        self._actuacion(p, "nota", "Registrado por recepción: el paciente dejó el reclamo en persona.", recibida + timedelta(minutes=10), recepcion)
+
+        # 5. Notas internas, alertas y escalamiento según el término de cada caso abierto
+        for p in PQRSF.objects.filter(institucion=fisio, estado__in=[PQRSF.Estado.RADICADA, PQRSF.Estado.EN_TRAMITE]):
+            pct = p.porcentaje(ahora)
+            if pct >= 50 and not p.alerta_50:
+                p.alerta_50 = True
+                self._actuacion(p, "alerta", "Alerta al 50 % del término enviada al responsable.", p.recibida_en + (p.vence_en - p.recibida_en) * 0.5, None)
+            if pct >= 80 and not p.alerta_80:
+                p.alerta_80 = True
+                self._actuacion(p, "alerta", "Alerta al 80 % del término enviada al responsable.", p.recibida_en + (p.vence_en - p.recibida_en) * 0.8, None)
+            if pct >= 100 and not p.escalada:
+                p.escalada = True
+                self._actuacion(p, "escalamiento", "El término se venció: se avisó a la dirección.", p.vence_en, None)
+            p.save()
+            if p.clasificacion_confirmada and p.asignada_a_id:
+                self._actuacion(p, "nota", "Se llamó al paciente para ampliar la información; queda pendiente la respuesta.", p.recibida_en + timedelta(hours=6), diana)
+
+        # 6. Invitaciones a la encuesta en todos los estados
+        hoy = timezone.localdate()
+        for nombre, estado in [("Marleny Cabrera Trujillo", "sin_enviar"), ("Jairo Andrade Polanía", "pendiente"), ("Nancy Tamayo Rojas", "pendiente"),
+                               ("Álvaro Quintero Gómez", "pendiente"), ("Liliana Charry Medina", "vencida")]:
+            inv = InvitacionEncuesta.objects.create(
+                institucion=fisio, nombre_paciente=nombre, telefono=f"3{azar.randint(100000000, 229999999)}",
+                servicio=servicios[azar.choice(list(servicios))], fin_tratamiento=hoy - timedelta(days=40 if estado == "vencida" else 1),
+                creada_por=recepcion,
+            )
+            if estado != "sin_enviar":
+                inv.enviada_en = ahora - timedelta(days=40 if estado == "vencida" else 1)
+            if estado == "vencida":
+                inv.expira_en = ahora - timedelta(days=10)
+            inv.save()

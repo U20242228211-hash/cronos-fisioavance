@@ -64,7 +64,7 @@ mark.go{background-size:100% 100%}
 .nav{position:absolute;bottom:14px;z-index:30;width:56px;height:56px;border-radius:14px;background:var(--papel);border:3px solid var(--tinta);box-shadow:4px 4px 0 var(--tinta);font:800 34px/1 "Brico";color:var(--tinta)}
 #ant{left:24px}#sig{right:24px}
 #notas{position:absolute;left:0;right:0;bottom:0;background:var(--tinta);color:var(--papel);border-top:6px solid var(--mostaza);padding:22px 110px 30px;z-index:60;display:none}
-#notas.on{display:block}#notas small{color:var(--mostaza);font:800 20px "Brico";letter-spacing:.14em}#notas div{font:500 30px/1.4 "Brico";margin-top:6px}
+#notas.on{display:block}#notas small{color:var(--mostaza);font:800 20px "Brico";letter-spacing:.14em}#notas div{font:500 27px/1.4 "Brico";margin-top:6px;white-space:pre-line;max-height:520px;overflow:auto}
 #vista{position:absolute;inset:0;background:rgba(27,26,23,.97);z-index:70;display:none;padding:60px 90px;grid-template-columns:repeat(4,1fr);gap:22px;align-content:start;overflow:auto}
 #vista.on{display:grid}
 #vista button{background:var(--papel);border:3px solid var(--tinta);border-radius:14px;padding:18px;text-align:left;font:800 28px "Brico";color:var(--tinta)}
@@ -124,7 +124,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;heigh
       <span class="chip a-pop" data-p="2">Pedro Antonio Silva Tovar</span><span class="chip a-pop" data-p="2" style="animation-delay:.12s">Valeria Vargas Artunduaga</span><span class="chip a-pop" data-p="2" style="animation-delay:.24s">José Manuel Garzón Durán</span><span class="chip a-pop" data-p="2" style="animation-delay:.36s">Angela Sofía Rupay Aros</span>
     </div>
     <p class="peque a-sube" data-p="3">Universidad Surcolombiana · Docente Maryoli González Quesada · 2026-2 · Para Fisioavance IPS, Neiva</p>
-    <aside class="nota">[Flecha →: frase / nombres / datos] Buenas tardes. Les vamos a contar cómo un trabajo de clase pasó de una idea en el papel a un programa que funciona. Es una historia con un cambio de rumbo a la mitad y un reloj como protagonista. Por eso se llama Cronos.</aside>
+    <aside class="nota">Buenas tardes, profe y compañeros. Somos el grupo 5 y hoy les contamos cómo hicimos Cronos.
+▶ Sale la frase «Que ninguna queja de un paciente se venza sin que alguien la vea»
+Cronos es un sistema para que ninguna queja de un paciente se venza sin que alguien la vea.
+▶ Salen los cuatro nombres
+Somos Pedro, Valeria, Angela y yo, José Manuel.
+▶ Salen la universidad y la docente
+Lo hicimos para Fisioavance IPS, un centro de rehabilitación de Neiva. Y vamos a empezar con una pregunta.</aside>
   </section>
 
   <!-- 2 GANCHO -->
@@ -151,7 +157,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;heigh
       </div>
       <div class="fila" style="gap:20px;position:absolute;right:110px;bottom:78px"><button class="bt" id="b-buzon">↻ Buzón</button><button class="bt" id="b-cronos">↻ Cronos</button></div>
     </div>
-    <aside class="nota">[→ buzón / → Cronos] Esta es la pregunta que nos cambió el proyecto. La queja entra al buzón y se queda esperando. A las 24 horas la ley ya venció y la institución ni sabe que existe; recién a las 48 la abren. Con Cronos, en el momento en que el paciente la envía el sistema la registra, cuenta el plazo y avisa. Esa diferencia es todo el proyecto.</aside>
+    <aside class="nota">Una queja de riesgo vital, por ejemplo una paciente que llega con mucho dolor, se debe resolver en 24 horas, según la ley. Y el buzón de Fisioavance se abre cada 2 días.
+▶ Sale la barra del buzón y el reloj empieza a correr solo
+Miren: la queja entra al buzón. A las 24 horas se vence el plazo de la ley y nadie sabe que existe. Recién a las 48 horas abren el buzón.
+▶ Sale la parte de Cronos, con la campana
+Con Cronos, en el momento en que el paciente envía la queja, el sistema la registra, cuenta el plazo y avisa. A la mitad del tiempo manda una alerta, y otra al 80 %. Ese es el problema que resolvimos. Para entender cómo llegamos hasta aquí, le paso a Angela.</aside>
   </section>
 
   <!-- 3 HISTORIA -->
@@ -165,7 +175,19 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;heigh
       <div id="pin" style="position:absolute;top:24px;width:50px;height:60px;transition:left .6s cubic-bezier(.5,0,.3,1)"><svg viewBox="0 0 50 60"><path d="M25 58 C25 58 4 36 4 22 a21 21 0 0 1 42 0 C46 36 25 58 25 58z" fill="#E5452A" stroke="#1B1A17" stroke-width="4"/><circle cx="25" cy="22" r="8" fill="#FFFDF8" stroke="#1B1A17" stroke-width="3"/></svg></div>
     </div>
     <div class="stk" id="hito" style="min-height:300px;position:relative;overflow:hidden"></div>
-    <aside class="nota">[→ avanza cada etapa] Empezamos con una clínica, la Clínica Belo Horizonte, para un sistema de quejas y reclamos. No se pudo seguir con esa clínica y tocó buscar otra institución. Ahí apareció Fisioavance. El cambio no nos tumbó porque trabajamos por iteraciones.</aside>
+    <aside class="nota">Les cuento cómo llegamos hasta aquí.
+▶ Paso 1 · el pin salta a «Agosto»
+En agosto arrancamos con una clínica, la Clínica Belo Horizonte. La idea era un sistema para gestionar quejas y reclamos.
+▶ Paso 2 · «Septiembre»
+En septiembre definimos los objetivos, pasamos de siete a cinco, elegimos las técnicas y escribimos las guías de entrevista.
+▶ Paso 3 · «19 oct»: la clínica se tacha y aparece Fisioavance
+El 19 de octubre hubo un cambio de rumbo. No se pudo seguir con la clínica y tocó buscar otra institución. Escogimos Fisioavance IPS, que maneja menos volumen y nos pidió sumar encuestas de satisfacción.
+▶ Paso 4 · «26 oct»
+El 26 de octubre fuimos a la sede, entrevistamos al representante legal, grabamos el buzón y rehicimos el proyecto para ellos.
+▶ Paso 5 · «27 oct – 4 nov»
+Entre el 27 de octubre y el 4 de noviembre revisamos la ley, diseñamos y programamos Cronos, hicimos 61 pruebas y escribimos el documento.
+▶ Paso 6 · «Hoy»
+Y hoy se lo contamos. Valeria les cuenta quién es Fisioavance.</aside>
   </section>
 
   <!-- 4 FISIOAVANCE -->
@@ -179,7 +201,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;heigh
       </div>
       <div style="width:880px;display:grid;grid-template-columns:1fr 1fr;gap:26px;align-content:start" id="stats"></div>
     </div>
-    <aside class="nota">[→ cada número] Fisioavance es un centro de rehabilitación pequeño en Neiva, con siete servicios. Su volumen es bajo: dos o tres PQRSF al mes. El problema no es la cantidad sino que ninguna se pierda ni se venza. Y en su página web no hay ninguna sección de PQRSF: solo un botón de WhatsApp.</aside>
+    <aside class="nota">▶ Paso 1 · saltan los siete servicios
+Fisioavance IPS es un centro de rehabilitación en Neiva, Huila. Tiene siete servicios: fisioterapia, fisiatría, fonoaudiología, ortopedia, psicología, tecarterapia y terapia ocupacional. En Cronos, cada paciente califica el servicio que recibió.
+▶ Paso 2 · sale el 2
+Entre una apertura del buzón y la siguiente pasan 2 días.
+▶ Paso 3 · sale el 3
+Reciben dos o tres PQRSF al mes, casi todas sugerencias.
+▶ Paso 4 · sale el 30
+Hacen unas treinta encuestas al mes, también por código QR.
+▶ Paso 5 · sale el 0
+Y en su página web no hay ninguna sección de PQRSF. Como el volumen es bajo, el problema no es la cantidad: es que ninguna se pierda ni se venza. Angela sigue con la entrevista.</aside>
   </section>
 
   <!-- 5 ENTREVISTA -->
@@ -188,7 +219,19 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;heigh
     <h2 class="titulo" style="font-size:70px">Cuatro preguntas al representante legal, <span style="color:var(--mostaza)">Cristhian Pérez</span></h2>
     <div id="chat" style="display:grid;grid-template-columns:1fr 1fr;gap:22px 34px;margin-top:6px"></div>
     <div style="position:relative;height:170px"><div class="nota-adh a-caer" data-p="6" style="left:300px;top:6px;transform:rotate(-4deg)">latencia de lectura<br><span style="font:600 28px Brico">el papel espera días</span></div><div class="nota-adh a-caer" data-p="6" style="left:760px;top:12px;transform:rotate(3deg);background:#FFB3A3;animation-delay:.25s">fricción<br><span style="font:600 28px Brico">al paciente le cuesta participar</span></div><div class="mano a-izq" data-p="6" style="position:absolute;left:0;top:50px;color:var(--mostaza)">dos hallazgos →</div></div>
-    <aside class="nota">[→ una pregunta por flecha] La entrevista la hizo Angela en la sede con cuatro preguntas abiertas, grabada en video. Cristhian nos dijo: el buzón se abre cada dos días, llegan dos o tres PQRSF al mes, a los pacientes les da pereza escanear el código porque llegan de afán, y hacen unas treinta encuestas al mes. Subrayamos lo importante y salieron dos hallazgos que no esperábamos.</aside>
+    <aside class="nota">Yo hice la entrevista, el 26 de octubre, a Cristhian Pérez, el representante legal. Fueron cuatro preguntas.
+▶ Paso 1 · sale la pregunta 1 y la respuesta
+Le pregunté cómo manejan las PQRSF. Nos dijo que con un buzón de sugerencias que se abre cada 2 días.
+▶ Paso 2 · pregunta 2
+Le pregunté cuántas reciben al mes: dos o tres, casi todas sugerencias.
+▶ Paso 3 · pregunta 3
+Cuál es la mayor dificultad: que a los pacientes les da pereza escanear el código, porque casi todos vienen deprisa.
+▶ Paso 4 · pregunta 4
+Y qué herramientas agregaría: encuestas de satisfacción, unas treinta al mes, para que el usuario, y esto lo dijo él, no esté que escriba y escriba.
+▶ Paso 5 · se subrayan las frases importantes
+Subrayamos lo importante.
+▶ Paso 6 · caen las dos notas amarillas
+Y de ahí salieron dos hallazgos que no esperábamos. La latencia de lectura: el papel espera días antes de que alguien lo lea. Y la fricción: al paciente le cuesta participar. José les cuenta cómo analizamos esto.</aside>
   </section>
 
   <!-- 6 ANALISIS -->
@@ -199,7 +242,19 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;heigh
       <div class="col" style="width:560px;gap:12px" id="lista6"></div>
       <div class="stk crece" id="escena6" style="position:relative;min-height:690px;overflow:hidden"></div>
     </div>
-    <aside class="nota">[→ un paso por flecha] Paso uno: transcribimos el video. Dos: definimos siete categorías. Tres: partimos la entrevista en nueve frases y las codificamos; ahí salieron los dos códigos nuevos. Cuatro: sacamos las obligaciones de la norma. Cinco: triangulamos, que es poner todo lado a lado, y apareció la brecha. Seis: cada hallazgo se volvió requisito y lo priorizamos con MoSCoW.</aside>
+    <aside class="nota">Angela nos contó la entrevista. Yo les cuento cómo analizamos lo que nos dijo, en seis pasos.
+▶ Paso 1 · aparece la transcripción
+Uno: transcribimos el video, con el minuto de cada respuesta, para poder volver a la fuente exacta.
+▶ Paso 2 · aparecen las siete categorías
+Dos: definimos siete categorías antes de leer: etapas del proceso, volumen, puntos críticos, satisfacción, control de términos, clasificación y trazabilidad.
+▶ Paso 3 · caen las nueve frases y las dos notas
+Tres: partimos la entrevista en nueve frases y cada una fue a su categoría. Esa técnica se llama análisis de contenido. Ahí salieron dos cosas que no esperábamos: que el papel espera días en el buzón y que a los pacientes les cuesta participar.
+▶ Paso 4 · aparecen las normas
+Cuatro: hicimos lo mismo con la ley. De cada norma sacamos lo que la IPS debe hacer. La norma cubrió lo que la entrevista no preguntó.
+▶ Paso 5 · se juntan los tres círculos y sale «LA BRECHA»
+Cinco: pusimos todo lado a lado, y eso se llama triangulación. Y apareció la brecha: el buzón se abre cada 2 días y la ley da 24 horas.
+▶ Paso 6 · aparecen Debe, Debería, Podría y No tendrá
+Seis: cada hallazgo se volvió un requisito y los priorizamos con una técnica llamada MoSCoW: Debe, Debería, Podría y No tendrá. De ahí salió lo que construimos. Valeria les muestra cómo el sistema aplica la ley.</aside>
   </section>
 
   <!-- 7 CLASIFICADOR -->
@@ -210,7 +265,19 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;heigh
       <div class="col" style="width:700px;gap:14px" id="casos"></div>
       <div class="col crece" id="resp7" style="position:relative"></div>
     </div>
-    <aside class="nota">[→ un caso por flecha] Esto es lo que hace el sistema cuando entra un mensaje: busca palabras clave y propone la clasificación. El del niño con asma sale como riesgo vital de niño, niña o adolescente, con ocho horas, por la circular de la Supersalud de junio. Pero es solo una propuesta: una persona de atención al usuario la confirma.</aside>
+    <aside class="nota">Ahora veamos cómo el sistema aplica la ley. Voy a escoger mensajes de pacientes.
+▶ Paso 1 · primer mensaje: el del niño con asma (se resaltan las palabras clave)
+Este dice: «mi hijo de 9 años tiene asma y hoy lo dejaron sin la sesión». El sistema resalta las palabras clave y propone: riesgo vital de niño, niña o adolescente, 8 horas. Eso sale de una circular de la Supersalud de junio de este año.
+(Ojo: Aquí toca el botón «Atención al usuario confirma» una vez.)
+Ojo: es solo una propuesta. Una persona de atención al usuario la confirma.
+▶ Paso 2 · «mucho dolor»
+«Tengo mucho dolor y nadie me llama»: riesgo priorizado, 48 horas.
+▶ Paso 3 · «cita de control»
+«No me han dado la cita de control»: riesgo simple, 72 horas.
+▶ Paso 4 · «copia de la historia»
+«Necesito copia de mi historia clínica»: es una petición de copias, 3 días hábiles.
+▶ Paso 5 · sugerencia
+Y una sugerencia no tiene plazo en la ley, así que usamos 15 días hábiles como buena práctica. José nos va a mostrar el programa funcionando.</aside>
   </section>
 
   <!-- 9 PORTAL -->
@@ -221,7 +288,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;heigh
       <div style="width:380px;height:760px;border:14px solid #0b0b0a;border-radius:56px;background:#0b0b0a;overflow:hidden;position:relative;flex:none;box-shadow:12px 12px 0 rgba(0,0,0,.35)"><img id="tel-img" alt="pantalla" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;border-radius:42px;background:#fff;transition:transform .55s cubic-bezier(.2,.9,.2,1),opacity .4s" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="></div>
       <div class="col crece" style="gap:26px"><div class="mano" id="tel-mano" style="font-size:78px;color:var(--mostaza)"></div><p class="sub" id="tel-txt" style="font-size:42px;max-width:900px"></p><p class="peque" style="opacity:.8">Capturas reales del programa funcionando. Los datos son ficticios.</p></div>
     </div>
-    <aside class="nota">[→ una pantalla por flecha] Esto es lo que ve un paciente. Entra escaneando el cartel con QR o con un enlace por WhatsApp. No hay que crear cuenta. Tres pasos: qué pasó, sus datos y cómo quiere la respuesta. Al final recibe una constancia con el radicado y la fecha límite. Aquí es buen momento para pasar a la demo en vivo.</aside>
+    <aside class="nota">Ahora veamos lo que ve el paciente.
+▶ Sale el celular con la pantalla de inicio
+Entra escaneando un QR o con un enlace de WhatsApp. No tiene que crear cuenta.
+▶ Pantalla «¿Qué pasó?»
+Primero escoge qué quiere hacer: una petición, una queja, un reclamo, una sugerencia o una felicitación.
+▶ Pantalla de la constancia
+Al enviar recibe una constancia con el número de radicado y la fecha límite de respuesta. La ley lo pide.
+▶ Pantalla de la encuesta
+Esta es la encuesta: una pregunta por pantalla, con caritas.
+▶ Pantalla «Su caso»
+Y puede consultar su caso, con la respuesta y la advertencia de que puede acudir a la Supersalud.
+▶ El cartel con QR
+Y este es el cartel que se pega en la sede. Ahora se los mostramos funcionando.
+(Ojo: DEMO (2 a 3 minutos, en este orden): 1) En el navegador, el portal del paciente (modo celular): poner una PQRSF y mostrar la constancia. 2) Abrir el panel como Diana: la bandeja con el caso nuevo arriba. 3) Responder y mostrar el botón de WhatsApp. Antes de empezar la exposición: arrancar el servidor (comando abajo) y dejar las dos pestañas abiertas. Si algo falla, volver a las diapositivas y seguir: ya tienen las capturas.)</aside>
   </section>
 
   <!-- 10 PANEL -->
@@ -232,7 +312,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;heigh
       <div class="stk" style="padding:0;width:1180px;height:680px;overflow:hidden;position:relative;flex:none"><div style="height:46px;background:var(--tinta);display:flex;gap:10px;align-items:center;padding:0 18px"><i style="width:16px;height:16px;border-radius:50%;background:var(--tomate)"></i><i style="width:16px;height:16px;border-radius:50%;background:var(--mostaza)"></i><i style="width:16px;height:16px;border-radius:50%;background:var(--verde)"></i><span style="color:var(--papel);font:600 22px Brico;margin-left:16px">localhost:8000/admin</span></div><div style="position:absolute;left:0;right:0;top:46px;bottom:0;overflow:hidden;background:#fff"><img id="pan-img" class="zoomable" alt="panel" style="width:100%;display:block;transform-origin:50% 0" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="></div></div>
       <div class="col crece" style="gap:20px"><div class="mano" id="pan-mano" style="font-size:70px"></div><p class="sub" id="pan-txt" style="font-size:38px"></p><p class="peque" style="opacity:.7">Toca la imagen para verla grande.</p></div>
     </div>
-    <aside class="nota">[→ una pantalla por flecha] Primero el tablero: casos abiertos, por vencer, respondidos a tiempo y los dos indicadores de la Resolución 256. La bandeja pone primero lo que vence antes, con semáforo. El detalle de un caso: confirmar la clasificación, responder y enviar por WhatsApp con un clic. Los reportes bajan a Excel. Y los términos: viven en una tabla, no en el código.</aside>
+    <aside class="nota">Este es el panel que usa Diana, de atención al usuario.
+▶ Paso 1 · tablero
+Primero el tablero: los casos abiertos, los por vencer, los vencidos, el porcentaje respondido a tiempo y los dos indicadores de satisfacción de la Resolución 256.
+▶ Paso 2 · bandeja
+La bandeja: lo que vence primero va arriba y tiene semáforo.
+▶ Paso 3 · un caso
+En un caso, ella confirma la clasificación, escribe la respuesta y la envía por WhatsApp con un clic.
+▶ Paso 4 · reportes
+Los reportes: un resumen del mes y cuatro descargas en Excel.
+▶ Paso 5 · términos
+Y los términos: los plazos de la ley viven en una tabla, así que si la ley cambia se actualiza ahí, sin tocar el código. Angela les muestra algo importante del panel.</aside>
   </section>
 
   <!-- 11 SEMAFORO -->
@@ -254,7 +344,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;heigh
         <div id="vuelo"></div>
       </div>
     </div>
-    <aside class="nota">[→ play] El semáforo: verde, el término va bien; amarillo desde la mitad; rojo desde el 80 por ciento; vencida al cien. En el 50 y el 80 por ciento el sistema manda un correo al responsable, y si se vence, escala a la dirección. Esa revisión corre sola cada hora.</aside>
+    <aside class="nota">Algo importante del panel es el semáforo. Le damos play.
+▶ Un solo paso · empieza solo (también puedes mover la barra con el mouse)
+Este es un reclamo de 48 horas. Mientras corre el tiempo se ve el semáforo. Al 50 % el sistema manda un correo de alerta a Diana, que es la responsable. Al 80 %, una segunda alerta. Y si el plazo se vence, se escala a la dirección. Esa revisión corre sola, cada hora.
+(Ojo: Cuando termine la animación, sigues. Si la quieres repetir, el botón «Play».)</aside>
   </section>
 
   <!-- 12 ENCUESTA -->
@@ -262,7 +355,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;heigh
     <div class="etq">Encuesta de satisfacción · Resolución 256 de 2016</div>
     <h2 class="titulo" style="font-size:76px">Contéstala tú: <span style="color:var(--tomate)">cinco caritas</span>, menos de un minuto</h2>
     <div id="enc" style="position:relative;flex:1;overflow:hidden"></div>
-    <aside class="nota">Esta es la encuesta, y funciona de verdad. Una pregunta por pantalla, con caritas. Las preguntas uno y cinco son las oficiales del Ministerio de Salud: de ahí salen los indicadores que se reportan cada trimestre. Si alguien califica con dos o menos, el sistema avisa para que atención al usuario lo revise. Contéstenla, tardan menos de un minuto.</aside>
+    <aside class="nota">Ahora les toca a ustedes. Esta es la encuesta que contesta un paciente: cinco preguntas con caritas, en menos de un minuto.
+(Ojo: Esta diapositiva no tiene pasos: se contesta con el mouse. Pídele a alguien del público que escoja las caritas, o escógelas tú. La primera vez, con caritas buenas (sale confeti). Si quieres mostrar la alerta, califica una pregunta con «Mala».)
+La primera y la última pregunta son las oficiales del Ministerio de Salud. De ahí salen los indicadores que se reportan cada trimestre.
+Y si alguien califica con dos o menos, el sistema avisa a atención al usuario para que lo revise. Angela les cuenta cómo diseñamos el proceso.</aside>
   </section>
 
   <!-- 13 BPMN -->
@@ -279,7 +375,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;heigh
       </div>
       <div class="stk" style="padding:0;width:1230px;height:700px;overflow:hidden;position:relative;background:#fff"><img id="bp-img" class="zoomable" alt="diagrama" style="width:100%;height:100%;object-fit:contain;display:block" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="></div>
     </div>
-    <aside class="nota">[→ un diagrama por flecha] Modelamos el proceso en BPMN 2.0. A la izquierda, cómo se leen los símbolos. Primero el proceso actual con sus dos puntos críticos. Después el proceso con Cronos, en tres diagramas: radicación, atención y encuesta. Los archivos se pueden abrir en bpmn.io.</aside>
+    <aside class="nota">Para diseñar todo esto modelamos el proceso con BPMN 2.0, que es la notación estándar. A la izquierda están los símbolos: los círculos son eventos, los rectángulos son tareas, los rombos son decisiones y las líneas punteadas son mensajes entre dos partes.
+▶ Paso 1 · diagrama del proceso actual
+Este es el proceso actual. Tiene dos puntos críticos: el buzón se abre cada 2 días y el paciente no escanea el código.
+▶ Paso 2 · radicación con Cronos
+Con Cronos, el paciente radica desde el celular o deja el papel en el buzón, y el sistema radica, clasifica, calcula el plazo y avisa.
+▶ Paso 3 · atención
+Después la atención: alertas al 50 y 80 %, escalamiento si se vence y respuesta al paciente.
+▶ Paso 4 · encuesta
+Y la encuesta: invitación, guardado, revisión si hay una calificación baja y el reporte trimestral al Ministerio de Salud. Pedro les cuenta cómo nos organizamos.</aside>
   </section>
 
   <!-- 14 COMO LO HICIMOS -->
@@ -291,7 +395,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;heigh
       <div class="stk crece a-sube" data-p="2"><div class="etq" style="opacity:.7">5 sprints · toca uno</div><div class="fila" id="sprints" style="gap:12px;margin-top:10px"></div><p id="spr-det" class="peque" style="margin-top:14px;font-size:28px;min-height:84px;color:var(--tinta)"></p></div>
       <div class="stk a-sube" data-p="3" style="width:760px"><div class="etq" style="opacity:.7">Herramientas · toca una</div><div class="fila" style="flex-wrap:wrap;gap:12px;margin-top:10px" id="stack"></div><p id="stack-det" class="peque" style="margin-top:14px;min-height:70px;color:var(--tinta)"></p></div>
     </div>
-    <aside class="nota">[→ equipo / sprints / herramientas] Trabajamos con Scrum. Angela es Product Owner porque habló con el cliente. José Manuel es Scrum Master, y Pedro, Valeria y José Manuel son developers. Fueron cinco sprints y cada uno dejó una versión nueva del documento o del programa. Python con Django, Git y GitHub, PlantUML y bpmn.io.</aside>
+    <aside class="nota">▶ Paso 1 · caen las cuatro tarjetas de los roles
+Trabajamos con Scrum, y cada uno tuvo un rol. Angela fue la Product Owner, porque habló con el cliente. José fue el Scrum Master. Y Valeria, José y yo fuimos developers. Yo soy Pedro Silva.
+▶ Paso 2 · aparece el cuadro de sprints (puedes tocar uno, por ejemplo el 3)
+Fueron cinco sprints, y cada uno dejó una versión nueva del documento o del programa. El tres, que terminó el 4 de noviembre, dejó el programa funcionando con sus 61 pruebas.
+▶ Paso 3 · aparece el cuadro de herramientas
+Usamos Python con Django, que ya conocíamos de Programación Web, Git y GitHub, y PlantUML y bpmn.io para los diagramas.</aside>
   </section>
 
   <!-- 15 PRUEBAS -->
@@ -302,7 +411,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;heigh
       <div class="col pira" style="width:820px;gap:12px;align-items:center" id="pira"></div>
       <div class="stk crece" id="pira-det" style="min-height:420px;font:600 34px/1.35 Brico"></div>
     </div>
-    <aside class="nota">[→ construye la pirámide] Hicimos 61 pruebas automáticas y todas pasan. Siguen la pirámide de pruebas: muchas unitarias abajo, menos de integración en el medio y pocas de sistema arriba. Donde un error cuesta más es el cálculo de plazos: ahí hay 33 casos escritos a mano con festivos, fines de semana y cambio de año.</aside>
+    <aside class="nota">▶ Paso 1 · cae el ladrillo de abajo: 47
+Hicimos 61 pruebas automáticas. Abajo, 47 unitarias: 33 son casos del cálculo de plazos, que escribimos a mano con festivos, fines de semana y cambio de año, y 14 son de la clasificación de riesgo.
+▶ Paso 2 · cae el del medio: 12
+En el medio, 12 de integración: revisan que varias partes funcionen juntas, como radicar, los permisos y que una institución no vea los datos de otra.
+▶ Paso 3 · cae el de arriba: 2
+Arriba, 2 de sistema: un caso completo de punta a punta.
+▶ Paso 4 · sale el sello «TODAS PASAN»
+Y todas pasan.</aside>
   </section>
 
   <!-- 16 APRENDIMOS -->
@@ -311,7 +427,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;heigh
     <h2 class="titulo">Lo que <span style="color:var(--tomate)">aprendimos</span> y lo que sigue</h2>
     <div class="fila" id="apr" style="gap:28px;margin-top:10px"></div>
     <div class="stk a-sube" data-p="4" style="margin-top:8px"><div class="etq" style="opacity:.7;margin-bottom:12px">Lo que sigue, con honestidad · toca para marcar</div><div class="fila" id="sigue" style="gap:12px;flex-wrap:wrap"></div></div>
-    <aside class="nota">[→ tres aprendizajes / lo que sigue] Uno: el modelo iterativo nos salvó, porque cambiamos de cliente a la mitad. Dos: poner los plazos como datos y no como código permitió adaptarnos a la nueva circular sin tocar el motor. Tres: escribir los casos de prueba a mano nos obligó a entender la norma. Y con honestidad, lo que falta: probar con Diana y recepción y medir el minuto de la encuesta, y confirmar el hosting.</aside>
+    <aside class="nota">▶ Paso 1 · cae la primera tarjeta
+Lo primero que aprendimos: cambiar no nos tumbó. Trabajar por iteraciones nos permitió cambiar de cliente a mitad del semestre sin perder lo que ya teníamos.
+▶ Paso 2 · segunda tarjeta
+Segundo: los plazos son datos. Cuando salió la circular de las 8 horas, el sistema se adaptó sin tocar el motor.
+▶ Paso 3 · tercera tarjeta
+Tercero: probar a mano. Escribir los 33 casos de prueba a mano nos obligó a entender cómo se cuenta cada término.
+▶ Paso 4 · sale la lista «lo que sigue»
+Y con honestidad, esto es lo que falta: probar la encuesta con Diana y la recepción y medir que se conteste en menos de un minuto; confirmar si el hosting de Fisioavance permite Python; instalarlo en un subdominio con su dominio, y enviar la invitación a la encuesta de forma automática. José cierra.
+(Ojo: Puedes ir marcando los pendientes con el mouse mientras los dices.)</aside>
   </section>
 
   <!-- 17 GRACIAS -->
@@ -326,7 +450,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;heigh
       <div class="col a-pop" data-p="1" style="align-items:center;gap:16px"><div class="stk" style="width:450px;height:450px;padding:20px;transform:rotate(3deg)">
 <svg style="width:100%;height:100%" width="31mm" height="31mm" version="1.1" viewBox="0 0 31 31" xmlns="http://www.w3.org/2000/svg"><path d="M1,1H2V2H1zM2,1H3V2H2zM3,1H4V2H3zM4,1H5V2H4zM5,1H6V2H5zM6,1H7V2H6zM7,1H8V2H7zM13,1H14V2H13zM15,1H16V2H15zM16,1H17V2H16zM19,1H20V2H19zM20,1H21V2H20zM23,1H24V2H23zM24,1H25V2H24zM25,1H26V2H25zM26,1H27V2H26zM27,1H28V2H27zM28,1H29V2H28zM29,1H30V2H29zM1,2H2V3H1zM7,2H8V3H7zM11,2H12V3H11zM13,2H14V3H13zM15,2H16V3H15zM16,2H17V3H16zM23,2H24V3H23zM29,2H30V3H29zM1,3H2V4H1zM3,3H4V4H3zM4,3H5V4H4zM5,3H6V4H5zM7,3H8V4H7zM11,3H12V4H11zM12,3H13V4H12zM13,3H14V4H13zM15,3H16V4H15zM16,3H17V4H16zM17,3H18V4H17zM18,3H19V4H18zM20,3H21V4H20zM21,3H22V4H21zM23,3H24V4H23zM25,3H26V4H25zM26,3H27V4H26zM27,3H28V4H27zM29,3H30V4H29zM1,4H2V5H1zM3,4H4V5H3zM4,4H5V5H4zM5,4H6V5H5zM7,4H8V5H7zM11,4H12V5H11zM12,4H13V5H12zM15,4H16V5H15zM16,4H17V5H16zM19,4H20V5H19zM23,4H24V5H23zM25,4H26V5H25zM26,4H27V5H26zM27,4H28V5H27zM29,4H30V5H29zM1,5H2V6H1zM3,5H4V6H3zM4,5H5V6H4zM5,5H6V6H5zM7,5H8V6H7zM11,5H12V6H11zM12,5H13V6H12zM13,5H14V6H13zM15,5H16V6H15zM16,5H17V6H16zM17,5H18V6H17zM18,5H19V6H18zM19,5H20V6H19zM21,5H22V6H21zM23,5H24V6H23zM25,5H26V6H25zM26,5H27V6H26zM27,5H28V6H27zM29,5H30V6H29zM1,6H2V7H1zM7,6H8V7H7zM9,6H10V7H9zM10,6H11V7H10zM14,6H15V7H14zM15,6H16V7H15zM16,6H17V7H16zM18,6H19V7H18zM19,6H20V7H19zM20,6H21V7H20zM23,6H24V7H23zM29,6H30V7H29zM1,7H2V8H1zM2,7H3V8H2zM3,7H4V8H3zM4,7H5V8H4zM5,7H6V8H5zM6,7H7V8H6zM7,7H8V8H7zM9,7H10V8H9zM11,7H12V8H11zM13,7H14V8H13zM15,7H16V8H15zM17,7H18V8H17zM19,7H20V8H19zM21,7H22V8H21zM23,7H24V8H23zM24,7H25V8H24zM25,7H26V8H25zM26,7H27V8H26zM27,7H28V8H27zM28,7H29V8H28zM29,7H30V8H29zM12,8H13V9H12zM13,8H14V9H13zM15,8H16V9H15zM18,8H19V9H18zM19,8H20V9H19zM21,8H22V9H21zM1,9H2V10H1zM4,9H5V10H4zM6,9H7V10H6zM7,9H8V10H7zM9,9H10V10H9zM10,9H11V10H10zM13,9H14V10H13zM14,9H15V10H14zM15,9H16V10H15zM16,9H17V10H16zM17,9H18V10H17zM20,9H21V10H20zM22,9H23V10H22zM24,9H25V10H24zM1,10H2V11H1zM2,10H3V11H2zM3,10H4V11H3zM5,10H6V11H5zM6,10H7V11H6zM10,10H11V11H10zM11,10H12V11H11zM14,10H15V11H14zM15,10H16V11H15zM17,10H18V11H17zM21,10H22V11H21zM22,10H23V11H22zM23,10H24V11H23zM26,10H27V11H26zM29,10H30V11H29zM2,11H3V12H2zM3,11H4V12H3zM4,11H5V12H4zM5,11H6V12H5zM6,11H7V12H6zM7,11H8V12H7zM8,11H9V12H8zM9,11H10V12H9zM14,11H15V12H14zM15,11H16V12H15zM17,11H18V12H17zM20,11H21V12H20zM23,11H24V12H23zM26,11H27V12H26zM27,11H28V12H27zM28,11H29V12H28zM2,12H3V13H2zM3,12H4V13H3zM5,12H6V13H5zM8,12H9V13H8zM9,12H10V13H9zM10,12H11V13H10zM11,12H12V13H11zM12,12H13V13H12zM14,12H15V13H14zM15,12H16V13H15zM16,12H17V13H16zM19,12H20V13H19zM20,12H21V13H20zM21,12H22V13H21zM24,12H25V13H24zM25,12H26V13H25zM27,12H28V13H27zM28,12H29V13H28zM1,13H2V14H1zM2,13H3V14H2zM4,13H5V14H4zM5,13H6V14H5zM6,13H7V14H6zM7,13H8V14H7zM8,13H9V14H8zM11,13H12V14H11zM12,13H13V14H12zM14,13H15V14H14zM17,13H18V14H17zM18,13H19V14H18zM19,13H20V14H19zM21,13H22V14H21zM22,13H23V14H22zM23,13H24V14H23zM26,13H27V14H26zM28,13H29V14H28zM29,13H30V14H29zM1,14H2V15H1zM2,14H3V15H2zM3,14H4V15H3zM5,14H6V15H5zM6,14H7V15H6zM11,14H12V15H11zM12,14H13V15H12zM13,14H14V15H13zM15,14H16V15H15zM20,14H21V15H20zM21,14H22V15H21zM22,14H23V15H22zM24,14H25V15H24zM1,15H2V16H1zM2,15H3V16H2zM4,15H5V16H4zM7,15H8V16H7zM9,15H10V16H9zM10,15H11V16H10zM13,15H14V16H13zM14,15H15V16H14zM17,15H18V16H17zM22,15H23V16H22zM26,15H27V16H26zM27,15H28V16H27zM28,15H29V16H28zM29,15H30V16H29zM5,16H6V17H5zM9,16H10V17H9zM10,16H11V17H10zM11,16H12V17H11zM12,16H13V17H12zM14,16H15V17H14zM15,16H16V17H15zM17,16H18V17H17zM18,16H19V17H18zM19,16H20V17H19zM22,16H23V17H22zM23,16H24V17H23zM26,16H27V17H26zM28,16H29V17H28zM2,17H3V18H2zM5,17H6V18H5zM6,17H7V18H6zM7,17H8V18H7zM8,17H9V18H8zM10,17H11V18H10zM11,17H12V18H11zM13,17H14V18H13zM15,17H16V18H15zM17,17H18V18H17zM18,17H19V18H18zM20,17H21V18H20zM22,17H23V18H22zM24,17H25V18H24zM28,17H29V18H28zM2,18H3V19H2zM4,18H5V19H4zM6,18H7V19H6zM8,18H9V19H8zM10,18H11V19H10zM11,18H12V19H11zM13,18H14V19H13zM15,18H16V19H15zM17,18H18V19H17zM23,18H24V19H23zM24,18H25V19H24zM26,18H27V19H26zM29,18H30V19H29zM1,19H2V20H1zM3,19H4V20H3zM4,19H5V20H4zM5,19H6V20H5zM7,19H8V20H7zM11,19H12V20H11zM13,19H14V20H13zM14,19H15V20H14zM18,19H19V20H18zM23,19H24V20H23zM24,19H25V20H24zM28,19H29V20H28zM29,19H30V20H29zM4,20H5V21H4zM6,20H7V21H6zM10,20H11V21H10zM13,20H14V21H13zM15,20H16V21H15zM16,20H17V21H16zM17,20H18V21H17zM18,20H19V21H18zM20,20H21V21H20zM21,20H22V21H21zM28,20H29V21H28zM29,20H30V21H29zM1,21H2V22H1zM4,21H5V22H4zM5,21H6V22H5zM6,21H7V22H6zM7,21H8V22H7zM9,21H10V22H9zM11,21H12V22H11zM17,21H18V22H17zM21,21H22V22H21zM22,21H23V22H22zM23,21H24V22H23zM24,21H25V22H24zM25,21H26V22H25zM27,21H28V22H27zM9,22H10V23H9zM10,22H11V23H10zM11,22H12V23H11zM12,22H13V23H12zM13,22H14V23H13zM17,22H18V23H17zM20,22H21V23H20zM21,22H22V23H21zM25,22H26V23H25zM27,22H28V23H27zM28,22H29V23H28zM29,22H30V23H29zM1,23H2V24H1zM2,23H3V24H2zM3,23H4V24H3zM4,23H5V24H4zM5,23H6V24H5zM6,23H7V24H6zM7,23H8V24H7zM10,23H11V24H10zM11,23H12V24H11zM17,23H18V24H17zM19,23H20V24H19zM21,23H22V24H21zM23,23H24V24H23zM25,23H26V24H25zM28,23H29V24H28zM1,24H2V25H1zM7,24H8V25H7zM9,24H10V25H9zM12,24H13V25H12zM13,24H14V25H13zM15,24H16V25H15zM17,24H18V25H17zM19,24H20V25H19zM21,24H22V25H21zM25,24H26V25H25zM26,24H27V25H26zM27,24H28V25H27zM1,25H2V26H1zM3,25H4V26H3zM4,25H5V26H4zM5,25H6V26H5zM7,25H8V26H7zM10,25H11V26H10zM11,25H12V26H11zM13,25H14V26H13zM16,25H17V26H16zM17,25H18V26H17zM18,25H19V26H18zM21,25H22V26H21zM22,25H23V26H22zM23,25H24V26H23zM24,25H25V26H24zM25,25H26V26H25zM1,26H2V27H1zM3,26H4V27H3zM4,26H5V27H4zM5,26H6V27H5zM7,26H8V27H7zM9,26H10V27H9zM10,26H11V27H10zM13,26H14V27H13zM18,26H19V27H18zM19,26H20V27H19zM20,26H21V27H20zM23,26H24V27H23zM25,26H26V27H25zM26,26H27V27H26zM27,26H28V27H27zM28,26H29V27H28zM1,27H2V28H1zM3,27H4V28H3zM4,27H5V28H4zM5,27H6V28H5zM7,27H8V28H7zM10,27H11V28H10zM11,27H12V28H11zM12,27H13V28H12zM13,27H14V28H13zM19,27H20V28H19zM22,27H23V28H22zM25,27H26V28H25zM26,27H27V28H26zM27,27H28V28H27zM29,27H30V28H29zM1,28H2V29H1zM7,28H8V29H7zM11,28H12V29H11zM12,28H13V29H12zM13,28H14V29H13zM15,28H16V29H15zM16,28H17V29H16zM18,28H19V29H18zM19,28H20V29H19zM20,28H21V29H20zM21,28H22V29H21zM25,28H26V29H25zM28,28H29V29H28zM1,29H2V30H1zM2,29H3V30H2zM3,29H4V30H3zM4,29H5V30H4zM5,29H6V30H5zM6,29H7V30H6zM7,29H8V30H7zM9,29H10V30H9zM13,29H14V30H13zM15,29H16V30H15zM16,29H17V30H16zM18,29H19V30H18zM21,29H22V30H21zM24,29H25V30H24zM25,29H26V30H25zM28,29H29V30H28z" id="qr-path" fill="#000000" fill-opacity="1" fill-rule="nonzero" stroke="none" /></svg></div><div class="mano" style="font-size:56px">escanéalo y sigue a Fisioavance</div></div>
     </div>
-    <aside class="nota">Empezó como un trabajo de clase y terminó siendo algo que Fisioavance podría usar de verdad. Como está hecho para varias instituciones, podría servirle a otras IPS. Les dejamos el QR del Instagram de Fisioavance, por si quieren conocerlos. Gracias. ¿Preguntas?</aside>
+    <aside class="nota">▶ Caen las letras de «¡Gracias!», sale el confeti, y con → aparece el QR
+Esto empezó como un trabajo de clase y terminó siendo algo que Fisioavance podría usar de verdad. Y como está hecho para varias instituciones, podría servirle a otras IPS. Les dejamos el QR del Instagram de Fisioavance, por si quieren conocerlos. Gracias. ¿Preguntas?
+(Ojo: Las preguntas las contestas tú. Si alguien responde mal, completas con calma. Las respuestas rápidas están en la última hoja.)</aside>
   </section>
 
   <button class="nav" id="ant" title="Anterior (←)">‹</button>
@@ -352,7 +478,7 @@ const COL=["#E5452A","#F4B73D","#2A47D8","#2E9B67","#1B1A17"];
 function pintaPasos(){const p=$("#pt");p.innerHTML="";const m=slides[idx]._max;for(let k=1;k<=m;k++)p.appendChild(el("i",k<=paso?"h":""))}
 function render(){const s=slides[idx];s.querySelectorAll("[data-p]").forEach(x=>x.classList.toggle("on",+x.dataset.p<=paso));if(R[idx])R[idx](paso);pintaPasos()}
 function entrar(n,ultimo){idx=n;paso=ultimo?slides[n]._max:0;slides.forEach(s=>s.classList.remove("activa"));const s=slides[n];s.classList.add("activa");
-  $("#cont").textContent=(n+1)+" / "+slides.length;$("#notas-txt").textContent="HABLA: "+s._quien.toUpperCase()+" · "+s._nota;$("#quien").textContent=s._quien;tSl=Date.now();history.replaceState(null,"","#"+(n+1));
+  $("#cont").textContent=(n+1)+" / "+slides.length;$("#notas-txt").textContent="HABLA: "+s._quien.toUpperCase()+"\n"+s._nota;$("#quien").textContent=s._quien;tSl=Date.now();history.replaceState(null,"","#"+(n+1));
   if(E[n])E[n]();render()}
 function ir(n,ultimo){n=Math.max(0,Math.min(slides.length-1,n));if(ocupado)return;
   ocupado=true;const c=$("#cortina");c.style.background=COL[n%COL.length];

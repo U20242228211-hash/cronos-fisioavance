@@ -107,7 +107,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:56px;heigh
 <body>
 <div id="esc">
   <div id="cortina"></div>
-  <div id="hud"><span id="tSlide">0:00</span><span id="tTotal">0:00</span><span id="cont">1 / 16</span></div>
+  <div id="hud"><span id="quien" style="background:#F4B73D"></span><span id="tSlide">0:00</span><span id="tTotal">0:00</span><span id="cont">1 / 16</span></div>
   <div id="pt"></div>
 
   <!-- 1 PORTADA -->
@@ -346,12 +346,13 @@ function ajusta(){esc.style.setProperty("--s",Math.min(innerWidth/1920,innerHeig
 
 /* ===== motor de diapositivas con pasos ===== */
 const slides=$$(".slide");let idx=0,paso=0,t0=Date.now(),tSl=Date.now(),ocupado=false;const R={},E={};
-slides.forEach(s=>{const a=s.querySelector("aside.nota");s._nota=a?a.textContent:"";if(a)a.remove();s._max=+s.dataset.pasos||0});
+const QUIEN=["José","José","Angela","Valeria","Angela","José","Valeria","José","Valeria","Angela","Valeria","Angela","Pedro","Pedro","Valeria","José"];
+slides.forEach(s=>{const a=s.querySelector("aside.nota");s._nota=a?a.textContent:"";s._quien=QUIEN[slides.indexOf(s)]||"";if(a)a.remove();s._max=+s.dataset.pasos||0});
 const COL=["#E5452A","#F4B73D","#2A47D8","#2E9B67","#1B1A17"];
 function pintaPasos(){const p=$("#pt");p.innerHTML="";const m=slides[idx]._max;for(let k=1;k<=m;k++)p.appendChild(el("i",k<=paso?"h":""))}
 function render(){const s=slides[idx];s.querySelectorAll("[data-p]").forEach(x=>x.classList.toggle("on",+x.dataset.p<=paso));if(R[idx])R[idx](paso);pintaPasos()}
 function entrar(n,ultimo){idx=n;paso=ultimo?slides[n]._max:0;slides.forEach(s=>s.classList.remove("activa"));const s=slides[n];s.classList.add("activa");
-  $("#cont").textContent=(n+1)+" / "+slides.length;$("#notas-txt").textContent=s._nota;tSl=Date.now();history.replaceState(null,"","#"+(n+1));
+  $("#cont").textContent=(n+1)+" / "+slides.length;$("#notas-txt").textContent="HABLA: "+s._quien.toUpperCase()+" · "+s._nota;$("#quien").textContent=s._quien;tSl=Date.now();history.replaceState(null,"","#"+(n+1));
   if(E[n])E[n]();render()}
 function ir(n,ultimo){n=Math.max(0,Math.min(slides.length-1,n));if(ocupado)return;
   ocupado=true;const c=$("#cortina");c.style.background=COL[n%COL.length];

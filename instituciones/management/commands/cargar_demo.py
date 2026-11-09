@@ -39,10 +39,15 @@ PROFESIONALES = [
     "Manuel Camacho Puyo", "Mayra Alejandra Barbosa", "Xiomara Reyes Rosillo",
 ]
 
-NOMBRES = ["María Fernanda", "Luis Alberto", "Carmen Rosa", "Andrés Felipe", "Gloria Inés", "Jhon Fredy", "Paola Andrea",
-           "Héctor", "Diana Marcela", "Óscar Iván", "Luz Dary", "Camilo", "Yolanda", "Sebastián", "Rubiela", "Edwin"]
+NOMBRES_F = ["María Fernanda", "Carmen Rosa", "Gloria Inés", "Paola Andrea", "Diana Marcela", "Luz Dary", "Yolanda", "Rubiela",
+             "Sandra Milena", "Martha Lucía", "Ana Beatriz", "Claudia Patricia", "Johana Alejandra", "Nidia", "Blanca Nelly"]
+NOMBRES_M = ["Luis Alberto", "Andrés Felipe", "Jhon Fredy", "Héctor", "Óscar Iván", "Camilo", "Sebastián", "Edwin",
+             "Carlos Arturo", "Jorge Enrique", "William", "Fabián Andrés", "Álvaro", "Rodrigo", "Gustavo Adolfo"]
 APELLIDOS = ["Ramírez Losada", "Perdomo Cerquera", "Trujillo Vargas", "Charry Polanía", "Cabrera Díaz", "Rojas Tovar",
-             "Quintero Cuéllar", "Andrade Puentes", "Medina Castro", "Polanía Sánchez", "Ortiz Gutiérrez", "Vargas Silva"]
+             "Quintero Cuéllar", "Andrade Puentes", "Medina Castro", "Polanía Sánchez", "Ortiz Gutiérrez", "Vargas Silva",
+             "Bonilla Cedeño", "Tamayo Lozano", "Castañeda Muñoz", "Gómez Falla", "Almario Torres", "Calderón Yate"]
+ASEGURADORAS = ["Aseguradora Surcolombiana de Salud", "Protección Vital Seguros"]
+NOMBRES_NINO = ["Santiago", "Mateo", "Samuel", "Valentina", "Isabella", "Juan José", "Sofía", "Emmanuel"]
 
 # (tipo, servicio, descripción, condición especial, canal, anónima)
 CASOS = [
@@ -62,16 +67,29 @@ CASOS = [
     ("S", "Terapia ocupacional", "Podrían tener una rampa en la entrada para las personas en silla de ruedas.", "discapacidad", "buzon", False),
     ("P", "Fisioterapia", "Necesito un certificado de asistencia a las terapias para la empresa donde trabajo.", "ninguna", "web", False),
 ]
+# Tres casos cerrados más, para que el historial de cinco meses se vea completo
+CASOS_EXTRA = [
+    ("P", "Ortopedia y traumatología", "Quisiera saber si la valoración de ortopedia necesita orden médica o si puedo pedir la cita directamente.", "ninguna", "whatsapp", False),
+    ("R", "Psicología", "Me cancelaron dos citas seguidas de psicología sin avisarme y ya llevaba un mes esperando.", "ninguna", "web", False),
+    ("S", "Fonoaudiología", "Sería bueno tener material para practicar en casa los ejercicios de lenguaje con los niños.", "menor", "buzon", False),
+]
 RESPUESTAS = {
-    "R": "Le ofrecemos disculpas. Revisamos su caso con la coordinación y ya quedó programada para continuar sus sesiones esta semana. Si necesita cambiar el horario, escríbanos al WhatsApp de la sede.",
-    "Q": "Gracias por contárnoslo. Hablamos con el equipo involucrado y reforzamos el protocolo de atención. Su caso nos ayuda a mejorar.",
-    "P": "Su solicitud está lista. Puede reclamarla en la recepción de la sede presentando su documento, o se la enviamos por correo si así lo prefiere.",
-    "S": "Gracias por su sugerencia. La revisamos en el comité de calidad y la incluimos en el plan de mejora de este mes.",
-    "F": "¡Muchas gracias por sus palabras! Las compartimos con todo el equipo. Nos alegra mucho acompañarlo en su recuperación.",
+    "R": ["Le ofrecemos disculpas. Revisamos su caso con la coordinación y ya quedó programada para continuar sus sesiones esta semana. Si necesita cambiar el horario, escríbanos al WhatsApp de la sede.",
+          "Lamentamos lo ocurrido. Hablamos con el área asistencial, le reprogramamos las citas pendientes y dejamos una persona encargada de avisarle con anticipación cualquier cambio."],
+    "Q": ["Gracias por contárnoslo. Hablamos con el equipo involucrado y reforzamos el protocolo de atención. Su caso nos ayuda a mejorar.",
+          "Le pedimos disculpas. La situación se trató con el personal de la sede y quedó como compromiso de mejora en la próxima reunión de calidad."],
+    "P": ["Su solicitud está lista. Puede reclamarla en la recepción de la sede presentando su documento, o se la enviamos por correo si así lo prefiere.",
+          "Con gusto le informamos: la atención es de lunes a viernes en el horario publicado en la sede y en nuestro WhatsApp. Cualquier duda, escríbanos."],
+    "S": ["Gracias por su sugerencia. La revisamos en el comité de calidad y la incluimos en el plan de mejora de este mes.",
+          "Nos parece una muy buena idea. La llevamos a la dirección para evaluar cómo implementarla."],
+    "F": ["¡Muchas gracias por sus palabras! Las compartimos con todo el equipo. Nos alegra mucho acompañarlo en su recuperación.",
+          "Su mensaje nos motiva a seguir. Se lo hicimos llegar al profesional y a todo el equipo."],
 }
-COMENTARIOS_BUENOS = ["Excelente atención, muy amables.", "Los terapeutas son muy profesionales.", "Me sentí muy bien atendido.",
-                      "Todo muy organizado.", "Gracias por la paciencia.", "", "", "", ""]
-COMENTARIOS_MALOS = ["Me tocó esperar mucho para la sesión.", "La sede estaba muy llena y hacía calor.", "Me cambiaron la cita dos veces."]
+COMENTARIOS_BUENOS = ["Excelente atención, muy amables.", "Los terapeutas son muy profesionales y pacientes.", "Me sentí muy bien atendido.",
+                      "Todo muy organizado, siempre empiezan a la hora.", "Gracias por la paciencia con mi mamá.", "Ya camino mejor, gracias al equipo.",
+                      "Las instalaciones son cómodas.", "", "", "", "", ""]
+COMENTARIOS_MALOS = ["Me tocó esperar mucho para la sesión.", "La sede estaba muy llena y hacía calor.", "Me cambiaron la cita dos veces en la misma semana.",
+                     "No me explicaron bien los ejercicios que debía hacer en casa."]
 
 
 def _hace_dias_habiles(n, hora=10):
@@ -122,7 +140,7 @@ class Command(BaseCommand):
             servicios[nombre], _ = Servicio.objects.get_or_create(institucion=fisio, nombre=nombre, defaults={"orden": orden})
         for nombre in PROFESIONALES:
             Profesional.objects.get_or_create(institucion=fisio, nombre=nombre)
-        for nombre in ("Aseguradora de ejemplo 1", "Aseguradora de ejemplo 2"):
+        for nombre in ASEGURADORAS:
             Aseguradora.objects.get_or_create(institucion=fisio, nombre=nombre)
         crear_preguntas_por_defecto(fisio)
 
@@ -151,6 +169,7 @@ class Command(BaseCommand):
             Actuacion.objects.filter(pqrsf__institucion=fisio).delete()
             PQRSF.objects.filter(institucion=fisio).delete()
             Consecutivo.objects.filter(institucion=fisio).delete()
+            Aseguradora.objects.filter(institucion=fisio).exclude(nombre__in=ASEGURADORAS).delete()
         if PQRSF.objects.filter(institucion=fisio).exists():
             self.stdout.write("Ya había casos de ejemplo; use --borrar para recrearlos.")
         else:
@@ -160,12 +179,19 @@ class Command(BaseCommand):
 
     # ------------------------------------------------------------------------------------------
     def _persona(self, azar):
+        sexo = azar.choice(["F", "M"])
+        usados = self.__dict__.setdefault("_usados", set())
+        while True:  # que ninguna persona ni apellido se repita de más: así la demo parece de pacientes distintos
+            nombres, apellidos = azar.choice(NOMBRES_F if sexo == "F" else NOMBRES_M), azar.choice(APELLIDOS)
+            if apellidos not in usados or len(usados) >= len(APELLIDOS):
+                usados.add(apellidos)
+                break
         return {
             "tipo_documento": "CC",
             "numero_documento": str(azar.randint(12_000_000, 1_090_000_000)),
-            "nombres": azar.choice(NOMBRES),
-            "apellidos": azar.choice(APELLIDOS),
-            "sexo": azar.choice(["F", "M"]),
+            "nombres": nombres,
+            "apellidos": apellidos,
+            "sexo": sexo,
             "telefono": f"3{azar.randint(100000000, 229999999)}",
             "municipio": azar.choice(["Neiva", "Neiva", "Neiva", "Palermo", "Rivera", "Campoalegre"]),
             "fecha_nacimiento": timezone.localdate() - timedelta(days=365 * azar.randint(19, 80) + azar.randint(0, 300)),
@@ -181,6 +207,12 @@ class Command(BaseCommand):
     def _crear(self, fisio, servicios, caso, recibida, azar, aseguradora):
         tipo, servicio, texto, condicion, canal, anonima = caso
         datos = {} if anonima else self._persona(azar)
+        if condicion == "menor" and not anonima:  # lo presenta un acudiente en nombre de un niño o niña
+            datos["fecha_nacimiento"] = timezone.localdate() - timedelta(days=365 * azar.randint(28, 48))
+            datos.update(es_acudiente=True, nombre_paciente=f"{azar.choice(NOMBRES_NINO)} {datos['apellidos']}",
+                         paciente_tipo_documento="TI", paciente_numero_documento=str(azar.randint(1_080_000_000, 1_100_000_000)))
+        if tipo in ("F", "Q", "R") and not anonima and servicio != "Psicología":
+            datos["profesional"] = Profesional.objects.filter(institucion=fisio).exclude(nombre__startswith="Cristhian").order_by("?").first()
         pqrsf = PQRSF(
             institucion=fisio, tipo=tipo, servicio=servicios[servicio], descripcion=texto, condicion_especial=condicion,
             canal=canal, anonima=anonima, recibida_en=recibida, **datos,
@@ -204,9 +236,9 @@ class Command(BaseCommand):
         aseguradora = Aseguradora.objects.filter(institucion=fisio).first()
         hoy = timezone.localdate()
         # Casos ya cerrados: unos 3 por mes en los últimos 5 meses (volumen real que contó Fisioavance)
-        cerrados = CASOS[:11]
+        cerrados = CASOS[:12] + CASOS_EXTRA
         for i, caso in enumerate(cerrados):
-            dias_atras = 150 - i * 13
+            dias_atras = 148 - i * 9
             dia = hoy - timedelta(days=dias_atras)
             while not plazos.es_habil(dia):
                 dia -= timedelta(days=1)
@@ -219,7 +251,7 @@ class Command(BaseCommand):
             total = (pqrsf.vence_en - recibida).total_seconds()
             tarde = i == 6  # un caso respondido fuera del término, para que el indicador sea real
             respondida = recibida + timedelta(seconds=total * (1.15 if tarde else azar.uniform(0.15, 0.7)))
-            pqrsf.respuesta, pqrsf.respondida_en, pqrsf.respondida_por = RESPUESTAS[pqrsf.tipo], respondida, diana
+            pqrsf.respuesta, pqrsf.respondida_en, pqrsf.respondida_por = azar.choice(RESPUESTAS[pqrsf.tipo]), respondida, diana
             pqrsf.estado = PQRSF.Estado.RESPONDIDA
             if pqrsf.anonima:
                 pqrsf.aviso_desde = timezone.localdate(respondida)
@@ -271,7 +303,7 @@ class Command(BaseCommand):
                 invitacion = None
                 if canal == "invitacion":
                     invitacion = InvitacionEncuesta.objects.create(
-                        institucion=fisio, nombre_paciente=f"{azar.choice(NOMBRES)} {azar.choice(APELLIDOS)}",
+                        institucion=fisio, nombre_paciente=f"{azar.choice(NOMBRES_F + NOMBRES_M)} {azar.choice(APELLIDOS)}",
                         telefono=f"3{azar.randint(100000000, 229999999)}", servicio=servicio,
                         fin_tratamiento=dia, creada_por=usuarios["recepcion"], enviada_en=momento - timedelta(hours=3),
                     )
@@ -290,6 +322,6 @@ class Command(BaseCommand):
         # Dos invitaciones enviadas que todavía no responden
         for nombre in ("Rosa Elvira Tovar Charry", "Fabián Andrés Cuéllar Rojas"):
             InvitacionEncuesta.objects.create(
-                institucion=fisio, nombre_paciente=nombre, telefono="3001234567", servicio=servicios["Fisioterapia"],
+                institucion=fisio, nombre_paciente=nombre, telefono=f"3{azar.randint(100000000, 229999999)}", servicio=servicios["Fisioterapia"],
                 fin_tratamiento=hoy, creada_por=usuarios["recepcion"], enviada_en=timezone.now() - timedelta(hours=5),
             )

@@ -12,6 +12,10 @@
     <dt>Recibida</dt><dd>{{ pqrsf.recibida_en|date:"j \d\e F \d\e Y, g:i a"|lower }}</dd>
     {% if pqrsf.abierta and pqrsf.vence_en %}<dt>Respuesta a más tardar</dt><dd>{{ pqrsf.vence_en|date:"j \d\e F \d\e Y, g:i a"|lower }}</dd>{% endif %}
   </dl>
+  <div style="display:grid;gap:8px">
+    <h2>Lo que usted nos contó</h2>
+    <div class="relato">{{ pqrsf.descripcion }}</div>
+  </div>
   {% if pqrsf.respuesta and not pqrsf.abierta %}
     <div style="display:grid;gap:8px">
       <h2>Nuestra respuesta</h2>

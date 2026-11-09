@@ -63,6 +63,7 @@ def test_consultar_con_radicado_y_documento(client, institucion, datos_paciente)
     pqrsf = PQRSF.objects.get()
     bien = client.post(url("consulta", institucion), {"radicado": pqrsf.radicado.lower(), "documento": "1075123456"})
     assert bien.status_code == 302 and pqrsf.token in bien.url
+    assert pqrsf.descripcion in client.get(bien.url).content.decode()  # el paciente ve lo que contó
     mal = client.post(url("consulta", institucion), {"radicado": pqrsf.radicado, "documento": "999"})
     assert mal.status_code == 200 and "No encontramos" in mal.content.decode()
 

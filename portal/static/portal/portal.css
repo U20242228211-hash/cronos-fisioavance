@@ -119,6 +119,7 @@ input[type=file] { font: inherit; }
 .linea li::after { content: ""; position: absolute; left: 12px; top: 22px; bottom: 0; width: 2px; background: var(--borde); }
 .linea li:last-child::after { display: none; }
 .linea time { display: block; color: var(--tenue); font-size: .85rem; }
+.relato { white-space: pre-line; background: var(--fondo); border-left: 5px solid var(--marca); border-radius: 14px; padding: 16px 18px; }
 .respuesta { white-space: pre-line; background: var(--ok-suave); border-radius: 14px; padding: 16px 18px; }
 
 .pregunta { display: grid; gap: 18px; text-align: center; }

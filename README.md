@@ -8,6 +8,9 @@ Primera institución: **Fisioavance IPS** (Neiva, Huila). Proyecto final de Inge
 Surcolombiana · 2026-2 · José Manuel Garzón Durán, Angela Sofía Rupay Aros, Pedro Antonio Silva Tovar y Valeria
 Vargas Artunduaga.
 
+
+> 🌐 **Demo en línea:** https://jmgarzondev.pythonanywhere.com/fisioavance/ (panel: `/admin/`) · datos ficticios.
+
 ## Qué hace
 
 | Para el paciente (sin crear cuenta) | Para el equipo de la IPS |

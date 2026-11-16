@@ -36,6 +36,8 @@ CRONOS_INSTITUCION_POR_DEFECTO=fisioavance
 ENV
   echo "▶ Archivo .env creado"
 fi
+# Es una demo con datos ficticios: mostrar usuarios y clave de prueba (quitar la línea CRONOS_DEMO=1 del .env para ocultarlos)
+grep -q "^CRONOS_DEMO=" .env || echo "CRONOS_DEMO=1" >> .env
 
 echo "▶ Base de datos y datos de ejemplo…"
 python manage.py migrate --noinput -v 0

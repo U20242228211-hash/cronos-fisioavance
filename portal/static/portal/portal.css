@@ -154,3 +154,7 @@ input[type=file] { font: inherit; }
   .tarjeta { border: 0; padding: 0; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* Aviso del modo demostración */
+.demo-aviso { background: #fff4d6; color: #5a4200; border-bottom: 1px solid #f0d58a; font-size: .9rem; text-align: center; padding: 8px 14px; line-height: 1.4; }
+.demo-aviso a { color: inherit; font-weight: 700; }

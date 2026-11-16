@@ -10,6 +10,7 @@ Los pacientes, las PQRSF y las encuestas son FICTICIOS.
 import random
 from datetime import datetime, time, timedelta
 
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
@@ -22,7 +23,7 @@ from pqrsf.models import PQRSF, Actuacion, Consecutivo
 from pqrsf.servicios import proponer_clasificacion, proponer_motivo
 from usuarios.models import Usuario
 
-CLAVE_DEMO = "Cronos-Demo-2026"
+CLAVE_DEMO = settings.CRONOS_DEMO_CLAVE
 
 AVISO = (
     "Fisioavance IPS, como responsable del tratamiento, usará sus datos personales (nombre, documento, datos de "

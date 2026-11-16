@@ -70,6 +70,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "instituciones.context_processors.institucion",
+                "instituciones.context_processors.demo",
             ],
         },
     },
@@ -139,6 +140,11 @@ else:
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Cronos <no-responder@localhost>")
 
 CRONOS_INSTITUCION_POR_DEFECTO = os.environ.get("CRONOS_INSTITUCION_POR_DEFECTO", "")
+
+# Modo demostración: muestra los usuarios y la clave de prueba en la entrada del panel y un aviso en el portal.
+# Encendido por defecto en desarrollo; en un servidor, CRONOS_DEMO=1 solo mientras sea una demo con datos ficticios.
+CRONOS_DEMO = os.environ.get("CRONOS_DEMO", "1" if DEBUG else "0") == "1"
+CRONOS_DEMO_CLAVE = "Cronos-Demo-2026"
 
 if not DEBUG:
     SESSION_COOKIE_SECURE = True

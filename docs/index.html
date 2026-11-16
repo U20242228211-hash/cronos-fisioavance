@@ -1,1 +1,111 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=presentacion/"><title>Cronos</title></head><body><a href="presentacion/">Presentación de Cronos</a></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cronos · Proyecto final de Ingeniería de Software</title>
+<style>
+:root{--tinta:#1B1A17;--papel:#F7F3EA;--blanco:#FFFDF8;--tomate:#E5452A;--mostaza:#F4B73D;--cobalto:#2A47D8;--gris:#5b5a55}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:"Avenir Next","Segoe UI",system-ui,sans-serif;line-height:1.5}
+.envoltura{max-width:1080px;margin:0 auto;padding:40px 20px 70px}
+header h1{font-size:clamp(40px,8vw,76px);margin:6px 0 4px;letter-spacing:-.03em;line-height:1}
+.etq{font-weight:800;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--tomate)}
+.lema{font-size:20px;max-width:760px;margin:8px 0 18px}
+.datos{color:var(--gris);font-size:15px}
+h2{font-size:26px;margin:44px 0 14px}
+.tarjetas{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.t{display:block;background:var(--blanco);border:3px solid var(--tinta);border-radius:14px;box-shadow:6px 6px 0 var(--tinta);padding:18px;text-decoration:none;color:inherit;transition:transform .1s}
+.t:hover{transform:translate(-2px,-2px)}
+.t b{display:block;font-size:19px;margin-bottom:4px}
+.t span{color:var(--gris);font-size:15px}
+.t.principal{background:var(--mostaza)}
+.galeria{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.galeria a{display:block;background:#fff;border:2px solid var(--tinta);border-radius:10px;overflow:hidden;text-decoration:none;color:var(--tinta)}
+.galeria img{width:100%;height:150px;object-fit:cover;object-position:top;display:block;border-bottom:2px solid var(--tinta)}
+.galeria span{display:block;padding:8px 10px;font-size:14px;font-weight:600}
+.moviles img{height:260px}
+.nota{background:var(--blanco);border-left:6px solid var(--cobalto);padding:14px 18px;border-radius:6px;font-size:15px}
+table{border-collapse:collapse;width:100%;background:var(--blanco);font-size:15px}
+td,th{border:2px solid var(--tinta);padding:8px 10px;text-align:left}
+th{background:var(--mostaza)}
+footer{margin-top:50px;color:var(--gris);font-size:14px}
+</style>
+</head>
+<body>
+<div class="envoltura">
+<header>
+  <div class="etq">Proyecto final · Ingeniería de Software · USCO 2026-2</div>
+  <h1>Cronos</h1>
+  <p class="lema">Sistema de PQRSF y encuestas de satisfacción para <b>Fisioavance IPS</b> (Neiva): que ninguna queja de un paciente se venza sin que alguien la vea.</p>
+  <p class="datos">Grupo 5 · Angela Sofía Rupay Aros (Product Owner) · José Manuel Garzón Durán (Scrum Master) · Pedro Antonio Silva Tovar y Valeria Vargas Artunduaga (Developers)<br>Docente: Maryoli González Quesada</p>
+</header>
+
+<h2>Lo principal</h2>
+<div class="tarjetas">
+  <a class="t principal" href="proyecto/documento-cronos-v17.pdf"><b>📄 Documento del proyecto</b><span>Versión 17, 70 páginas: análisis, requisitos, diseño, BPMN, pruebas</span></a>
+  <a class="t" href="presentacion/"><b>🎤 Presentación</b><span>Diapositivas interactivas de la exposición (tecla F: pantalla completa)</span></a>
+  <a class="t" href="https://github.com/U20242228211-hash/cronos-fisioavance"><b>💻 Código fuente</b><span>Repositorio en GitHub: Python 3.13 + Django, 61 pruebas automáticas</span></a>
+  <a class="t" href="presentacion/libretos/"><b>🗒️ Reparto de la exposición</b><span>Libretos de cada integrante</span></a>
+</div>
+
+<h2>Cómo ver el programa funcionando</h2>
+<div class="nota">
+  GitHub Pages solo publica páginas fijas, y Cronos es una aplicación web con base de datos (Django), así que no puede correr aquí.
+  Para verlo hay dos caminos: las <b>capturas de abajo</b>, tomadas del programa funcionando con datos ficticios, o <b>instalarlo</b>
+  siguiendo el README del repositorio (no necesita instalar base de datos: usa SQLite).
+  Usuarios de prueba y clave: sección «Usuarios de prueba» del README.
+</div>
+
+<h2>El portal del paciente (celular)</h2>
+<div class="galeria moviles">
+  <a href="proyecto/capturas/movil-01-inicio.jpg"><img src="proyecto/capturas/movil-01-inicio.jpg" alt="Inicio del portal"><span>Inicio, sin crear cuenta</span></a>
+  <a href="proyecto/capturas/movil-02-radicar.jpg"><img src="proyecto/capturas/movil-02-radicar.jpg" alt="Radicar una PQRSF"><span>Radicar en 3 pasos</span></a>
+  <a href="proyecto/capturas/movil-03-constancia.jpg"><img src="proyecto/capturas/movil-03-constancia.jpg" alt="Constancia"><span>Constancia con fecha límite</span></a>
+  <a href="proyecto/capturas/movil-04-encuesta.jpg"><img src="proyecto/capturas/movil-04-encuesta.jpg" alt="Encuesta"><span>Encuesta con caritas</span></a>
+  <a href="proyecto/capturas/movil-05-estado.jpg"><img src="proyecto/capturas/movil-05-estado.jpg" alt="Consulta del caso"><span>Consulta del caso</span></a>
+</div>
+
+<h2>El panel de atención al usuario</h2>
+<div class="galeria">
+  <a href="proyecto/capturas/escritorio-01-tablero.jpg"><img src="proyecto/capturas/escritorio-01-tablero.jpg" alt="Tablero"><span>Tablero con indicadores</span></a>
+  <a href="proyecto/capturas/escritorio-02-bandeja.jpg"><img src="proyecto/capturas/escritorio-02-bandeja.jpg" alt="Bandeja"><span>Bandeja con semáforo</span></a>
+  <a href="proyecto/capturas/escritorio-03-detalle.jpg"><img src="proyecto/capturas/escritorio-03-detalle.jpg" alt="Detalle"><span>Atender un caso</span></a>
+  <a href="proyecto/capturas/escritorio-04-reportes.jpg"><img src="proyecto/capturas/escritorio-04-reportes.jpg" alt="Reportes"><span>Reportes y Excel</span></a>
+  <a href="proyecto/capturas/escritorio-05-carteles.jpg"><img src="proyecto/capturas/escritorio-05-carteles.jpg" alt="Carteles"><span>Carteles con QR</span></a>
+  <a href="proyecto/capturas/escritorio-06-respuestas-encuesta.jpg"><img src="proyecto/capturas/escritorio-06-respuestas-encuesta.jpg" alt="Respuestas"><span>Respuestas de la encuesta</span></a>
+  <a href="proyecto/capturas/escritorio-07-terminos.jpg"><img src="proyecto/capturas/escritorio-07-terminos.jpg" alt="Términos"><span>Términos de respuesta</span></a>
+</div>
+
+<h2>Diagramas</h2>
+<div class="galeria">
+  <a href="proyecto/diagramas/01-casos-de-uso.png"><img src="proyecto/diagramas/01-casos-de-uso.png" alt=""><span>Casos de uso</span></a>
+  <a href="proyecto/diagramas/02-secuencia-radicacion.png"><img src="proyecto/diagramas/02-secuencia-radicacion.png" alt=""><span>Secuencia: radicación</span></a>
+  <a href="proyecto/diagramas/03-secuencia-respuesta.png"><img src="proyecto/diagramas/03-secuencia-respuesta.png" alt=""><span>Secuencia: respuesta</span></a>
+  <a href="proyecto/diagramas/04-actividad-ciclo.png"><img src="proyecto/diagramas/04-actividad-ciclo.png" alt=""><span>Actividad: ciclo de la PQRSF</span></a>
+  <a href="proyecto/diagramas/05-estados-pqrsf.png"><img src="proyecto/diagramas/05-estados-pqrsf.png" alt=""><span>Estados de la PQRSF</span></a>
+  <a href="proyecto/diagramas/06-modelo-de-datos.png"><img src="proyecto/diagramas/06-modelo-de-datos.png" alt=""><span>Modelo de datos</span></a>
+  <a href="proyecto/diagramas/07-arquitectura.png"><img src="proyecto/diagramas/07-arquitectura.png" alt=""><span>Arquitectura</span></a>
+  <a href="proyecto/diagramas/08-despliegue.png"><img src="proyecto/diagramas/08-despliegue.png" alt=""><span>Despliegue</span></a>
+  <a href="proyecto/diagramas/09-bpmn-as-is.png"><img src="proyecto/diagramas/09-bpmn-as-is.png" alt=""><span>BPMN: proceso actual</span></a>
+  <a href="proyecto/diagramas/10-bpmn-to-be-radicacion.png"><img src="proyecto/diagramas/10-bpmn-to-be-radicacion.png" alt=""><span>BPMN: radicación con Cronos</span></a>
+  <a href="proyecto/diagramas/11-bpmn-to-be-atencion.png"><img src="proyecto/diagramas/11-bpmn-to-be-atencion.png" alt=""><span>BPMN: atención</span></a>
+  <a href="proyecto/diagramas/12-bpmn-to-be-encuesta.png"><img src="proyecto/diagramas/12-bpmn-to-be-encuesta.png" alt=""><span>BPMN: encuesta</span></a>
+</div>
+<p class="datos">Los archivos .bpmn se pueden abrir en <a href="https://demo.bpmn.io">demo.bpmn.io</a> (están en la carpeta <a href="https://github.com/U20242228211-hash/cronos-fisioavance/tree/main/docs/proyecto/diagramas">proyecto/diagramas</a>).</p>
+
+<h2>En una tabla</h2>
+<table>
+  <tr><th>Qué</th><th>Detalle</th></tr>
+  <tr><td>Cliente</td><td>Fisioavance IPS, centro de rehabilitación en Neiva, Huila</td></tr>
+  <tr><td>Recolección de datos</td><td>Entrevista al representante legal (26 de octubre de 2026), observación del buzón y revisión de la norma</td></tr>
+  <tr><td>Metodología</td><td>Scrum, 5 sprints</td></tr>
+  <tr><td>Tecnología</td><td>Python 3.13, Django 6.1, SQLite / PostgreSQL / MySQL</td></tr>
+  <tr><td>Pruebas</td><td>61 automáticas: 47 unitarias, 12 de integración y 2 de sistema</td></tr>
+  <tr><td>Norma</td><td>Circular Única de la Supersalud, Circular Externa de junio de 2026, Ley 1755 de 2015, Resolución 256 de 2016, Ley 1581 de 2012</td></tr>
+</table>
+
+<footer>Datos de pacientes y casos: ficticios. Los datos de la institución son los que Fisioavance publica en su sitio web.</footer>
+</div>
+</body>
+</html>

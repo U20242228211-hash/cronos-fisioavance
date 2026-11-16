@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definiciones_AsIs" targetNamespace="https://github.com/U20242228211-hash/cronos-fisioavance" exporter="Cronos (generado)" exporterVersion="1.0">
+  <bpmn:collaboration id="Colaboracion_AsIs">
+    <bpmn:participant id="Pac" name="Paciente o acudiente" processRef="Proceso_Paciente" />
+    <bpmn:participant id="Ips" name="Fisioavance IPS" processRef="Proceso_Ips" />
+    <bpmn:messageFlow id="Mensaje_1" sourceRef="Fin_Papel" targetRef="T_Abrir" />
+    <bpmn:messageFlow id="Mensaje_2" name="Respuestas del formulario" sourceRef="Fin_Form" targetRef="T_Leer" />
+    <bpmn:textAnnotation id="Nota_1"><bpmn:text>Punto crítico 2: muchos pacientes llegan de afán y no escanean el código.</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="Asociacion_1" associationDirection="None" sourceRef="Fin_NoDice" targetRef="Nota_1" />
+    <bpmn:textAnnotation id="Nota_2"><bpmn:text>Punto crítico 1: el buzón se abre cada 2 días y un reclamo de riesgo vital se debe resolver en 24 horas.</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="Asociacion_2" associationDirection="None" sourceRef="Ini_Rec" targetRef="Nota_2" />
+    <bpmn:textAnnotation id="Nota_3"><bpmn:text>No se indagó cómo se responde ni cómo se controla el término.</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="Asociacion_3" associationDirection="None" sourceRef="T_Atender" targetRef="Nota_3" />
+  </bpmn:collaboration>
+  <bpmn:process id="Proceso_Paciente" isExecutable="false">
+    <bpmn:startEvent id="Ini_Pac" name="Quiere decir algo sobre la atención">
+      <bpmn:outgoing>Flujo_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="Gw_Como" name="¿Cómo lo hace?">
+      <bpmn:incoming>Flujo_1</bpmn:incoming>
+      <bpmn:outgoing>Flujo_2</bpmn:outgoing>
+      <bpmn:outgoing>Flujo_3</bpmn:outgoing>
+      <bpmn:outgoing>Flujo_4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="Fin_NoDice" name="La IPS no se entera">
+      <bpmn:incoming>Flujo_2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="T_Qr" name="Escanear el QR y llenar el formulario (PQRSF o encuesta)">
+      <bpmn:incoming>Flujo_3</bpmn:incoming>
+      <bpmn:outgoing>Flujo_5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Fin_Form" name="Formulario enviado">
+      <bpmn:incoming>Flujo_5</bpmn:incoming>
+      <bpmn:messageEventDefinition />
+    </bpmn:endEvent>
+    <bpmn:task id="T_Buzon" name="Escribir la sugerencia y depositarla en el buzón">
+      <bpmn:incoming>Flujo_4</bpmn:incoming>
+      <bpmn:outgoing>Flujo_6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Fin_Papel" name="Papel en el buzón">
+      <bpmn:incoming>Flujo_6</bpmn:incoming>
+      <bpmn:messageEventDefinition />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flujo_1" sourceRef="Ini_Pac" targetRef="Gw_Como" />
+    <bpmn:sequenceFlow id="Flujo_2" name="No lo dice" sourceRef="Gw_Como" targetRef="Fin_NoDice" />
+    <bpmn:sequenceFlow id="Flujo_3" name="Código QR" sourceRef="Gw_Como" targetRef="T_Qr" />
+    <bpmn:sequenceFlow id="Flujo_4" name="Buzón" sourceRef="Gw_Como" targetRef="T_Buzon" />
+    <bpmn:sequenceFlow id="Flujo_5" sourceRef="T_Qr" targetRef="Fin_Form" />
+    <bpmn:sequenceFlow id="Flujo_6" sourceRef="T_Buzon" targetRef="Fin_Papel" />
+  </bpmn:process>
+  <bpmn:process id="Proceso_Ips" isExecutable="false">
+    <bpmn:laneSet id="Carriles_Proceso_Ips">
+      <bpmn:lane id="L_Rec" name="Recepción">
+        <bpmn:flowNodeRef>Ini_Rec</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Abrir</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_Coo" name="Representante legal o coordinación">
+        <bpmn:flowNodeRef>T_Leer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Atender</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Fin_Ips</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Ini_Rec" name="Cada 2 días">
+      <bpmn:outgoing>Flujo_7</bpmn:outgoing>
+      <bpmn:timerEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:manualTask id="T_Abrir" name="Abrir el buzón y recoger los papeles">
+      <bpmn:incoming>Flujo_7</bpmn:incoming>
+      <bpmn:outgoing>Flujo_8</bpmn:outgoing>
+    </bpmn:manualTask>
+    <bpmn:userTask id="T_Leer" name="Leer las sugerencias y las respuestas del formulario">
+      <bpmn:incoming>Flujo_8</bpmn:incoming>
+      <bpmn:outgoing>Flujo_9</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="T_Atender" name="Atender cada caso">
+      <bpmn:incoming>Flujo_9</bpmn:incoming>
+      <bpmn:outgoing>Flujo_10</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Fin_Ips" name="Caso atendido">
+      <bpmn:incoming>Flujo_10</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flujo_7" sourceRef="Ini_Rec" targetRef="T_Abrir" />
+    <bpmn:sequenceFlow id="Flujo_8" sourceRef="T_Abrir" targetRef="T_Leer" />
+    <bpmn:sequenceFlow id="Flujo_9" sourceRef="T_Leer" targetRef="T_Atender" />
+    <bpmn:sequenceFlow id="Flujo_10" sourceRef="T_Atender" targetRef="Fin_Ips" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagrama_AsIs">
+    <bpmndi:BPMNPlane id="Plano_AsIs" bpmnElement="Colaboracion_AsIs">
+      <bpmndi:BPMNShape id="Pac_di" bpmnElement="Pac" isHorizontal="true"><dc:Bounds x="0" y="0" width="1055" height="330" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Ips_di" bpmnElement="Ips" isHorizontal="true"><dc:Bounds x="0" y="390" width="1055" height="330" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_Rec_di" bpmnElement="L_Rec" isHorizontal="true"><dc:Bounds x="30" y="390" width="1025" height="150" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_Coo_di" bpmnElement="L_Coo" isHorizontal="true"><dc:Bounds x="30" y="540" width="1025" height="180" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Ini_Pac_di" bpmnElement="Ini_Pac"><dc:Bounds x="132" y="142" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="95" y="183" width="110" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gw_Como_di" bpmnElement="Gw_Como" isMarkerVisible="true"><dc:Bounds x="285" y="135" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="203" y="109" width="80" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fin_NoDice_di" bpmnElement="Fin_NoDice"><dc:Bounds x="292" y="34" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="176" y="37" width="110" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Qr_di" bpmnElement="T_Qr"><dc:Bounds x="405" y="115" width="130" height="90" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fin_Form_di" bpmnElement="Fin_Form"><dc:Bounds x="612" y="142" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="654" y="145" width="90" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Buzon_di" bpmnElement="T_Buzon"><dc:Bounds x="245" y="225" width="130" height="90" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fin_Papel_di" bpmnElement="Fin_Papel"><dc:Bounds x="452" y="252" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="494" y="255" width="80" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Ini_Rec_di" bpmnElement="Ini_Rec"><dc:Bounds x="292" y="447" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="270" y="413" width="80" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Abrir_di" bpmnElement="T_Abrir"><dc:Bounds x="405" y="420" width="130" height="90" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Leer_di" bpmnElement="T_Leer"><dc:Bounds x="565" y="585" width="130" height="90" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Atender_di" bpmnElement="T_Atender"><dc:Bounds x="725" y="585" width="130" height="90" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fin_Ips_di" bpmnElement="Fin_Ips"><dc:Bounds x="932" y="612" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="895" y="653" width="110" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Nota_1_di" bpmnElement="Nota_1"><dc:Bounds x="350" y="26" width="290" height="52" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Nota_2_di" bpmnElement="Nota_2"><dc:Bounds x="80" y="600" width="330" height="56" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Nota_3_di" bpmnElement="Nota_3"><dc:Bounds x="730" y="410" width="250" height="48" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flujo_1_di" bpmnElement="Flujo_1"><di:waypoint x="168" y="160" /><di:waypoint x="285" y="160" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_2_di" bpmnElement="Flujo_2"><di:waypoint x="310" y="135" /><di:waypoint x="310" y="70" /><bpmndi:BPMNLabel><dc:Bounds x="316" y="95" width="60" height="16" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_3_di" bpmnElement="Flujo_3"><di:waypoint x="335" y="160" /><di:waypoint x="405" y="160" /><bpmndi:BPMNLabel><dc:Bounds x="340" y="140" width="60" height="16" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_4_di" bpmnElement="Flujo_4"><di:waypoint x="310" y="185" /><di:waypoint x="310" y="225" /><bpmndi:BPMNLabel><dc:Bounds x="316" y="197" width="40" height="16" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_5_di" bpmnElement="Flujo_5"><di:waypoint x="535" y="160" /><di:waypoint x="612" y="160" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_6_di" bpmnElement="Flujo_6"><di:waypoint x="375" y="270" /><di:waypoint x="452" y="270" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_7_di" bpmnElement="Flujo_7"><di:waypoint x="328" y="465" /><di:waypoint x="405" y="465" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_8_di" bpmnElement="Flujo_8"><di:waypoint x="470" y="510" /><di:waypoint x="470" y="630" /><di:waypoint x="565" y="630" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_9_di" bpmnElement="Flujo_9"><di:waypoint x="695" y="630" /><di:waypoint x="725" y="630" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_10_di" bpmnElement="Flujo_10"><di:waypoint x="855" y="630" /><di:waypoint x="932" y="630" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Mensaje_1_di" bpmnElement="Mensaje_1"><di:waypoint x="470" y="288" /><di:waypoint x="470" y="420" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Mensaje_2_di" bpmnElement="Mensaje_2"><di:waypoint x="630" y="178" /><di:waypoint x="630" y="585" /><bpmndi:BPMNLabel><dc:Bounds x="638" y="196" width="90" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Asociacion_1_di" bpmnElement="Asociacion_1"><di:waypoint x="328" y="52" /><di:waypoint x="350" y="52" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Asociacion_2_di" bpmnElement="Asociacion_2"><di:waypoint x="310" y="483" /><di:waypoint x="310" y="600" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Asociacion_3_di" bpmnElement="Asociacion_3"><di:waypoint x="790" y="585" /><di:waypoint x="790" y="458" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

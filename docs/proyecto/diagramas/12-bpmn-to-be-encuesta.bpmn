@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definiciones_Encuesta" targetNamespace="https://github.com/U20242228211-hash/cronos-fisioavance" exporter="Cronos (generado)" exporterVersion="1.0">
+  <bpmn:collaboration id="Colaboracion_Encuesta">
+    <bpmn:participant id="Pac" name="Paciente o acudiente" />
+    <bpmn:participant id="Ips" name="Fisioavance IPS" processRef="Proceso_Encuesta" />
+    <bpmn:participant id="Min" name="Ministerio de Salud y Protección Social (PISIS)" />
+    <bpmn:messageFlow id="Mensaje_1" name="Invitación con el enlace de la encuesta" sourceRef="T_Invitar" targetRef="Pac" />
+    <bpmn:messageFlow id="Mensaje_2" name="Respuestas: cinco caritas y un comentario" sourceRef="Pac" targetRef="C_Respondida" />
+    <bpmn:messageFlow id="Mensaje_3" name="Conteos del trimestre" sourceRef="T_Reportar" targetRef="Min" />
+    <bpmn:textAnnotation id="Nota_1"><bpmn:text>También se responde por el código QR o en la tableta de recepción, sin invitación.</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="Asociacion_1" associationDirection="None" sourceRef="C_Respondida" targetRef="Nota_1" />
+    <bpmn:textAnnotation id="Nota_2"><bpmn:text>Cronos le avisa por correo a atención al usuario.</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="Asociacion_2" associationDirection="None" sourceRef="T_Revisar" targetRef="Nota_2" />
+    <bpmn:textAnnotation id="Nota_3"><bpmn:text>Dentro de los 30 días siguientes al cierre de cada trimestre (Resolución 256).</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="Asociacion_3" associationDirection="None" sourceRef="Ini_Trimestre" targetRef="Nota_3" />
+  </bpmn:collaboration>
+  <bpmn:process id="Proceso_Encuesta" isExecutable="false">
+    <bpmn:laneSet id="Carriles_Proceso_Encuesta">
+      <bpmn:lane id="L_Rec" name="Recepción">
+        <bpmn:flowNodeRef>Ini_Termina</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Invitar</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_Cro" name="Cronos (sistema)">
+        <bpmn:flowNodeRef>C_Respondida</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Guardar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gw_Mala</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Fin_Guardada</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_Ate" name="Atención al usuario">
+        <bpmn:flowNodeRef>T_Revisar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Fin_Revisada</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Ini_Trimestre</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Reportar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Fin_Reporte</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Ini_Termina" name="El paciente terminó su tratamiento">
+      <bpmn:outgoing>Flujo_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sendTask id="T_Invitar" name="Crear la invitación y enviarla por WhatsApp">
+      <bpmn:incoming>Flujo_1</bpmn:incoming>
+      <bpmn:outgoing>Flujo_2</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:intermediateCatchEvent id="C_Respondida" name="Encuesta respondida">
+      <bpmn:incoming>Flujo_2</bpmn:incoming>
+      <bpmn:outgoing>Flujo_3</bpmn:outgoing>
+      <bpmn:messageEventDefinition />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:serviceTask id="T_Guardar" name="Guardar las respuestas">
+      <bpmn:incoming>Flujo_3</bpmn:incoming>
+      <bpmn:outgoing>Flujo_4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gw_Mala" name="¿Alguna calificación de 2 o menos?">
+      <bpmn:incoming>Flujo_4</bpmn:incoming>
+      <bpmn:outgoing>Flujo_5</bpmn:outgoing>
+      <bpmn:outgoing>Flujo_6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="Fin_Guardada" name="Encuesta guardada">
+      <bpmn:incoming>Flujo_5</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="T_Revisar" name="Revisar la encuesta y decidir si se registra una queja">
+      <bpmn:incoming>Flujo_6</bpmn:incoming>
+      <bpmn:outgoing>Flujo_7</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Fin_Revisada" name="Encuesta revisada">
+      <bpmn:incoming>Flujo_7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:startEvent id="Ini_Trimestre" name="Cada trimestre">
+      <bpmn:outgoing>Flujo_8</bpmn:outgoing>
+      <bpmn:timerEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:userTask id="T_Reportar" name="Descargar el Excel de la Resolución 256 y reportarlo">
+      <bpmn:incoming>Flujo_8</bpmn:incoming>
+      <bpmn:outgoing>Flujo_9</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Fin_Reporte" name="Reporte enviado">
+      <bpmn:incoming>Flujo_9</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flujo_1" sourceRef="Ini_Termina" targetRef="T_Invitar" />
+    <bpmn:sequenceFlow id="Flujo_2" sourceRef="T_Invitar" targetRef="C_Respondida" />
+    <bpmn:sequenceFlow id="Flujo_3" sourceRef="C_Respondida" targetRef="T_Guardar" />
+    <bpmn:sequenceFlow id="Flujo_4" sourceRef="T_Guardar" targetRef="Gw_Mala" />
+    <bpmn:sequenceFlow id="Flujo_5" name="No" sourceRef="Gw_Mala" targetRef="Fin_Guardada" />
+    <bpmn:sequenceFlow id="Flujo_6" name="Sí" sourceRef="Gw_Mala" targetRef="T_Revisar" />
+    <bpmn:sequenceFlow id="Flujo_7" sourceRef="T_Revisar" targetRef="Fin_Revisada" />
+    <bpmn:sequenceFlow id="Flujo_8" sourceRef="Ini_Trimestre" targetRef="T_Reportar" />
+    <bpmn:sequenceFlow id="Flujo_9" sourceRef="T_Reportar" targetRef="Fin_Reporte" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagrama_Encuesta">
+    <bpmndi:BPMNPlane id="Plano_Encuesta" bpmnElement="Colaboracion_Encuesta">
+      <bpmndi:BPMNShape id="Pac_di" bpmnElement="Pac" isHorizontal="true"><dc:Bounds x="0" y="0" width="1055" height="60" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Ips_di" bpmnElement="Ips" isHorizontal="true"><dc:Bounds x="0" y="130" width="1055" height="520" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Min_di" bpmnElement="Min" isHorizontal="true"><dc:Bounds x="0" y="710" width="1055" height="60" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_Rec_di" bpmnElement="L_Rec" isHorizontal="true"><dc:Bounds x="30" y="130" width="1025" height="140" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_Cro_di" bpmnElement="L_Cro" isHorizontal="true"><dc:Bounds x="30" y="270" width="1025" height="150" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_Ate_di" bpmnElement="L_Ate" isHorizontal="true"><dc:Bounds x="30" y="420" width="1025" height="230" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Ini_Termina_di" bpmnElement="Ini_Termina"><dc:Bounds x="132" y="182" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="100" y="223" width="100" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Invitar_di" bpmnElement="T_Invitar"><dc:Bounds x="245" y="155" width="130" height="90" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="C_Respondida_di" bpmnElement="C_Respondida"><dc:Bounds x="452" y="327" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="430" y="368" width="80" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Guardar_di" bpmnElement="T_Guardar"><dc:Bounds x="565" y="300" width="130" height="90" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gw_Mala_di" bpmnElement="Gw_Mala" isMarkerVisible="true"><dc:Bounds x="765" y="320" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="720" y="286" width="140" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fin_Guardada_di" bpmnElement="Fin_Guardada"><dc:Bounds x="932" y="327" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="905" y="368" width="90" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Revisar_di" bpmnElement="T_Revisar"><dc:Bounds x="725" y="445" width="130" height="90" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fin_Revisada_di" bpmnElement="Fin_Revisada"><dc:Bounds x="932" y="472" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="905" y="513" width="90" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Ini_Trimestre_di" bpmnElement="Ini_Trimestre"><dc:Bounds x="132" y="577" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="110" y="618" width="80" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="T_Reportar_di" bpmnElement="T_Reportar"><dc:Bounds x="245" y="550" width="130" height="90" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fin_Reporte_di" bpmnElement="Fin_Reporte"><dc:Bounds x="452" y="577" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="430" y="618" width="80" height="30" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Nota_1_di" bpmnElement="Nota_1"><dc:Bounds x="560" y="150" width="290" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Nota_2_di" bpmnElement="Nota_2"><dc:Bounds x="700" y="590" width="240" height="44" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Nota_3_di" bpmnElement="Nota_3"><dc:Bounds x="80" y="440" width="300" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flujo_1_di" bpmnElement="Flujo_1"><di:waypoint x="168" y="200" /><di:waypoint x="245" y="200" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_2_di" bpmnElement="Flujo_2"><di:waypoint x="310" y="245" /><di:waypoint x="310" y="345" /><di:waypoint x="452" y="345" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_3_di" bpmnElement="Flujo_3"><di:waypoint x="488" y="345" /><di:waypoint x="565" y="345" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_4_di" bpmnElement="Flujo_4"><di:waypoint x="695" y="345" /><di:waypoint x="765" y="345" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_5_di" bpmnElement="Flujo_5"><di:waypoint x="815" y="345" /><di:waypoint x="932" y="345" /><bpmndi:BPMNLabel><dc:Bounds x="862" y="325" width="24" height="16" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_6_di" bpmnElement="Flujo_6"><di:waypoint x="790" y="370" /><di:waypoint x="790" y="445" /><bpmndi:BPMNLabel><dc:Bounds x="796" y="400" width="20" height="16" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_7_di" bpmnElement="Flujo_7"><di:waypoint x="855" y="490" /><di:waypoint x="932" y="490" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_8_di" bpmnElement="Flujo_8"><di:waypoint x="168" y="595" /><di:waypoint x="245" y="595" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flujo_9_di" bpmnElement="Flujo_9"><di:waypoint x="375" y="595" /><di:waypoint x="452" y="595" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Mensaje_1_di" bpmnElement="Mensaje_1"><di:waypoint x="310" y="155" /><di:waypoint x="310" y="60" /><bpmndi:BPMNLabel><dc:Bounds x="318" y="70" width="130" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Mensaje_2_di" bpmnElement="Mensaje_2"><di:waypoint x="470" y="60" /><di:waypoint x="470" y="327" /><bpmndi:BPMNLabel><dc:Bounds x="478" y="70" width="140" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Mensaje_3_di" bpmnElement="Mensaje_3"><di:waypoint x="310" y="640" /><di:waypoint x="310" y="710" /><bpmndi:BPMNLabel><dc:Bounds x="318" y="655" width="120" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Asociacion_1_di" bpmnElement="Asociacion_1"><di:waypoint x="482" y="327" /><di:waypoint x="580" y="200" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Asociacion_2_di" bpmnElement="Asociacion_2"><di:waypoint x="790" y="535" /><di:waypoint x="790" y="590" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Asociacion_3_di" bpmnElement="Asociacion_3"><di:waypoint x="150" y="577" /><di:waypoint x="150" y="490" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

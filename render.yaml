@@ -1,0 +1,24 @@
+# Despliegue gratis en Render (render.com → New → Blueprint → este repositorio).
+# Usa SQLite y recarga los datos de ejemplo cada vez que el servicio arranca: es una demo, no producción.
+services:
+  - type: web
+    name: cronos-fisioavance
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: python manage.py migrate --noinput && python manage.py cargar_demo --borrar && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.8
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "0"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: .onrender.com
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        value: https://*.onrender.com
+      - key: DATABASE_URL
+        value: sqlite:///db.sqlite3
+      - key: CRONOS_INSTITUCION_POR_DEFECTO
+        value: fisioavance
